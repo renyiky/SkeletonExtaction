@@ -1,10 +1,10 @@
 #include <opencv2/core.hpp>
-
 #include <vector>
 #include <iostream>
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/Eigenvalues>
 #include <cmath>
+#include <opencv2/imgcodecs.hpp>
 
 #include "getPointsetInitialized.hpp"
 #include "Point.hpp"
@@ -14,24 +14,44 @@ using namespace std;
 using namespace cv;
 using namespace Eigen;
 
-int contract(Mat &img, string filename){
-    vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d3nn
-    
-    skelx::computeUi(img, pointset);
-    skelx::PCA(img, pointset);
-    skelx::movePoint(pointset); 
-}
-
 namespace skelx{
 
-    
-
-    vector<skelx::Point> movePoint(vector<skelx::Point> pointset){  // note: no referenced
+    Mat draw(Mat src, vector<struct skelx::Point> pointset){
+        int rows = src.rows, cols = src.cols;
+        Mat ret = Mat::zeros(rows, cols, CV_8U);
         for(skelx::Point p : pointset){
-            p.pos[0] += p.deltaX[0];
-            p.pos[1] += p.deltaX[1];
+            if(p.pos[0] >= 0 && p.pos[0] < rows && p.pos[1] >= 0 && p.pos[1] < cols){
+                ret.at<uchar>(p.pos[0],p.pos[1]) = 255;
+            }
         }
-        return pointset;
+        return ret;
+    }
+
+    // remove duplicates which result from moving point
+    void refreshPointset(vector<skelx::Point> &pointset){
+        unsigned int count = 0;
+
+        while(count < pointset.size()){
+            skelx::Point temp = pointset[count];
+            unsigned int i = count + 1;
+            while (i < pointset.size())
+            {
+                if(pointset[i].pos[0] == temp.pos[0] && pointset[i].pos[1] == temp.pos[1]){
+                    pointset.erase(pointset.begin() + i);
+                }else{
+                    ++i;
+                }
+            }
+            ++count;
+        }
+    }
+
+    // move points toward deltaX
+    void movePoint(vector<skelx::Point> &pointset){
+        for(skelx::Point &p : pointset){
+            p.pos[0] += static_cast<int>(p.deltaX[0]);
+            p.pos[1] += static_cast<int>(p.deltaX[1]);
+        }
     }
 
     // set ui for each xi
@@ -59,8 +79,20 @@ namespace skelx{
 
         // get and set covMat for each xi
         for(skelx::Point &xi: pointset){
-            if(!setNeighborsOfK(img, xi, 3 * xi.d3nn)){   // set PCA neighbors
-                cout<<"PCA neighbors insufficient!"<<endl;
+
+            // get PCA neighbors which is in 3 * d3nn distance
+            double d3nn = xi.d3nn, 
+                    dnn = 3 * d3nn,
+                    x = xi.pos[0],
+                    y = xi.pos[1];
+            xi.neighbors = {};
+
+            for(int i = -dnn; i < dnn + 1; ++i){
+                for(int j = -dnn; j < dnn + 1; ++j){
+                    if(x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+                        xi.neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+                    }  //need to refresh d3nn!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                }
             }
 
             // calculate center point, namely xi
@@ -86,6 +118,13 @@ namespace skelx{
             covMat[0][1] /= xi.neighbors.size();
             covMat[1][0] /= xi.neighbors.size();
             covMat[1][1] /= xi.neighbors.size();
+
+            if(isnan(covMat[0][0])){
+                cout<<"covMat:"<<xi.covMat[0][0]<<" "<<xi.covMat[0][1]<<" "<<xi.covMat[1][0]<<" "<<xi.covMat[1][1]<<endl;
+                cout<<"nei:"<<xi.neighbors.size()<<endl;
+                cout<<"d3nn:"<<xi.d3nn<<endl;
+            }
+
             xi.covMat = covMat;
         }
     
@@ -97,17 +136,27 @@ namespace skelx{
             covMatEigen(1, 0) = xi.covMat[1][0];
             covMatEigen(1, 1) = xi.covMat[1][1];
 
+            
+            
+
             EigenSolver<MatrixXd> es(covMatEigen);
             int maxIndex;
             double lamda1 = es.eigenvalues().col(0)(0).real(), 
-                    lamda2=es.eigenvalues().col(0)(1).real();
+                    lamda2 = es.eigenvalues().col(0)(1).real();
 
-            lamda1 > lamda2 ? maxIndex = 0 : maxIndex =1;
+            lamda1 > lamda2 ? maxIndex = 0 : maxIndex = 1;
             double sigma = es.eigenvalues().col(0)(maxIndex).real() / (lamda1 + lamda2);
             vector<double> maxEigenVec{es.eigenvectors().col(maxIndex)(0).real(), es.eigenvectors().col(maxIndex)(1).real()};
             
-            xi.sigma = sigma;
+            if(isnan(sigma)){
+                xi.sigma = 0.5;
+                cout<<"here"<<endl;
+            }else{
+                xi.sigma = sigma;
+            }
             xi.principalVec = maxEigenVec;
+
+            // cout<<"mod Eigen vec"<<(pow(pow(xi.principalVec[0], 2) + pow(xi.principalVec[1], 2), 0.5) + pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5))<<endl;
         }
     
         // set deltaX for each xi
@@ -134,3 +183,31 @@ namespace skelx{
 
 }
 
+Mat contract(Mat img, string filename){
+    double sigmaHat = 0.0;
+    int count = 0;
+    vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d3nn
+
+    while(sigmaHat < 0.95){
+        skelx::computeUi(img, pointset);
+        skelx::PCA(img, pointset);
+
+        skelx::movePoint(pointset);
+        skelx::refreshPointset(pointset);
+        for(skelx::Point p : pointset){
+            sigmaHat += p.sigma;
+            // cout<<"sigma:"<<p.sigma<<endl;
+            // cout<<"ui:"<<p.ui[0]<<" "<<p.ui[1]<<endl;
+            // cout<<"deltaX:"<<p.deltaX[0]<<" "<<p.deltaX[1]<<"\n"<<endl;
+
+        }
+        sigmaHat /= pointset.size();
+        
+        img = skelx::draw(img, pointset);
+
+        imwrite("results/" + to_string(count + 2) + "_" + filename + ".png", img);
+        cout<<"iter:"<<count<<"   sigmaHat = "<<sigmaHat<<endl;
+        count++;
+    }
+    return img;
+}

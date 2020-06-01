@@ -1,0 +1,88 @@
+iter:0   sigmaHat = 0.680689
+iter:1   sigmaHat = 0.691968
+iter:2   sigmaHat = 0.697807
+iter:3   sigmaHat = 0.703804
+iter:4   sigmaHat = 0.711518
+iter:5   sigmaHat = 0.720071
+iter:6   sigmaHat = 0.726757
+iter:7   sigmaHat = 0.733924
+iter:8   sigmaHat = 0.738505
+here
+iter:9   sigmaHat = 0.741597
+here
+iter:10   sigmaHat = 0.745258
+here
+iter:11   sigmaHat = 0.748738
+here
+iter:12   sigmaHat = 0.749862
+here
+iter:13   sigmaHat = 0.754402
+here
+iter:14   sigmaHat = 0.7568
+here
+iter:15   sigmaHat = 0.758962
+here
+iter:16   sigmaHat = 0.760949
+here
+iter:17   sigmaHat = 0.761105
+here
+iter:18   sigmaHat = 0.761419
+here
+iter:19   sigmaHat = 0.764098
+here
+iter:20   sigmaHat = 0.765994
+here
+iter:21   sigmaHat = 0.767471
+here
+iter:22   sigmaHat = 0.769361
+here
+iter:23   sigmaHat = 0.769759
+here
+iter:24   sigmaHat = 0.771056
+here
+iter:25   sigmaHat = 0.772788
+here
+iter:26   sigmaHat = 0.774282
+here
+iter:27   sigmaHat = 0.774418
+here
+iter:28   sigmaHat = 0.775308
+here
+iter:29   sigmaHat = 0.775529
+here
+iter:30   sigmaHat = 0.777404
+here
+iter:31   sigmaHat = 0.778051
+here
+iter:32   sigmaHat = 0.77913
+here
+iter:33   sigmaHat = 0.780018
+here
+iter:34   sigmaHat = 0.782319
+here
+iter:35   sigmaHat = 0.784299
+here
+iter:36   sigmaHat = 0.785128
+here
+iter:37   sigmaHat = 0.785708
+here
+iter:38   sigmaHat = 0.78714
+here
+here
+iter:39   sigmaHat = 0.787343
+here
+here
+iter:40   sigmaHat = 0.788705
+here
+iter:41   sigmaHat = 0.789247
+here
+iter:42   sigmaHat = 0.791649
+here
+iter:43   sigmaHat = 0.7926
+here
+iter:44   sigmaHat = 0.79273
+here
+iter:45   sigmaHat = 0.793268
+covMat:0 0 0 0
+nei:0
+d3nn:1

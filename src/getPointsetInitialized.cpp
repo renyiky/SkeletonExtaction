@@ -28,7 +28,7 @@ vector<struct skelx::Point> getPointsetInitialized(Mat &img){
     int num = pointset.size();
     for(struct skelx::Point &i : pointset){
         i.d3nn = getD3nn(img, i);
-        i.k = static_cast<int>(dbb / (pow(num, 1/3) * i.d3nn));
+        i.k = 10 ;//static_cast<int>(dbb / (pow(num, 1/3) * i.d3nn));
     }
     return pointset;
 }

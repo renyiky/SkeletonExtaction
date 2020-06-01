@@ -3,7 +3,8 @@
 #include <opencv2/highgui.hpp>
 #include <string>
 
-#include "preprocess.hpp" 
+#include "preprocess.hpp"
+#include "contract.hpp"
 
 using namespace std;
 using namespace cv;
@@ -12,13 +13,13 @@ void output(Mat &img, string name);
 
 int count = 0;
 
-int main(){
-    string filename = "man", inputPath = "dataset/";
+int main(int argc, char *argv[]){
+    string filename = argv[1], inputPath = "dataset/";
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw");
-    img=preprocess(img);
+    img = preprocess(img);
     output(img, "preProcessed");
-
+    img = contract(img, filename);
 
     return 0;
 }
