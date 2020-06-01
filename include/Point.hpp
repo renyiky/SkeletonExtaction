@@ -6,15 +6,17 @@
 namespace skelx{
     
     struct Point{
+    int k, visited=0;
     std::vector<double> pos{0.0,0.0}, 
                         ui, 
-                        deltaX;
+                        deltaX,
+                        principalVec{0.0, 0.0};
 
     double  sigma,
             d3nn, 
             lambda; // confidence
-    int k, visited=0;
-    std::vector<std::vector<int> > neighbors;
+
+    std::vector<std::vector<double> > neighbors, covMat;
     };
 
 }

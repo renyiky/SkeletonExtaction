@@ -9,6 +9,7 @@
 using namespace std;
 using namespace cv;
 
+// initialize the pointset
 vector<struct skelx::Point> getPointsetInitialized(Mat &img){
     double dbb = getDbb(img);  // diagonal length of bounding box
 

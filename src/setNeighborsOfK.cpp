@@ -14,7 +14,7 @@ int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
         cols = img.cols,
         x = point.pos[0],
         y = point.pos[1];
-    vector<vector<int> > neighbors{};
+    vector<vector<double> > neighbors{};
 
     while(neighbors.size() < k){
         ++radius;
@@ -24,7 +24,7 @@ int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
                     if(x + i >= 0 && x + i < rows && y + j >= 0 
                     && y + j < cols && img.at<uchar>(x + i, y + j) != 0 
                     && !(i == 0 && j == 0)){
-                        neighbors.push_back({i, j});
+                        neighbors.push_back({static_cast<double>(i), static_cast<double>(j)});
                     }
                 }
             }else{
@@ -32,14 +32,14 @@ int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
                 if(x + i >= 0 && x + i < rows && y + j >= 0 
                 && y + j < cols && img.at<uchar>(x + i, y + j) != 0 
                 && !(i == 0 && j == 0)){
-                    neighbors.push_back({i, j});
+                    neighbors.push_back({static_cast<double>(i), static_cast<double>(j)});
                 }
 
                 j = radius;
                 if(x + i >= 0 && x + i < rows && y + j >= 0 
                 && y + j < cols && img.at<uchar>(x + i, y + j) != 0 
                 && !(i == 0 && j == 0)){
-                    neighbors.push_back({i, j});
+                    neighbors.push_back({static_cast<double>(i), static_cast<double>(j)});
                 }
             }
         }
