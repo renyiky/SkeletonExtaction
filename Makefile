@@ -31,5 +31,5 @@ clean:
 	@echo App and objs cleaned.
 
 cleanres:
-	@rm -rf results/*
+	@rm -rf results/*.png
 	@echo Results cleaned.

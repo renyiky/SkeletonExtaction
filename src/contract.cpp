@@ -56,8 +56,10 @@ namespace skelx{
     // move points toward deltaX
     void movePoint(vector<skelx::Point> &pointset){
         for(skelx::Point &p : pointset){
-            p.pos[0] += static_cast<int>(p.deltaX[0]);
-            p.pos[1] += static_cast<int>(p.deltaX[1]);
+            //if(p.sigma < 0.99){
+                p.pos[0] += static_cast<int>(p.deltaX[0]);
+                p.pos[1] += static_cast<int>(p.deltaX[1]);
+            //}
         }
     }
 
@@ -181,14 +183,6 @@ namespace skelx{
         }
     }
 
-    vector<vector<skelx::Point> > drawPointMap(const Mat &img, const vector<skelx::Point> pointset){
-        skelx::Point t;
-        vector<vector<skelx::Point> > ret(img.rows, vector<skelx::Point>(img.cols, t));
-
-
-        
-    }
-
 }
 
 Mat contract(Mat img, string filename){
@@ -196,16 +190,19 @@ Mat contract(Mat img, string filename){
     int t = 0;  // times of iterations
     vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d3nn
 
-    while(sigmaHat < 0.95){
+    while(sigmaHat < 0.9){
         skelx::computeUi(img, pointset);
         skelx::PCA(img, pointset);
         skelx::movePoint(pointset);
         skelx::refreshPointset(img, pointset);
         for(skelx::Point &p : pointset){
             sigmaHat += p.sigma;
+            // p.k = static_cast<double>(p.k) * 0.8;
         }
         sigmaHat /= pointset.size();
-        pointset = updateK(img, pointset, t + 1);
+
+        // cout<<"before updateK"<<endl;
+        // pointset = updateK(img, pointset, t + 1);
 
         imwrite("results/" + to_string(t + 2) + "_" + filename + ".png", img);
         cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
