@@ -9,6 +9,7 @@
 #include "getPointsetInitialized.hpp"
 #include "Point.hpp"
 #include "setNeighborsOfK.hpp"
+#include "getD3nn.hpp"
 
 using namespace std;
 using namespace cv;
@@ -27,8 +28,8 @@ namespace skelx{
         return ret;
     }
 
-    // remove duplicates which result from moving point
-    void refreshPointset(vector<skelx::Point> &pointset){
+    // remove duplicates which result from moving point, and refresh d3nn for each point
+    void refreshPointset(Mat &img, vector<skelx::Point> &pointset){
         unsigned int count = 0;
 
         while(count < pointset.size()){
@@ -44,6 +45,11 @@ namespace skelx{
             }
             ++count;
         }
+
+        img = skelx::draw(img, pointset);
+        for(skelx::Point &p : pointset){
+            p.d3nn = getD3nn(img, p);
+        }
     }
 
     // move points toward deltaX
@@ -54,7 +60,7 @@ namespace skelx{
         }
     }
 
-    // set ui for each xi
+    // set ui for each xi based on p.k
     void computeUi(Mat &img, vector<skelx::Point> &pointset){
         for(skelx::Point &p : pointset){
             // get k nearest neighbors
@@ -74,7 +80,7 @@ namespace skelx{
     }
 
     // pca process, after this, the sigma, principalVec, 
-    // covMat and deltaX of xi would be set
+    // PCAneighbors, covMat and deltaX of xi would be set
     void PCA(Mat &img, vector<skelx::Point> &pointset){
 
         // get and set covMat for each xi
@@ -85,27 +91,27 @@ namespace skelx{
                     dnn = 3 * d3nn,
                     x = xi.pos[0],
                     y = xi.pos[1];
-            xi.neighbors = {};
+            xi.PCAneighbors = {};
 
             for(int i = -dnn; i < dnn + 1; ++i){
                 for(int j = -dnn; j < dnn + 1; ++j){
                     if(x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-                        xi.neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
-                    }  //need to refresh d3nn!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        xi.PCAneighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+                    }
                 }
             }
 
             // calculate center point, namely xi
             vector<double> centerPoint{0.0, 0.0};
-            for(vector<double> &xj: xi.neighbors){
+            for(vector<double> &xj: xi.PCAneighbors){
                 centerPoint[0] += xj[0];
                 centerPoint[1] += xj[1];
             }
-            centerPoint[0] /= static_cast<double>(xi.neighbors.size());
-            centerPoint[1] /= static_cast<double>(xi.neighbors.size());
+            centerPoint[0] /= static_cast<double>(xi.PCAneighbors.size());
+            centerPoint[1] /= static_cast<double>(xi.PCAneighbors.size());
 
             vector<vector<double> > covMat(2, vector<double>(2,0.0));  // create cov Matrix
-            for(vector<double> &xj: xi.neighbors){
+            for(vector<double> &xj: xi.PCAneighbors){
                 vector<double> xixj = {xj[0] - centerPoint[0], xj[1] - centerPoint[1]};
 
                 covMat[0][0] += xixj[0] * xixj[0];
@@ -114,15 +120,13 @@ namespace skelx{
                 covMat[1][1] += xixj[1] * xixj[1];
             }
 
-            covMat[0][0] /= xi.neighbors.size();
-            covMat[0][1] /= xi.neighbors.size();
-            covMat[1][0] /= xi.neighbors.size();
-            covMat[1][1] /= xi.neighbors.size();
+            covMat[0][0] /= xi.PCAneighbors.size();
+            covMat[0][1] /= xi.PCAneighbors.size();
+            covMat[1][0] /= xi.PCAneighbors.size();
+            covMat[1][1] /= xi.PCAneighbors.size();
 
             if(isnan(covMat[0][0])){
-                cout<<"covMat:"<<xi.covMat[0][0]<<" "<<xi.covMat[0][1]<<" "<<xi.covMat[1][0]<<" "<<xi.covMat[1][1]<<endl;
-                cout<<"nei:"<<xi.neighbors.size()<<endl;
-                cout<<"d3nn:"<<xi.d3nn<<endl;
+                cout<<"NaN covMat occured."<<endl;
             }
 
             xi.covMat = covMat;
@@ -136,9 +140,6 @@ namespace skelx{
             covMatEigen(1, 0) = xi.covMat[1][0];
             covMatEigen(1, 1) = xi.covMat[1][1];
 
-            
-            
-
             EigenSolver<MatrixXd> es(covMatEigen);
             int maxIndex;
             double lamda1 = es.eigenvalues().col(0)(0).real(), 
@@ -150,13 +151,11 @@ namespace skelx{
             
             if(isnan(sigma)){
                 xi.sigma = 0.5;
-                cout<<"here"<<endl;
+                cout<<"NaN sigma occured."<<endl;
             }else{
                 xi.sigma = sigma;
             }
             xi.principalVec = maxEigenVec;
-
-            // cout<<"mod Eigen vec"<<(pow(pow(xi.principalVec[0], 2) + pow(xi.principalVec[1], 2), 0.5) + pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5))<<endl;
         }
     
         // set deltaX for each xi
@@ -185,29 +184,22 @@ namespace skelx{
 
 Mat contract(Mat img, string filename){
     double sigmaHat = 0.0;
-    int count = 0;
+    int t = 0;  // times of iterations
     vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d3nn
 
     while(sigmaHat < 0.95){
         skelx::computeUi(img, pointset);
         skelx::PCA(img, pointset);
-
         skelx::movePoint(pointset);
-        skelx::refreshPointset(pointset);
+        skelx::refreshPointset(img, pointset);
         for(skelx::Point p : pointset){
             sigmaHat += p.sigma;
-            // cout<<"sigma:"<<p.sigma<<endl;
-            // cout<<"ui:"<<p.ui[0]<<" "<<p.ui[1]<<endl;
-            // cout<<"deltaX:"<<p.deltaX[0]<<" "<<p.deltaX[1]<<"\n"<<endl;
-
         }
         sigmaHat /= pointset.size();
-        
-        img = skelx::draw(img, pointset);
 
-        imwrite("results/" + to_string(count + 2) + "_" + filename + ".png", img);
-        cout<<"iter:"<<count<<"   sigmaHat = "<<sigmaHat<<endl;
-        count++;
+        imwrite("results/" + to_string(t + 2) + "_" + filename + ".png", img);
+        cout<<"iter:"<<t<<"   sigmaHat = "<<sigmaHat<<endl;
+        t++;
     }
     return img;
 }
