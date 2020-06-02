@@ -10,6 +10,7 @@
 #include "Point.hpp"
 #include "setNeighborsOfK.hpp"
 #include "getD3nn.hpp"
+#include "updateK.hpp"
 
 using namespace std;
 using namespace cv;
@@ -60,7 +61,8 @@ namespace skelx{
         }
     }
 
-    // set ui for each xi based on p.k
+    // set ui for each xi based on p.k,
+    // neighbors and ui of xi would be set
     void computeUi(Mat &img, vector<skelx::Point> &pointset){
         for(skelx::Point &p : pointset){
             // get k nearest neighbors
@@ -87,8 +89,7 @@ namespace skelx{
         for(skelx::Point &xi: pointset){
 
             // get PCA neighbors which is in 3 * d3nn distance
-            double d3nn = xi.d3nn, 
-                    dnn = 3 * d3nn,
+            double dnn = 3 * xi.d3nn, 
                     x = xi.pos[0],
                     y = xi.pos[1];
             xi.PCAneighbors = {};
@@ -180,6 +181,14 @@ namespace skelx{
         }
     }
 
+    vector<vector<skelx::Point> > drawPointMap(const Mat &img, const vector<skelx::Point> pointset){
+        skelx::Point t;
+        vector<vector<skelx::Point> > ret(img.rows, vector<skelx::Point>(img.cols, t));
+
+
+        
+    }
+
 }
 
 Mat contract(Mat img, string filename){
@@ -192,13 +201,14 @@ Mat contract(Mat img, string filename){
         skelx::PCA(img, pointset);
         skelx::movePoint(pointset);
         skelx::refreshPointset(img, pointset);
-        for(skelx::Point p : pointset){
+        for(skelx::Point &p : pointset){
             sigmaHat += p.sigma;
         }
         sigmaHat /= pointset.size();
+        pointset = updateK(img, pointset, t + 1);
 
         imwrite("results/" + to_string(t + 2) + "_" + filename + ".png", img);
-        cout<<"iter:"<<t<<"   sigmaHat = "<<sigmaHat<<endl;
+        cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
         t++;
     }
     return img;
