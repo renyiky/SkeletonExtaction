@@ -11,6 +11,7 @@
 #include "setNeighborsOfK.hpp"
 #include "getD3nn.hpp"
 #include "updateK.hpp"
+#include "visualize.hpp"
 
 using namespace std;
 using namespace cv;
@@ -54,12 +55,13 @@ namespace skelx{
     }
 
     // move points toward deltaX
-    void movePoint(vector<skelx::Point> &pointset){
+    // only move the point whose sigma is less than the threshold
+    void movePoint(vector<skelx::Point> &pointset, double threshold){
         for(skelx::Point &p : pointset){
-            //if(p.sigma < 0.99){
+            if(p.sigma < threshold){
                 p.pos[0] += static_cast<int>(p.deltaX[0]);
                 p.pos[1] += static_cast<int>(p.deltaX[1]);
-            //}
+            }
         }
     }
 
@@ -71,7 +73,7 @@ namespace skelx{
             vector<double> ui{0.0, 0.0};
 
             if(!setNeighborsOfK(img, p, p.k)){  // set ui neighbors
-                cout<<"neighbors insufficient!"<<endl;
+                std::cout<<"neighbors insufficient!"<<endl;
             }
             for(vector<double> nei: p.neighbors){
                 ui[0] += (nei[0] - p.pos[0]);
@@ -98,7 +100,7 @@ namespace skelx{
 
             for(int i = -dnn; i < dnn + 1; ++i){
                 for(int j = -dnn; j < dnn + 1; ++j){
-                    if(x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+                    if(pow((i * i + j * j), 0.5) < dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
                         xi.PCAneighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
                     }
                 }
@@ -129,7 +131,7 @@ namespace skelx{
             covMat[1][1] /= xi.PCAneighbors.size();
 
             if(isnan(covMat[0][0])){
-                cout<<"NaN covMat occured."<<endl;
+                std::cout<<"NaN covMat occured."<<endl;
             }
 
             xi.covMat = covMat;
@@ -154,7 +156,7 @@ namespace skelx{
             
             if(isnan(sigma)){
                 xi.sigma = 0.5;
-                cout<<"NaN sigma occured."<<endl;
+                std::cout<<"NaN sigma occured."<<endl;
             }else{
                 xi.sigma = sigma;
             }
@@ -190,10 +192,13 @@ Mat contract(Mat img, string filename){
     int t = 0;  // times of iterations
     vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d3nn
 
-    while(sigmaHat < 0.9){
+    while(sigmaHat < 0.95){
         skelx::computeUi(img, pointset);
         skelx::PCA(img, pointset);
-        skelx::movePoint(pointset);
+
+        if(t == 6){visualize(img, pointset, t);}
+
+        skelx::movePoint(pointset, 0.95);
         skelx::refreshPointset(img, pointset);
         for(skelx::Point &p : pointset){
             sigmaHat += p.sigma;
@@ -205,7 +210,7 @@ Mat contract(Mat img, string filename){
         // pointset = updateK(img, pointset, t + 1);
 
         imwrite("results/" + to_string(t + 2) + "_" + filename + ".png", img);
-        cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
+        std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
         t++;
     }
     return img;

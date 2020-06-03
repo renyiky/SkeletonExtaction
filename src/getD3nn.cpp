@@ -42,5 +42,5 @@ double getD3nn(Mat &img, const struct skelx::Point &point){
             }
         }
     }
-    return (neighbors[0] + neighbors[1] + neighbors[2]) / 3;
+    return (neighbors[0] + neighbors[1] + neighbors[2]) ;   // /3
 }

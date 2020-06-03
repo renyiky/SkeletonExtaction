@@ -22,7 +22,7 @@ makeOBJDIR:
 	@echo Compiling $(notdir $<)...
 	@$(CXX) -c $< -o $(OBJ_DIR)/$@ $(CXXFLAGS) 
 
-.PHONY: clean cleanall cleanres
+.PHONY: clean cleanall cleanres do
 
 cleanall: clean cleanres
 
@@ -32,4 +32,8 @@ clean:
 
 cleanres:
 	@rm -rf results/*.png
+	@rm -rf results/visualization/*.png
 	@echo Results cleaned.
+
+do: cleanres
+	@make

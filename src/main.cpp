@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
     string filename = argv[1], inputPath = "dataset/";
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw");
-    img = preprocess(img);
+    // img = preprocess(img);
     output(img, "preProcessed");
     img = contract(img, filename);
 
