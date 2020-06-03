@@ -93,14 +93,14 @@ namespace skelx{
         for(skelx::Point &xi: pointset){
 
             // get PCA neighbors which is in 3 * d3nn distance
-            double dnn = 3 * xi.d3nn, 
+            double dnn = 3 * 3 * xi.d3nn, // 9 times of d3nn
                     x = xi.pos[0],
                     y = xi.pos[1];
             xi.PCAneighbors = {};
 
             for(int i = -dnn; i < dnn + 1; ++i){
                 for(int j = -dnn; j < dnn + 1; ++j){
-                    if(pow((i * i + j * j), 0.5) < dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+                    if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
                         xi.PCAneighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
                     }
                 }
@@ -196,7 +196,7 @@ Mat contract(Mat img, string filename){
         skelx::computeUi(img, pointset);
         skelx::PCA(img, pointset);
 
-        if(t == 6){visualize(img, pointset, t);}
+        if(t % 10 == 0 && t != 0){visualize(img, pointset, t);}
 
         skelx::movePoint(pointset, 0.95);
         skelx::refreshPointset(img, pointset);
@@ -207,7 +207,7 @@ Mat contract(Mat img, string filename){
         sigmaHat /= pointset.size();
 
         // cout<<"before updateK"<<endl;
-        // pointset = updateK(img, pointset, t + 1);
+        updateK(img, pointset, t + 1);
 
         imwrite("results/" + to_string(t + 2) + "_" + filename + ".png", img);
         std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;

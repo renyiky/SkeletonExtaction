@@ -1,5 +1,6 @@
 #include <vector>
 #include <opencv2/core.hpp>
+#include <cmath>
 
 #include "Point.hpp"
 #include "setNeighborsOfK.hpp"
@@ -18,31 +19,45 @@ int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
 
     while(neighbors.size() < k){
         ++radius;
-        for(int i = -radius; i < radius + 1; ++i){
-            if(i == -radius || i == radius){
-                for(int j = -radius; j < radius + 1; ++j){
-                    if(x + i >= 0 && x + i < rows && y + j >= 0 
-                    && y + j < cols && img.at<uchar>(x + i, y + j) != 0 
-                    && !(i == 0 && j == 0)){
-                        neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
-                    }
-                }
-            }else{
-                int j = -radius;
-                if(x + i >= 0 && x + i < rows && y + j >= 0 
-                && y + j < cols && img.at<uchar>(x + i, y + j) != 0 
-                && !(i == 0 && j == 0)){
-                    neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
-                }
+        neighbors = {};
 
-                j = radius;
-                if(x + i >= 0 && x + i < rows && y + j >= 0 
-                && y + j < cols && img.at<uchar>(x + i, y + j) != 0 
-                && !(i == 0 && j == 0)){
+        // rectangle search
+        // for(int i = -radius; i < radius + 1; ++i){
+        //     if(i == -radius || i == radius){
+        //         for(int j = -radius; j < radius + 1; ++j){
+        //             if(/*pow(i * i + j * j, 0.5) <= radius && */x + i >= 0 && x + i < rows && y + j >= 0 
+        //             && y + j < cols && img.at<uchar>(x + i, y + j) != 0 
+        //             && !(i == 0 && j == 0)){
+        //                 neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+        //             }
+        //         }
+        //     }else{
+        //         int j = -radius;
+        //         if(/*pow(i * i + j * j, 0.5) <= radius &&*/ x + i >= 0 && x + i < rows && y + j >= 0 
+        //         && y + j < cols && img.at<uchar>(x + i, y + j) != 0 
+        //         && !(i == 0 && j == 0)){
+        //             neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+        //         }
+
+        //         j = radius;
+        //         if(/*pow(i * i + j * j, 0.5) <= radius &&*/ x + i >= 0 && x + i < rows && y + j >= 0 
+        //         && y + j < cols && img.at<uchar>(x + i, y + j) != 0 
+        //         && !(i == 0 && j == 0)){
+        //             neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+        //         }
+        //     }
+        // }
+
+
+        // circle search
+        for(int i = -radius; i < radius + 1; ++i){
+            for(int j = -radius; j < radius + 1; ++j){
+                if(pow((i * i + j * j), 0.5) <= radius && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
                     neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
                 }
             }
         }
+
     }
     if(neighbors.size() != 0){
         point.neighbors = neighbors;

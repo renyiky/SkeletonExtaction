@@ -14,6 +14,7 @@ double getD3nn(Mat &img, const struct skelx::Point &point){
         cols = img.cols;
     vector<int> neighbors = {};
 
+    // rectangle search
     while(neighbors.size() < 3){
         ++radius;
         for(int i = -radius; i < radius + 1; ++i){
@@ -42,5 +43,5 @@ double getD3nn(Mat &img, const struct skelx::Point &point){
             }
         }
     }
-    return (neighbors[0] + neighbors[1] + neighbors[2]) ;   // /3
+    return (static_cast<double>(neighbors[0]) + static_cast<double>(neighbors[1]) + static_cast<double>(neighbors[2])) / 3;   // /3
 }
