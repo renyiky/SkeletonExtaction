@@ -8,8 +8,9 @@ using namespace cv;
 
 // get d3nn of param point
 double getD3nn(Mat &img, const struct skelx::Point &point){
-    int x = point.pos[0], y = point.pos[1];
-    int radius = 0,
+    int x = point.pos[0], 
+        y = point.pos[1],
+        radius = 0,
         rows = img.rows,
         cols = img.cols;
     vector<int> neighbors = {};

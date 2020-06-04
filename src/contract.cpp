@@ -79,8 +79,8 @@ namespace skelx{
                 ui[0] += (nei[0] - p.pos[0]);
                 ui[1] += (nei[1] - p.pos[1]);
             }
-            ui[0] = ui[0]/static_cast<double>(p.neighbors.size());
-            ui[1] = ui[1]/static_cast<double>(p.neighbors.size());
+            ui[0] = ui[0] / static_cast<double>(p.neighbors.size());
+            ui[1] = ui[1] / static_cast<double>(p.neighbors.size());
             p.ui = {ui[0], ui[1]};
         }
     }
@@ -133,10 +133,9 @@ namespace skelx{
             if(isnan(covMat[0][0])){
                 std::cout<<"NaN covMat occured."<<endl;
             }
-
             xi.covMat = covMat;
         }
-    
+
         // get eigen value and eigen vectors, and set sigma, principalVec for each xi
         for(skelx::Point &xi: pointset){
             MatrixXd covMatEigen(2, 2);
@@ -178,13 +177,12 @@ namespace skelx{
             }
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
-            deltaX[0] = uiMod * cosTheta * (1 - xi.sigma) * xi.principalVec[0] + xi.ui[0] - uiMod * cosTheta * xi.principalVec[0];
-            deltaX[1] = uiMod * cosTheta * (1 - xi.sigma) * xi.principalVec[1] + xi.ui[1] - uiMod * cosTheta * xi.principalVec[1];
+            deltaX[0] = xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0];
+            deltaX[1] = xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1];
 
             xi.deltaX = deltaX;
         }
     }
-
 }
 
 Mat contract(Mat img, string filename){
@@ -196,7 +194,9 @@ Mat contract(Mat img, string filename){
         skelx::computeUi(img, pointset);
         skelx::PCA(img, pointset);
 
-        if(t % 10 == 0 && t != 0){visualize(img, pointset, t);}
+        // if(t % 10 == 0 && t != 0){
+        //     visualize(img, pointset, t);
+        // }
 
         skelx::movePoint(pointset, 0.95);
         skelx::refreshPointset(img, pointset);
@@ -209,9 +209,9 @@ Mat contract(Mat img, string filename){
         // cout<<"before updateK"<<endl;
         updateK(img, pointset, t + 1);
 
-        imwrite("results/" + to_string(t + 2) + "_" + filename + ".png", img);
+        imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
         std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
-        t++;
+        ++t;
     }
     return img;
 }

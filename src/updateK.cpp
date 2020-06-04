@@ -106,8 +106,7 @@ void updateK(Mat &img, vector<skelx::Point> &pointset, int t, double threshold, 
                 }
             }
         }
-        
-        p.k = 20 > 2 * neighborsCount.size() ? 20 : 2 * neighborsCount.size(); // static_cast<int>(dbb / (pow(num, 1/3) * p.d3nn));
-        cout<<p.k<<"  "<< 2 * neighborsCount.size()<<endl;
+        p.k = 20 < 2 * neighborsCount.size() ? 20 : 2 * neighborsCount.size(); // static_cast<int>(dbb / (pow(num, 1/3) * p.d3nn));
+        // cout<<p.k<<"  "<< 2 * neighborsCount.size()<<endl;
     }
 }
