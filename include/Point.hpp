@@ -6,9 +6,9 @@
 namespace skelx{
     
     struct Point{
-    int k0, k, visited=0;
+    int k0, k;
     std::vector<double> pos{0.0,0.0}, 
-                        ui, 
+                        ui,
                         deltaX,
                         principalVec{0.0, 0.0};
 

@@ -186,32 +186,44 @@ namespace skelx{
 }
 
 Mat contract(Mat img, string filename){
-    double sigmaHat = 0.0;
-    int t = 0;  // times of iterations
+    double sigmaHat = 0.0, preSigmaHat = sigmaHat;
+    int count = 0,  // count if sigmaHat remains unchanged
+        t = 0;  // times of iterations
     vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d3nn
 
     while(sigmaHat < 0.95){
         skelx::computeUi(img, pointset);
         skelx::PCA(img, pointset);
 
-        // if(t % 10 == 0 && t != 0){
-        //     visualize(img, pointset, t);
-        // }
+        if(t % 10 == 0 && t != 0){
+            visualize(img, pointset, t);
+        }
 
         skelx::movePoint(pointset, 0.95);
         skelx::refreshPointset(img, pointset);
         for(skelx::Point &p : pointset){
             sigmaHat += p.sigma;
-            // p.k = static_cast<double>(p.k) * 0.8;
         }
         sigmaHat /= pointset.size();
-
         // cout<<"before updateK"<<endl;
         updateK(img, pointset, t + 1);
 
         imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
         std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
         ++t;
+        
+        // check if sigmaHat remains unchanged
+        // if it doesn't change for 3 times, stop extracting
+        if(sigmaHat == preSigmaHat){
+            if(count == 2){
+                return img;
+            }else{
+                ++count;
+            }
+        }else{
+            preSigmaHat = sigmaHat;
+            count = 0;
+        }
     }
     return img;
 }

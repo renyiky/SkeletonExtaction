@@ -5,7 +5,6 @@
 #include "Point.hpp"
 #include "setNeighborsOfK.hpp"
 
-
 using namespace std;
 using namespace cv;
 
@@ -66,4 +65,32 @@ int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
     else{
         return 0;
     }
+}
+
+int regularize(skelx::Point centerPoint){
+    double xi = centerPoint.pos[0], yi = centerPoint.pos[1];
+    vector<vector<double> > connectedDomain = {{xi, yi, 0}}; // neighborset inlucdes center point, and set the connected domain flag of center point as 0;
+    vector<vector<double> > neighbors = centerPoint.neighbors;
+
+    unsigned int count = 0;
+    while (count < neighbors.size())
+    {
+        double xj = neighbors[count][0], yj = neighbors[count][1];
+        
+        
+        // for(int i = -1; i < 2; ++i){
+        //     for(int j = -1; j < 2; ++j){
+        //         if(!(i == 0 && j == 0) && xi + i == xj && yi + j == yj){
+
+        //         }
+        //     }
+        // }
+    }
+    
+
+                // if(!(i == 0 && j == 0) && xi + i == xj && yi + j == yj){
+                //     return 1;
+                // }
+
+    return 0;
 }
