@@ -204,6 +204,28 @@ namespace skelx{
             xi.deltaX = deltaX;
         }
     }
+
+    // remove isolate point, namely noise
+    void postProcess(Mat &img){
+        for(int x = 0; x< img.rows; ++x){
+            for(int y = 0; y < img.cols; ++y){
+                if(img.at<uchar>(x, y) != 0){
+                    int flag = 0;
+                    for(int i = -1; (i < 2) && (flag == 0); ++i){
+                        for(int j = -1; (j < 2) && (flag == 0); ++j){
+                            if(x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+                                flag = 1;
+                                break;
+                            }
+                        }
+                    }
+                    if(flag == 0){
+                        img.at<uchar>(x, y) = 0;
+                    }
+                }
+            }
+        }
+    }
 }
 
 Mat contract(Mat img, string filename){
@@ -232,11 +254,12 @@ Mat contract(Mat img, string filename){
         imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
         std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
         ++t;
-        
+
         // check if sigmaHat remains unchanged
         // if it doesn't change for 3 times, stop extracting
         if(sigmaHat == preSigmaHat){
             if(count == 2){
+                skelx::postProcess(img);
                 return img;
             }else{
                 ++count;
@@ -246,5 +269,6 @@ Mat contract(Mat img, string filename){
             count = 0;
         }
     }
+    skelx::postProcess(img);
     return img;
 }
