@@ -87,11 +87,14 @@ namespace skelx{
 
     // pca process, after this, the sigma, principalVec, 
     // PCAneighbors, covMat and deltaX of xi would be set
-    void PCA(Mat &img, vector<skelx::Point> &pointset){
+    // only do PCA for the point whose sigma is less than the @param threshold
+    void PCA(Mat &img, vector<skelx::Point> &pointset, double threshold){
 
         // get and set covMat for each xi
         for(skelx::Point &xi: pointset){
-
+            if(xi.sigma > threshold){
+                continue;
+            }
             // get PCA neighbors which is in 3 * d3nn distance
             double dnn = 3 * 3 * xi.d3nn, // 9 times of d3nn
                     x = xi.pos[0],
@@ -138,6 +141,9 @@ namespace skelx{
 
         // get eigen value and eigen vectors, and set sigma, principalVec for each xi
         for(skelx::Point &xi: pointset){
+            if(xi.sigma > threshold){
+                continue;
+            }
             MatrixXd covMatEigen(2, 2);
             covMatEigen(0, 0) = xi.covMat[0][0];
             covMatEigen(0, 1) = xi.covMat[0][1];
@@ -164,6 +170,9 @@ namespace skelx{
     
         // set deltaX for each xi
         for(skelx::Point &xi: pointset){
+            if(xi.sigma > threshold){
+                continue;
+            }
             vector<double> deltaX{0.0, 0.0};
             double cosTheta;
             // compute cos<pV, ui>, namely cosTheta
@@ -193,7 +202,7 @@ Mat contract(Mat img, string filename){
 
     while(sigmaHat < 0.95){
         skelx::computeUi(img, pointset);
-        skelx::PCA(img, pointset);
+        skelx::PCA(img, pointset, 0.95);
 
         if(t % 10 == 0 && t != 0){
             visualize(img, pointset, t);

@@ -12,7 +12,7 @@ namespace skelx{
                         deltaX,
                         principalVec{0.0, 0.0};
 
-    double  sigma,
+    double  sigma = 0,
             d3nn, 
             lambda, // confidence
             deltaK;
