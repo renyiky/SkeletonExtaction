@@ -93,7 +93,10 @@ using namespace cv;
 //     return ret;
 // }
 
-void updateK(Mat &img, vector<skelx::Point> &pointset, int t){
+// update K every c iterations
+void updateK(Mat &img, vector<skelx::Point> &pointset, int t, int c){
+    if(t % c == 0){
+
     for(struct skelx::Point &p : pointset){
         double dnn = 3 * p.d3nn;
         int x = p.pos[0],
@@ -109,5 +112,6 @@ void updateK(Mat &img, vector<skelx::Point> &pointset, int t){
         // set the upper limit of K = 20
         p.k = 20 < 2 * neighborsCount.size() ? 20 : 2 * neighborsCount.size(); // static_cast<int>(dbb / (pow(num, 1/3) * p.d3nn));
         // cout<<p.k<<"  "<< 2 * neighborsCount.size()<<endl;
+    }
     }
 }

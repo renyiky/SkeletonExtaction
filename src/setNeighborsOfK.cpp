@@ -66,7 +66,7 @@ int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
     }
     if(neighbors.size() != 0){
         point.neighbors = neighbors;
-        regularize(point);  // set connected domain in each neighbor[2]
+        // regularize(point);  // set connected domain in each neighbor[2]
         return 1;
     }
     else{

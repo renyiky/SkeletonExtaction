@@ -14,12 +14,10 @@ namespace skelx{
 
     double  sigma = 0,
             d3nn, 
-            lambda, // confidence
-            deltaK;
+            lambda; // confidence
 
     std::vector<std::vector<double> > neighbors, PCAneighbors, covMat;
     };
-
 }
 
 #endif

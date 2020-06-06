@@ -67,8 +67,11 @@ namespace skelx{
 
     // set ui for each xi based on p.k,
     // neighbors and ui of xi would be set
-    void computeUi(Mat &img, vector<skelx::Point> &pointset){
+    void computeUi(Mat &img, vector<skelx::Point> &pointset, double threshold){
         for(skelx::Point &p : pointset){
+            if(p.sigma > threshold){
+                continue;
+            }
             // get k nearest neighbors
             vector<double> ui{0.0, 0.0};
 
@@ -76,8 +79,17 @@ namespace skelx{
                 std::cout<<"neighbors insufficient!"<<endl;
             }
             for(vector<double> nei: p.neighbors){
+                // if it's connected in the same domain with center point
+                // if(nei[2] == 0){
                 ui[0] += (nei[0] - p.pos[0]);
                 ui[1] += (nei[1] - p.pos[1]);
+                // }else{
+                //     // if not, decrease its influence to center point
+                //     double distance = pow((nei[0] - p.pos[0]) * (nei[0] - p.pos[0]) + (nei[1] - p.pos[1]) * (nei[1] - p.pos[1]), 0.5),
+                //             influenceRatio = exp(-(distance - 0.5) * (distance - 0.5) / 2);
+                //     ui[0] += ((nei[0] - p.pos[0]) * influenceRatio);
+                //     ui[1] += ((nei[1] - p.pos[1]) * influenceRatio);
+                // }
             }
             ui[0] = ui[0] / static_cast<double>(p.neighbors.size());
             ui[1] = ui[1] / static_cast<double>(p.neighbors.size());
@@ -201,12 +213,12 @@ Mat contract(Mat img, string filename){
     vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d3nn
 
     while(sigmaHat < 0.95){
-        skelx::computeUi(img, pointset);
+        skelx::computeUi(img, pointset, 0.95);
         skelx::PCA(img, pointset, 0.95);
 
-        if(t % 10 == 0 && t != 0){
-            visualize(img, pointset, t);
-        }
+        // if(t % 10 == 0 && t != 0){
+        //     visualize(img, pointset, t);
+        // }
 
         skelx::movePoint(pointset, 0.95);
         skelx::refreshPointset(img, pointset);
@@ -214,8 +226,8 @@ Mat contract(Mat img, string filename){
             sigmaHat += p.sigma;
         }
         sigmaHat /= pointset.size();
-        // cout<<"before updateK"<<endl;
-        updateK(img, pointset, t + 1);
+
+        updateK(img, pointset, t + 1, 1);
 
         imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
         std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
