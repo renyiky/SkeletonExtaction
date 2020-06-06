@@ -1,12 +1,18 @@
 #include <vector>
 #include <opencv2/core.hpp>
 #include <cmath>
+#include <algorithm>
+#include <iostream>
 
 #include "Point.hpp"
 #include "setNeighborsOfK.hpp"
 
 using namespace std;
 using namespace cv;
+
+int isNextTo(vector<double> nei, vector<double> point);
+vector<vector<vector<double> > > connectFunc(vector<vector<double> > curPointset,  vector<vector<double> > centerDomain,  vector<vector<double> > outerDomain);
+void regularize(skelx::Point &centerPoint);
 
 int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
     int radius = 0,
@@ -60,6 +66,7 @@ int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
     }
     if(neighbors.size() != 0){
         point.neighbors = neighbors;
+        regularize(point);  // set connected domain in each neighbor[2]
         return 1;
     }
     else{
@@ -67,30 +74,84 @@ int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
     }
 }
 
-int regularize(skelx::Point centerPoint){
-    double xi = centerPoint.pos[0], yi = centerPoint.pos[1];
-    vector<vector<double> > connectedDomain = {{xi, yi, 0}}; // neighborset inlucdes center point, and set the connected domain flag of center point as 0;
+void regularize(skelx::Point &centerPoint){
+    vector<vector<double> > centerDomain = {{centerPoint.pos[0], centerPoint.pos[1]}},
+                            outerDomain = {};
+            
+    vector<vector<vector<double> > > domains;
     vector<vector<double> > neighbors = centerPoint.neighbors;
 
-    unsigned int count = 0;
-    while (count < neighbors.size())
-    {
-        double xj = neighbors[count][0], yj = neighbors[count][1];
-        
-        
-        // for(int i = -1; i < 2; ++i){
-        //     for(int j = -1; j < 2; ++j){
-        //         if(!(i == 0 && j == 0) && xi + i == xj && yi + j == yj){
-
-        //         }
-        //     }
-        // }
+    int flag = 0;
+            
+    for(vector<double> nei : neighbors){
+        for(vector<double> point : centerDomain){
+            if(isNextTo(nei, point)){
+                flag = 1;
+                domains = connectFunc({nei}, centerDomain, outerDomain);
+                centerDomain = domains[0];
+                outerDomain = domains[1];
+                break;
+            }
+        }
+        if(flag == 0){
+            outerDomain.push_back(nei);
+        }else{
+            flag = 0;
+        }
     }
+
+    vector<vector<double> > regularizedNeighbors = {};
     
+    centerDomain.erase(centerDomain.begin());   // erase the first point which is the center point, not the neighbor
+    for(vector<double> i : centerDomain){
+        regularizedNeighbors.push_back({i[0], i[1], 0});
+    }
+    for(vector<double> i : outerDomain){
+        regularizedNeighbors.push_back({i[0], i[1], 1});
+    }
 
-                // if(!(i == 0 && j == 0) && xi + i == xj && yi + j == yj){
-                //     return 1;
-                // }
+    centerPoint.neighbors = regularizedNeighbors;
+}
 
-    return 0;
+vector<vector<vector<double> > > 
+connectFunc(vector<vector<double> > curPointset,  vector<vector<double> > centerDomain,  vector<vector<double> > outerDomain){
+    for(vector<double> i : curPointset){
+        centerDomain.push_back(i);
+        
+        vector<vector<double> >::iterator iter = find(outerDomain.begin(), outerDomain.end(), i);
+        if(iter != outerDomain.end()){
+            outerDomain.erase(iter);
+        }
+    }
+    if(!outerDomain.size()){
+        return {centerDomain, outerDomain};
+    }
+    // cout<<outerDomain[0][0]<<"  "<<outerDomain[0][1]<<endl;
+    vector<vector<double> > newSet = {};
+    for(vector<double> i : curPointset){
+        for(vector<double> j : outerDomain){
+            if(isNextTo(i , j) && (find(newSet.begin(), newSet.end(), j) == newSet.end())){
+                newSet.push_back(j);
+            }
+        }
+    }
+    if(!newSet.size()){
+        return {centerDomain, outerDomain};
+    }
+    return connectFunc(newSet, centerDomain, outerDomain);
+}
+
+int isNextTo(vector<double> nei, vector<double> point){
+    if((nei[0] + 1 == point[0] && nei[1] == point[1]) ||
+        (nei[0] - 1 == point[0] && nei[1] == point[1]) ||
+        (nei[0] == point[0] && nei[1] + 1 == point[1]) ||
+        (nei[0] == point[0] && nei[1] - 1 == point[1]) ||
+        (nei[0] + 1 == point[0] && nei[1] + 1 == point[1]) ||
+        (nei[0] + 1 == point[0] && nei[1] - 1 == point[1]) ||
+        (nei[0] - 1 == point[0] && nei[1] + 1 == point[1]) ||
+        (nei[0] - 1 == point[0] && nei[1] - 1 == point[1])){
+            return 1;
+    }else{
+        return 0;
+    }
 }
