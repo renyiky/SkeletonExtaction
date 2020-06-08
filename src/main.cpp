@@ -4,6 +4,7 @@
 #include <string>
 
 #include "contract.hpp"
+#include "preProcess.hpp"
 
 using namespace std;
 using namespace cv;
@@ -14,6 +15,7 @@ int main(int argc, char *argv[]){
     string filename = argv[1], inputPath = "dataset/";
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw");
+    img = preProcess(img);
     img = contract(img, filename);
     output(img, "final");
     return 0;
