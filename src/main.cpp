@@ -10,18 +10,34 @@ using namespace std;
 using namespace cv;
 
 void output(Mat &img, string name);
+void superpose(Mat img, string filename, string inputPath);
 
 int main(int argc, char *argv[]){
     string filename = argv[1], inputPath = "dataset/";
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw");
     img = preProcess(img);
+    output(img, "invert");
     img = contract(img, filename);
-    output(img, "final");
+    output(img, "final_" + filename);
+
+    // superpose(img, filename, "results/");
     return 0;
 }
 
 void output(Mat &img, string name){
     string outputPath = "results/";
     imwrite(outputPath + "0_" + name + ".png", img);
+}
+
+void superpose(Mat img, string filename, string inputPath){
+    Mat src = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
+    for(int i = 0; i < img.rows; ++i){
+        for(int j = 0; j < img.cols; ++j){
+            if(img.at<uchar>(i, j) != 0){
+                src.at<uchar>(i, j) = 255;
+            }
+        }
+    }
+    output(src, "0_superposed_" + filename);
 }

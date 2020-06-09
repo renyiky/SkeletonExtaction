@@ -3,6 +3,6 @@
 
 #include <opencv2/core.hpp>
 
-cv::Mat preProcess(cv::Mat &img);
+cv::Mat preProcess(cv::Mat img);
 
 #endif

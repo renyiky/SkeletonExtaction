@@ -150,7 +150,7 @@ namespace skelx{
             }
             xi.covMat = covMat;
         }
-
+        
         // get eigen value and eigen vectors, and set sigma, principalVec for each xi
         for(skelx::Point &xi: pointset){
             if(xi.sigma > threshold){
