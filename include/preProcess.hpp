@@ -3,6 +3,7 @@
 
 #include <opencv2/core.hpp>
 
-cv::Mat preProcess(cv::Mat img);
+cv::Mat invert(cv::Mat img);
+cv::Mat fullfill(cv::Mat img);
 
 #endif

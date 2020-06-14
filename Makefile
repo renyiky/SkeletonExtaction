@@ -1,10 +1,11 @@
-VPATH := include:src
+VPATH := include:src:src/comparisonAlgs
 ROOT := $(shell pwd)
 INC_DIR := $(ROOT)/include
 SRC_DIR := $(ROOT)/src
+COMP_DIR := $(SRC_DIR)/comparisonAlgs
 OBJ_DIR := $(SRC_DIR)/obj
 
-SRC_CODE := $(notdir $(wildcard $(SRC_DIR)/*.cpp))
+SRC_CODE := $(notdir $(wildcard $(SRC_DIR)/*.cpp)) $(notdir $(wildcard $(COMP_DIR)/*.cpp))
 OBJ := $(SRC_CODE:%.cpp=%.o)
 
 CXX := clang++
@@ -22,7 +23,7 @@ makeOBJDIR:
 	@echo Compiling $(notdir $<)...
 	@$(CXX) -c $< -o $(OBJ_DIR)/$@ $(CXXFLAGS) 
 
-.PHONY: clean cleanall cleanres do
+.PHONY: clean cleanall cleanres do cleanobj
 
 cleanall: clean cleanres
 

@@ -2,9 +2,11 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <string>
+#include <unistd.h>
 
 #include "contract.hpp"
 #include "preProcess.hpp"
+#include "ZSalg.hpp"
 
 using namespace std;
 using namespace cv;
@@ -16,9 +18,16 @@ int main(int argc, char *argv[]){
     string filename = argv[1], inputPath = "dataset/";
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw");
-    img = preProcess(img);
-    output(img, "invert");
-    img = contract(img, filename);
+
+    // img = invert(img);
+    // output(img, "invert");
+
+    // img = fullfill(img);
+    // output(img, "fullfill_" + filename);
+
+    // img = ZSalg(img);
+
+    // img = contract(img, filename);
     output(img, "final_" + filename);
 
     // superpose(img, filename, "results/");
@@ -28,16 +37,4 @@ int main(int argc, char *argv[]){
 void output(Mat &img, string name){
     string outputPath = "results/";
     imwrite(outputPath + "0_" + name + ".png", img);
-}
-
-void superpose(Mat img, string filename, string inputPath){
-    Mat src = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
-    for(int i = 0; i < img.rows; ++i){
-        for(int j = 0; j < img.cols; ++j){
-            if(img.at<uchar>(i, j) != 0){
-                src.at<uchar>(i, j) = 255;
-            }
-        }
-    }
-    output(src, "0_superposed_" + filename);
 }
