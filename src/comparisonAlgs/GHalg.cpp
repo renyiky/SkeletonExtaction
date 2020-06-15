@@ -135,7 +135,7 @@ int isA2Satisfied(Mat &img, vector<int> pos){
             p5 = {x + 1, y + 1},
             p6 = {x + 1, y},
             p7 = {x + 1, y - 1},
-            p8 = {x, y -1};
+            p8 = {x, y - 1};
     vector<vector<int> > neighbors = {p1, p2, p3, p4, p5, p6, p7, p8};
     vector<int> neighborsValue = {};
     
