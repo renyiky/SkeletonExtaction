@@ -328,7 +328,7 @@ int stepFour(Mat &img, vector<int> pos){
      neighborsValue[4] == 0 && neighborsValue[5] == 0 &&
      neighborsValue[6] == 0 && neighborsValue[7] == 0 &&
      neighborsValue[8] == 1 && neighborsValue[9] == 1 &&
-     neighborsValue[10] == 0 &&){
+     neighborsValue[10] == 0){
          return 0;  // stop calculations for this pixel
     }
 
