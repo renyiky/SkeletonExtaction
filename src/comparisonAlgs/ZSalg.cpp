@@ -1,6 +1,5 @@
 #include <opencv2/core.hpp>
 #include <vector>
-#include <iostream>
 
 #include "ZSalg.hpp"
 
@@ -24,9 +23,7 @@ Mat ZSalg(Mat img){
         C1 = 0;
         C2 = 0;
         img = subIterationOne(img);
-        cout<<"C1 = "<<C1<<endl;
         img = subIterationTwo(img);
-        cout<<"C2 = "<<C2<<"\n"<<endl;
     }while(C1 != 0 || C2 != 0);
     return img;
 }
