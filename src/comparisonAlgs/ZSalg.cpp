@@ -119,7 +119,7 @@ int isSatisfiedIterTwo(Mat &img, const vector<int> &pos){
                 p6 = {x + 1, y},
                 p7 = {x + 1, y - 1},
                 p8 = {x, y - 1},
-                p9 = {x - 1, y -1};
+                p9 = {x - 1, y - 1};
     vector<vector<int> > neighbors = {p2, p3, p4, p5, p6, p7, p8, p9};
     
     // condition a

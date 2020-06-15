@@ -60,7 +60,7 @@ Mat AWalg(Mat img){
 int isRuleSatisfied(Mat &img, vector<int> pos){
     int x = pos[0],
         y = pos[1];
-    vector<int> p1 = {x - 1, y -1},
+    vector<int> p1 = {x - 1, y - 1},
                 p2 = {x - 1, y},
                 p3 = {x - 1, y + 1},
                 p4 = {x, y + 1},

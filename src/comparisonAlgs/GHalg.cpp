@@ -70,14 +70,14 @@ Mat GHalg(Mat img){
 int isA1Satisfied(Mat &img, vector<int> pos, int iter){
     int x = pos[0],
         y = pos[1];
-    vector<int> p1 = {x - 1, y -1},
+    vector<int> p1 = {x - 1, y - 1},
                 p2 = {x - 1, y},
                 p3 = {x - 1, y + 1},
                 p4 = {x, y + 1},
                 p5 = {x + 1, y + 1},
                 p6 = {x + 1, y},
                 p7 = {x + 1, y - 1},
-                p8 = {x, y -1};
+                p8 = {x, y - 1};
     vector<vector<int> > neighbors = {p1, p2, p3, p4, p5, p6, p7, p8};
     vector<int> neighborsValue = {};
     
@@ -128,7 +128,7 @@ int isA1Satisfied(Mat &img, vector<int> pos, int iter){
 int isA2Satisfied(Mat &img, vector<int> pos){
     int x = pos[0],
         y = pos[1];
-    vector<int> p1 = {x - 1, y -1},
+    vector<int> p1 = {x - 1, y - 1},
                 p2 = {x - 1, y},
                 p3 = {x - 1, y + 1},
                 p4 = {x, y + 1},
