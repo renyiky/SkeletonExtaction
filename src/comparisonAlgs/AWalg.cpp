@@ -1,6 +1,7 @@
 #include <opencv2/core.hpp>
 #include <vector>
 
+
 using namespace std;
 using namespace cv;
 
@@ -120,19 +121,19 @@ int isConditionOneSatisfied(Mat &img, vector<int> pos){
         }
 
     // horizontal case
-    vector<int> pz = {x, y - 1},
-                p1 = {x - 1, y - 2},
-                p2 = {x - 1, y - 1},
-                p3 = {x - 1, y},
-                p4 = {x - 1, y + 1},
-                p5 = {x, y + 1},
-                p6 = {x + 1, y + 1},
-                p7 = {x + 1, y},
-                p8 = {x + 1, y - 1},
-                p9 = {x + 1, y - 2},
-                p10 = {x, y - 2};
-    vector<vector<int> > neighbors = {pz, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
-    vector<int> neighborsValue = createNeighborsValue(img, neighbors);
+    pz = {x, y - 1},
+    p1 = {x - 1, y - 2},
+    p2 = {x - 1, y - 1},
+    p3 = {x - 1, y},
+    p4 = {x - 1, y + 1},
+    p5 = {x, y + 1},
+    p6 = {x + 1, y + 1},
+    p7 = {x + 1, y},
+    p8 = {x + 1, y - 1},
+    p9 = {x + 1, y - 2},
+    p10 = {x, y - 2};
+    neighbors = {pz, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
+    neighborsValue = createNeighborsValue(img, neighbors);
 
     if(neighborsValue[0] == 1 && neighborsValue[2] == 1 &&
         neighborsValue[3] == 1 && neighborsValue[5] == 0 &&
@@ -159,32 +160,32 @@ int stepOne(Mat &img, vector<int> pos){
         return 1;   // means vertical and w is above
     }
 
-    vector<int> p1 = {x - 2, y},
-                pz = {x - 1, y},    // when w is below
-                p2 = {x + 1, y};
-    vector<vector<int> > neighbors = {p1, pz, p2};
-    vector<int> neighborsValue = createNeighborsValue(img, neighbors);
+    p1 = {x - 2, y},
+    pz = {x - 1, y},    // when w is below
+    p2 = {x + 1, y};
+    neighbors = {p1, pz, p2};
+    neighborsValue = createNeighborsValue(img, neighbors);
     
     if(neighborsValue[0] == 0 && neighborsValue[1] == 1 && neighborsValue [2] == 0){
         return 2;   // means vertical and w is below
     }
 
     // horizontal case
-    vector<int> p1 = {x, y - 1},
-                pz = {x, y + 1},    // when w is on left side
-                p2 = {x, y + 2};
-    vector<vector<int> > neighbors = {p1, pz, p2};
-    vector<int> neighborsValue = createNeighborsValue(img, neighbors);
+    p1 = {x, y - 1},
+    pz = {x, y + 1},    // when w is on left side
+    p2 = {x, y + 2};
+    neighbors = {p1, pz, p2};
+    neighborsValue = createNeighborsValue(img, neighbors);
     
     if(neighborsValue[0] == 0 && neighborsValue[1] == 1 && neighborsValue[2] == 0){
         return 3;   // means horizontal and w is on left side
     }
 
-    vector<int> p1 = {x, y - 2},
-                pz = {x, y - 1},    // when w is on right side
-                p2 = {x, y + 1};
-    vector<vector<int> > neighbors = {p1, pz, p2};
-    vector<int> neighborsValue = createNeighborsValue(img, neighbors);
+    p1 = {x, y - 2},
+    pz = {x, y - 1},    // when w is on right side
+    p2 = {x, y + 1};
+    neighbors = {p1, pz, p2};
+    neighborsValue = createNeighborsValue(img, neighbors);
 
     if(neighborsValue[0] == 0 && neighborsValue[1] == 1 && neighborsValue[2] == 0){
         return 4;   // means horizontal and w is on right side
@@ -193,17 +194,6 @@ int stepOne(Mat &img, vector<int> pos){
     return 0;   // means this pixel doesn't belong to two pixels wide in the vertical or horizontal direction
 }
 
-vector<int> createNeighborsValue(Mat &img, const vector<vector<int> > &neighbors){
-    vector<int> neighborsValue = {};
-    for(vector<int> i : neighbors){
-        if(i[0] >= 0 && i[0] < img.rows && i[1] >= 0 && i[1] < img.cols){
-            neighborsValue.push_back(img.at<uchar>(i[0], i[1]) == 0 ? 0 : 1);
-        }else{
-            neighborsValue.push_back(0);
-        }
-    }
-    return neighborsValue;
-}
 
 // actual step 2 of the whole iteration
 int stepTwo(Mat &img, vector<int> pos){
@@ -231,19 +221,19 @@ int stepTwo(Mat &img, vector<int> pos){
             return 0;   // stop calculations for this pixel
         }
     
-    vector<int> pz = {x - 1, y},
-                p1 = {x - 2, y - 1},
-                p2 = {x - 2, y},
-                p3 = {x - 2, y + 1},
-                p4 = {x - 1, y + 1},
-                p5 = {x, y + 1},
-                p6 = {x + 1, y + 1},
-                p7 = {x + 1, y},
-                p8 = {x + 1, y - 1},
-                p9 = {x, y - 1},
-                p10 = {x - 1, y - 1};
-    vector<vector<int> > neighbors = {pz, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
-    vector<int> neighborsValue = createNeighborsValue(img, neighbors);
+    pz = {x - 1, y},
+    p1 = {x - 2, y - 1},
+    p2 = {x - 2, y},
+    p3 = {x - 2, y + 1},
+    p4 = {x - 1, y + 1},
+    p5 = {x, y + 1},
+    p6 = {x + 1, y + 1},
+    p7 = {x + 1, y},
+    p8 = {x + 1, y - 1},
+    p9 = {x, y - 1},
+    p10 = {x - 1, y - 1};
+    neighbors = {pz, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
+    neighborsValue = createNeighborsValue(img, neighbors);
 
     if(neighborsValue[0] == 1 && neighborsValue[2] == 0 && 
         neighborsValue[4] == 1 && neighborsValue[5] == 1 &&
@@ -281,19 +271,19 @@ int stepThree(Mat &img, vector<int> pos){
             return 0;   // stop calculations for this pixel
         }
 
-    vector<int> pz = {x, y - 1},
-                p1 = {x - 1, y - 2},
-                p2 = {x - 1, y - 1},
-                p3 = {x - 1, y},
-                p4 = {x - 1, y + 1},
-                p5 = {x, y + 1},
-                p6 = {x + 1, y + 1},
-                p7 = {x + 1, y},
-                p8 = {x + 1, y - 1},
-                p9 = {x + 1, y - 2},
-                p10 = {x, y - 2};
-    vector<vector<int> > neighbors = {pz, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
-    vector<int> neighborsValue = createNeighborsValue(img, neighbors);
+    pz = {x, y - 1},
+    p1 = {x - 1, y - 2},
+    p2 = {x - 1, y - 1},
+    p3 = {x - 1, y},
+    p4 = {x - 1, y + 1},
+    p5 = {x, y + 1},
+    p6 = {x + 1, y + 1},
+    p7 = {x + 1, y},
+    p8 = {x + 1, y - 1},
+    p9 = {x + 1, y - 2},
+    p10 = {x, y - 2};
+    neighbors = {pz, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
+    neighborsValue = createNeighborsValue(img, neighbors);
 
     if(neighborsValue[0] == 1 && neighborsValue[2] == 1 &&
         neighborsValue[3] == 1 && neighborsValue[5] == 0 &&
@@ -321,30 +311,33 @@ int stepFour(Mat &img, vector<int> pos){
                 p8 = {x + 2, y - 1},
                 p9 = {x + 1, y - 1},
                 p10 = {x, y - 1};
-     vector<vector<int> > neighbors = {pz, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
-     vector<int> neighborsValue = createNeighborsValue(img, neighbors);
-     if(neighborsValue[0] == 1 && neighborsValue[1] == 0 &&
-     neighborsValue[2] == 0 && neighborsValue[3] == 0 &&
-     neighborsValue[4] == 0 && neighborsValue[5] == 0 &&
-     neighborsValue[6] == 0 && neighborsValue[7] == 0 &&
-     neighborsValue[8] == 1 && neighborsValue[9] == 1 &&
-     neighborsValue[10] == 0){
-         return 0;  // stop calculations for this pixel
+    vector<vector<int> > neighbors = {pz, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
+    vector<int> neighborsValue = createNeighborsValue(img, neighbors);
+    if((neighborsValue[0] == 1 && neighborsValue[1] == 0 &&
+        neighborsValue[2] == 0 && neighborsValue[3] == 0 &&
+        neighborsValue[4] == 0 && neighborsValue[5] == 0 &&
+        neighborsValue[6] == 0 && neighborsValue[7] == 0 &&
+        neighborsValue[8] == 1 && neighborsValue[9] == 1 &&
+        neighborsValue[10] == 0) || 
+        (neighborsValue[0] == 1 && neighborsValue[1] == 0 &&
+        neighborsValue[2] == 0 && neighborsValue[3] == 0 &&
+        neighborsValue[4] == 0 && neighborsValue[5] == 1 &&
+        neighborsValue[6] == 1 && neighborsValue[7] == 0 &&
+        neighborsValue[7] == 0 && neighborsValue[8] == 0 &&
+        neighborsValue[9] == 0 && neighborsValue[10] == 0)){
+        return 0;  // two conditions which shall stop calculations for this pixel
     }
+        
+}
 
-    vector<int> pz = {x + 1, y},
-                p1 = {x - 1, y - 1},
-                p2 = {x - 1, y},
-                p3 = {x - 1, y + 1},
-                p4 = {x , y + 1},
-                p5 = {x + 1, y + 1},
-                p6 = {x + 2, y + 1},
-                p7 = {x + 2, y},
-                p8 = {x + 2, y - 1},
-                p9 = {x + 1, y - 1},
-                p10 = {x, y - 1};
-     vector<vector<int> > neighbors = {pz, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
-     vector<int> neighborsValue = createNeighborsValue(img, neighbors);
-
-
+vector<int> createNeighborsValue(Mat &img, const vector<vector<int> > &neighbors){
+    vector<int> neighborsValue = {};
+    for(vector<int> i : neighbors){
+        if(i[0] >= 0 && i[0] < img.rows && i[1] >= 0 && i[1] < img.cols){
+            neighborsValue.push_back(img.at<uchar>(i[0], i[1]) == 0 ? 0 : 1);
+        }else{
+            neighborsValue.push_back(0);
+        }
+    }
+    return neighborsValue;
 }
