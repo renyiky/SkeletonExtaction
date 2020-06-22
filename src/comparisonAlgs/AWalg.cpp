@@ -323,11 +323,41 @@ int stepFour(Mat &img, vector<int> pos){
         neighborsValue[2] == 0 && neighborsValue[3] == 0 &&
         neighborsValue[4] == 0 && neighborsValue[5] == 1 &&
         neighborsValue[6] == 1 && neighborsValue[7] == 0 &&
-        neighborsValue[7] == 0 && neighborsValue[8] == 0 &&
-        neighborsValue[9] == 0 && neighborsValue[10] == 0)){
-        return 0;  // two conditions which shall stop calculations for this pixel
+        neighborsValue[8] == 0 && neighborsValue[9] == 0 &&
+        neighborsValue[10] == 0)){
+        return 0;  // first two conditions which shall stop calculations for this pixel
     }
-        
+    
+    pz = {x - 1, y},
+    p1 = {x - 2, y - 1},
+    p2 = {x - 2, y},
+    p3 = {x - 2, y + 1},
+    p4 = {x - 1, y + 1},
+    p5 = {x, y + 1},
+    p6 = {x + 1, y + 1},
+    p7 = {x + 1, y},
+    p8 = {x + 1, y - 1},
+    p9 = {x, y - 1},
+    p10 = {x - 1, y - 1};
+    neighbors = {pz, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
+    neighborsValue = createNeighborsValue(img, neighbors);
+
+    if((neighborsValue[0] == 1 && neighborsValue[1] == 1 &&
+        neighborsValue[2] == 0 && neighborsValue[3] == 0 &&
+        neighborsValue[4] == 0 && neighborsValue[5] == 0 &&
+        neighborsValue[6] == 0 && neighborsValue[7] == 0 &&
+        neighborsValue[8] == 0 && neighborsValue[9] == 0 &&
+        neighborsValue[10] == 1) || 
+        (neighborsValue[0] == 1 && neighborsValue[1] == 0 &&
+        neighborsValue[2] == 0 && neighborsValue[3] == 1 &&
+        neighborsValue[4] == 1 && neighborsValue[5] == 0 &&
+        neighborsValue[6] == 0 && neighborsValue[7] == 0 &&
+        neighborsValue[8] == 0 && neighborsValue[9] == 0 &&
+        neighborsValue[10] == 0)){
+            return 0;   // second two conditions that shall stop calculations
+    }else{
+        return 1;   // go to step 6
+    }
 }
 
 vector<int> createNeighborsValue(Mat &img, const vector<vector<int> > &neighbors){
