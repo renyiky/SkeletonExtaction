@@ -21,8 +21,8 @@ int main(int argc, char *argv[]){
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw");
 
-    // img = invert(img);
-    // output(img, "invert");
+    img = invert(img);
+    output(img, "invert");
 
     // img = fullfill(img);
     // output(img, "fullfill_" + filename);
@@ -30,8 +30,10 @@ int main(int argc, char *argv[]){
     // img = ZSalg(img);
 
     // img = GHalg(img);
-    // img = AWalg(img);
-    img = contract(img, filename);
+    
+    img = AWalg(img);
+
+    // img = contract(img, filename);
     output(img, "final_" + filename);
 
     // superpose(img, filename, "results/");
