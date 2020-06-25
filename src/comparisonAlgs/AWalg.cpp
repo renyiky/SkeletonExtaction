@@ -7,6 +7,12 @@ using namespace cv;
 
 int isRuleSatisfied(Mat &img, vector<int> pos);
 vector<int> createNeighborsValue(Mat &img, const vector<vector<int> > &neighbors);
+int stepOne(Mat &img, vector<int> pos);
+int stepTwo(Mat &img, vector<int> pos);
+int stepThree(Mat &img, vector<int> pos);
+int stepFour(Mat &img, vector<int> pos);
+int stepFive(Mat &img, vector<int> pos);
+int stepSix(Mat &img, vector<int> pos);
 
 // here below are templates, namely rules
 vector<int> rule1 = {1, 2, 0, 0, 2, 1, 1, 1},
@@ -358,6 +364,74 @@ int stepFour(Mat &img, vector<int> pos){
     }else{
         return 1;   // go to step 6
     }
+}
+
+int stepFive(Mat &img, vector<int> pos){
+    int x = pos[0],
+        y = pos[1];
+    
+    vector<int> pz = {x, y + 1},
+                p1 = {x - 1, y - 1},
+                p2 = {x - 1, y},
+                p3 = {x - 1, y + 1},
+                p4 = {x - 1, y + 2},
+                p5 = {x, y + 2},
+                p6 = {x + 1, y + 2},
+                p7 = {x + 1, y + 1},
+                p8 = {x + 1, y},
+                p9 = {x + 1, y - 1},
+                p10 = {x, y - 1};
+    vector<vector<int> > neighbors = {pz, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
+    vector<int> neighborsValue = createNeighborsValue(img, neighbors);
+    if((neighborsValue[0] == 1 && neighborsValue[1] == 0 &&
+        neighborsValue[2] == 0 && neighborsValue[3] == 0 &&
+        neighborsValue[4] == 0 && neighborsValue[5] == 0 &&
+        neighborsValue[6] == 1 && neighborsValue[7] == 1 &&
+        neighborsValue[8] == 0 && neighborsValue[9] == 0 &&
+        neighborsValue[10] == 0) || 
+        (neighborsValue[0] == 1 && neighborsValue[1] == 0 &&
+        neighborsValue[2] == 0 && neighborsValue[3] == 1 &&
+        neighborsValue[4] == 1 && neighborsValue[5] == 0 &&
+        neighborsValue[6] == 0 && neighborsValue[7] == 0 &&
+        neighborsValue[8] == 0 && neighborsValue[9] == 0 &&
+        neighborsValue[10] == 0)){
+            return 0;   // first two conditions that shall stop calculations
+        }
+    
+    pz = {x, y - 1},
+    p1 = {x - 1, y - 2},
+    p2 = {x - 1, y - 1},
+    p3 = {x - 1, y},
+    p4 = {x - 1, y + 1},
+    p5 = {x, y + 1},
+    p6 = {x + 1, y + 1},
+    p7 = {x + 1, y},
+    p8 = {x + 1, y - 1},
+    p9 = {x + 1, y - 2},
+    p10 = {x, y - 2};
+    neighbors = {pz, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
+    neighborsValue = createNeighborsValue(img, neighbors);
+
+    if((neighborsValue[0] == 1 && neighborsValue[1] == 0 &&
+        neighborsValue[2] == 0 && neighborsValue[3] == 0 &&
+        neighborsValue[4] == 0 && neighborsValue[5] == 0 &&
+        neighborsValue[6] == 0 && neighborsValue[7] == 0 &&
+        neighborsValue[8] == 1 && neighborsValue[9] == 1 &&
+        neighborsValue[10] == 0) ||
+        (neighborsValue[0] == 1 && neighborsValue[1] == 1 &&
+        neighborsValue[2] == 1 && neighborsValue[3] == 0 &&
+        neighborsValue[4] == 0 && neighborsValue[5] == 0 &&
+        neighborsValue[6] == 0 && neighborsValue[7] == 0 &&
+        neighborsValue[8] == 0 && neighborsValue[9] == 0 &&
+        neighborsValue[10] == 0)){
+            return 0;   // second condistions that shall stop calculations
+        }else{
+            return 1;   // go to step 6
+        }
+}
+
+int stepSix(Mat &img, vector<int> pos){
+    return isRuleSatisfied(img, pos);
 }
 
 vector<int> createNeighborsValue(Mat &img, const vector<vector<int> > &neighbors){
