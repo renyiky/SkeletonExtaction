@@ -9,6 +9,7 @@
 #include "ZSalg.hpp"
 #include "GHalg.hpp"
 #include "AWalg.hpp"
+#include "HybridAlg.hpp"
 
 using namespace std;
 using namespace cv;
@@ -31,7 +32,9 @@ int main(int argc, char *argv[]){
 
     // img = GHalg(img);
     
-    img = AWalg(img);
+    // img = AWalg(img);
+
+    img = HybridAlg(img);
 
     // img = contract(img, filename);
     output(img, "final_" + filename);
