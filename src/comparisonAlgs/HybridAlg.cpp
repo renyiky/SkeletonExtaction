@@ -128,13 +128,13 @@ int checkBpOfPstar(Mat &img, vector<int> pos){
         y = pos[1];
 
     vector<int> p2 = {x - 1, y},
-                        p3 = {x - 1, y + 1},
-                        p4 = {x, y + 1},
-                        p5 = {x + 1, y + 1},
-                        p6 = {x + 1, y},
-                        p7 = {x + 1, y - 1},
-                        p8 = {x, y - 1},
-                        p9 = {x - 1, y - 1};
+                p3 = {x - 1, y + 1},
+                p4 = {x, y + 1},
+                p5 = {x + 1, y + 1},
+                p6 = {x + 1, y},
+                p7 = {x + 1, y - 1},
+                p8 = {x, y - 1},
+                p9 = {x - 1, y - 1};
     vector<vector<int> > neighbors = {p2, p3, p4, p5, p6, p7, p8, p9};
     vector<int> neighborsValue = createNeighborsValueHybridVer(img, neighbors);
     int Bp = 0;
