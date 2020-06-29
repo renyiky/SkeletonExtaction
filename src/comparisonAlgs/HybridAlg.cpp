@@ -23,28 +23,23 @@ Mat HybridAlg(Mat img){
         for(int i = 0; i < img.rows; ++i){
             for(int j = 0; j < img.cols; ++j){
                 if(img.at<uchar>(i, j) != 0){
+                    // when (i + j) % 2 == 0
                     if((i + j) % 2 == 0 && subIterationOne(img, {i, j})){
                         ret.at<uchar>(i, j) = 0;
                         ++count;
-                    // }else if((i + j) % 2 != 0 && subIterationTwo(img, {i, j})){
-                    //     ret.at<uchar>(i, j) = 0;
-                    //     ++count;
-                    }else{};    // pass
+                    }
                 }
             }
         }
         img = ret.clone();
-
         for(int i = 0; i < img.rows; ++i){
             for(int j = 0; j < img.cols; ++j){
                 if(img.at<uchar>(i, j) != 0){
+                    // when (i + j) % 2 != 0
                     if((i + j) % 2 != 0 && subIterationTwo(img, {i, j})){
                         ret.at<uchar>(i, j) = 0;
                         ++count;
-                    // }else if((i + j) % 2 != 0 && subIterationTwo(img, {i, j})){
-                    //     ret.at<uchar>(i, j) = 0;
-                    //     ++count;
-                    }else{};    // pass
+                    }
                 }
             }
         }
