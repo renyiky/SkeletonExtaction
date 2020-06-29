@@ -28,15 +28,19 @@ int main(int argc, char *argv[]){
     img = fullfill(img);
     output(img, "fullfill_" + filename);
 
-    // img = ZSalg(img);
+    Mat imgZS = ZSalg(img);
+    output(imgZS, "final_ZS_" + filename);
 
-    // img = GHalg(img);
-    
-    // img = AWalg(img);
+    Mat imgGH = GHalg(img);
+    output(imgGH, "final_GH_" + filename);
 
-    img = HybridAlg(img);
+    Mat imgAW = AWalg(img);
+    output(imgAW, "final_AW_" + filename);
 
-    // img = contract(img, filename);
+    Mat imgHybrid = HybridAlg(img);
+    output(imgHybrid, "final_Hybrid_" + filename);
+
+    img = contract(img, filename);
     output(img, "final_" + filename);
 
     // superpose(img, filename, "results/");

@@ -136,8 +136,8 @@ Mat AWalg(Mat img){
         }
         img = ret.clone();
     
-    cv::imwrite("results/" +  to_string(picCount) + "_test.png", img);
-    ++picCount;
+    // cv::imwrite("results/" +  to_string(picCount) + "_test.png", img);
+    // ++picCount;
     }
     return ret;
 }

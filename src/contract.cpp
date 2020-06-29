@@ -251,7 +251,7 @@ Mat contract(Mat img, string filename){
 
         updateK(img, pointset, t + 1, 1);
 
-        imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
+        // imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
         std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
         ++t;
 

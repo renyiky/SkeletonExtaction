@@ -3,6 +3,6 @@
 
 #include <opencv2/core.hpp>
 
-cv::Mat HybridAlg(cv::Mat);
+cv::Mat HybridAlg(cv::Mat img);
 
 #endif
