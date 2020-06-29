@@ -136,8 +136,8 @@ Mat AWalg(Mat img){
         }
         img = ret.clone();
     
-    // cv::imwrite("results/" +  to_string(picCount) + "_test.png", img);
-    // ++picCount;
+    cv::imwrite("results/" +  to_string(picCount) + "_test.png", img);
+    ++picCount;
     }
     return ret;
 }
@@ -162,7 +162,7 @@ int isRuleSatisfied(Mat &img, vector<int> pos){
     // check if neighborsValue meets one of the rules
     for(vector<int> rule : rules){
         int count = 0;
-        for(int i = 0; i < rules.size(); ++i){
+        for(int i = 0; i < rule.size(); ++i){
             if(rule[i] == 2){
                 ++count;
             }else if(rule[i] == neighborsValue[i]){
