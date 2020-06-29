@@ -1,5 +1,7 @@
 #include <opencv2/core.hpp>
 #include <vector>
+#include <iostream>
+#include <opencv2/highgui.hpp>
 
 #include "HybridAlg.hpp"
 
@@ -12,7 +14,8 @@ int subIterationOne(Mat &img, vector<int> pos);
 int subIterationTwo(Mat &img, vector<int> pos);
 
 Mat HybridAlg(Mat img){
-    int count = 1;
+    int count = 1,
+        c = 0;
     Mat ret = img.clone();
 
     while(count != 0){
@@ -22,13 +25,32 @@ Mat HybridAlg(Mat img){
                 if(img.at<uchar>(i, j) != 0){
                     if((i + j) % 2 == 0 && subIterationOne(img, {i, j})){
                         ret.at<uchar>(i, j) = 0;
-                    }else if((i + j) % 2 != 0 && subIterationTwo(img, {i, j})){
-                        ret.at<uchar>(i, j) = 0;
+                        ++count;
+                    // }else if((i + j) % 2 != 0 && subIterationTwo(img, {i, j})){
+                    //     ret.at<uchar>(i, j) = 0;
+                    //     ++count;
                     }else{};    // pass
                 }
             }
         }
         img = ret.clone();
+
+        for(int i = 0; i < img.rows; ++i){
+            for(int j = 0; j < img.cols; ++j){
+                if(img.at<uchar>(i, j) != 0){
+                    if((i + j) % 2 != 0 && subIterationTwo(img, {i, j})){
+                        ret.at<uchar>(i, j) = 0;
+                        ++count;
+                    // }else if((i + j) % 2 != 0 && subIterationTwo(img, {i, j})){
+                    //     ret.at<uchar>(i, j) = 0;
+                    //     ++count;
+                    }else{};    // pass
+                }
+            }
+        }
+        img = ret.clone();
+        // ++c;
+        // imwrite("results/" + to_string(c) + ".png", img);
     }
     return ret;
 }
@@ -68,6 +90,7 @@ int subIterationOne(Mat &img, vector<int> pos){
         }
 }
 
+// used for (i + j) % 2 != 0
 int subIterationTwo(Mat &img, vector<int> pos){
     int x = pos[0],
         y = pos[1];
@@ -88,9 +111,10 @@ int subIterationTwo(Mat &img, vector<int> pos){
                 static_cast<int>(!neighborsValue[4] && (neighborsValue[5] || neighborsValue[6])) +
                 static_cast<int>(!neighborsValue[6] && (neighborsValue[7] || neighborsValue[0])),
         Bp = 0;
-        for(int i : neighborsValue){
-            Bp += i;
-        }
+
+    for(int i : neighborsValue){
+        Bp += i;
+    }
 
     if(Bp == 1 && 
         ((neighborsValue[1] == 1 && checkBpOfPstar(img, {x - 1, y + 1})) || 
@@ -103,7 +127,7 @@ int subIterationTwo(Mat &img, vector<int> pos){
     if(Cp == 1 &&
         Bp >= 1 && Bp <= 7 &&
         neighborsValue[0] * neighborsValue[2] * neighborsValue[6] == 0 &&
-        neighborsValue[0] * neighborsValue[4] * neighborsValue[8]){
+        neighborsValue[0] * neighborsValue[4] * neighborsValue[6] == 0){
             return 1;
         }else{
             return 0;

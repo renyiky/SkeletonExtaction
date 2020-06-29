@@ -22,11 +22,11 @@ int main(int argc, char *argv[]){
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw");
 
-    img = invert(img);
-    output(img, "invert");
+    // img = invert(img);
+    // output(img, "invert");
 
-    // img = fullfill(img);
-    // output(img, "fullfill_" + filename);
+    img = fullfill(img);
+    output(img, "fullfill_" + filename);
 
     // img = ZSalg(img);
 
