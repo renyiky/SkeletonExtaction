@@ -94,6 +94,22 @@ namespace skelx{
             ui[0] = ui[0] / static_cast<double>(p.neighbors.size());
             ui[1] = ui[1] / static_cast<double>(p.neighbors.size());
             p.ui = {ui[0], ui[1]};
+
+            // compute the angle of current cluster of pixels, namely alpha, represented by its cosAlpha
+            double minCosAlpha = 2.0;
+            for(vector<double> neighbor : p.neighbors){
+                vector<double> tempVec = {neighbor[0] - p.pos[0], neighbor[1] - p.pos[1]};
+                // calculate the angle by the method of arccosTheta,
+                // so calculate the inner product firstly
+                double innerProduct = tempVec[0] * p.ui[0] + tempVec[1] * p.ui[1],
+                        cosAlpha = innerProduct / (pow(tempVec[0] * tempVec[0] + tempVec[1] * tempVec[1], 0.5) * pow(p.ui[0] * p.ui[0] + p.ui[1] * p.ui[1], 0.5));
+                minCosAlpha = minCosAlpha < cosAlpha ? minCosAlpha : cosAlpha;
+            }
+            p.cosAlpha = minCosAlpha;
+            cout<<p.pos[0]<<"  "<<p.pos[1]<<"  "<<p.cosAlpha<<endl;
+            if(isnan(p.cosAlpha)){
+                cout<<"ui: "<<p.ui[0]<<"  "<<p.ui[1]<<endl;
+            }
         }
     }
 
@@ -198,9 +214,9 @@ namespace skelx{
             }
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
-            deltaX[0] = xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0];
-            deltaX[1] = xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1];
-
+            deltaX[0] = (xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2.0) * (xi.ui[0]) < 0 ? xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] : xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2.0;
+            deltaX[1] = (xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2.0) * (xi.ui[0]) < 0 ? xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] : xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2.0;
+            // cout<<xi.neighbors.size()<<"   "<<xi.PCAneighbors.size()<<endl;
             xi.deltaX = deltaX;
         }
     }
@@ -251,7 +267,7 @@ Mat contract(Mat img, string filename){
 
         updateK(img, pointset, t + 1, 1);
 
-        // imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
+        imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
         std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
         ++t;
 

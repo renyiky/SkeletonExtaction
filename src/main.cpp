@@ -28,17 +28,17 @@ int main(int argc, char *argv[]){
     img = fullfill(img);
     output(img, "fullfill_" + filename);
 
-    Mat imgZS = ZSalg(img);
-    output(imgZS, "final_ZS_" + filename);
+    // Mat imgZS = ZSalg(img);
+    // output(imgZS, "final_ZS_" + filename);
 
-    Mat imgGH = GHalg(img);
-    output(imgGH, "final_GH_" + filename);
+    // Mat imgGH = GHalg(img);
+    // output(imgGH, "final_GH_" + filename);
 
-    Mat imgAW = AWalg(img);
-    output(imgAW, "final_AW_" + filename);
+    // Mat imgAW = AWalg(img);
+    // output(imgAW, "final_AW_" + filename);
 
-    Mat imgHybrid = HybridAlg(img);
-    output(imgHybrid, "final_Hybrid_" + filename);
+    // Mat imgHybrid = HybridAlg(img);
+    // output(imgHybrid, "final_Hybrid_" + filename);
 
     img = contract(img, filename);
     output(img, "final_" + filename);
