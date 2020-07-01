@@ -5,6 +5,7 @@
 #include <eigen3/Eigen/Eigenvalues>
 #include <cmath>
 #include <opencv2/imgcodecs.hpp>
+#include <algorithm>
 
 #include "getPointsetInitialized.hpp"
 #include "Point.hpp"
@@ -106,10 +107,10 @@ namespace skelx{
                 minCosAlpha = minCosAlpha < cosAlpha ? minCosAlpha : cosAlpha;
             }
             p.cosAlpha = minCosAlpha;
-            cout<<p.pos[0]<<"  "<<p.pos[1]<<"  "<<p.cosAlpha<<endl;
-            if(isnan(p.cosAlpha)){
-                cout<<"ui: "<<p.ui[0]<<"  "<<p.ui[1]<<endl;
-            }
+            // cout<<p.pos[0]<<"  "<<p.pos[1]<<"  "<<p.cosAlpha<<endl;
+            // if(isnan(p.cosAlpha)){
+            //     cout<<"ui: "<<p.ui[0]<<"  "<<p.ui[1]<<endl;
+            // }
         }
     }
 
@@ -124,7 +125,7 @@ namespace skelx{
                 continue;
             }
             // get PCA neighbors which is in 3 * d3nn distance
-            double dnn = 3 * 3 * xi.d3nn, // 9 times of d3nn
+            double dnn = 2 * 4 * xi.d3nn, // 9 times of d3nn
                     x = xi.pos[0],
                     y = xi.pos[1];
             xi.PCAneighbors = {};
@@ -214,8 +215,13 @@ namespace skelx{
             }
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
-            deltaX[0] = (xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2.0) * (xi.ui[0]) < 0 ? xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] : xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2.0;
-            deltaX[1] = (xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2.0) * (xi.ui[0]) < 0 ? xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] : xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2.0;
+            // if(!isnan(xi.cosAlpha)){
+            deltaX[0] = xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0];    // deltaX[0] = max(xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0], xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
+            deltaX[1] = xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1];    // deltaX[1] = max(xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1], xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
+            // }else{
+            //     deltaX[0] = 0;
+            //     deltaX[1] = 0;
+            // }
             // cout<<xi.neighbors.size()<<"   "<<xi.PCAneighbors.size()<<endl;
             xi.deltaX = deltaX;
         }
