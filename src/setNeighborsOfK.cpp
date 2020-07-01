@@ -13,10 +13,9 @@ using namespace cv;
 int isNextTo(vector<double> nei, vector<double> point);
 vector<vector<vector<double> > > connectFunc(vector<vector<double> > curPointset,  vector<vector<double> > centerDomain,  vector<vector<double> > outerDomain);
 void regularize(skelx::Point &centerPoint);
-int isInteger(double num);
 
 int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
-    double radius = 1,
+    int radius = 0,
         rows = img.rows,
         cols = img.cols,
         x = point.pos[0],
@@ -24,6 +23,7 @@ int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
     vector<vector<double> > neighbors{};
 
     while(neighbors.size() < k){
+        ++radius;
         neighbors = {};
 
         // rectangle search
@@ -55,14 +55,14 @@ int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
 
 
         // circle search
-        for(double i = -radius; i <= radius; i += 0.5){
-            for(double j = -radius; j <= radius; j += 0.5){
-                if(isInteger(i) && isInteger(j) && pow((i * i + j * j), 0.5) <= radius && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+        for(int i = -radius; i < radius + 1; ++i){
+            for(int j = -radius; j < radius + 1; ++j){
+                if(pow((i * i + j * j), 0.5) <= radius && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
                     neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
                 }
             }
         }
-    radius += 0.5;
+
     }
     if(neighbors.size() != 0){
         point.neighbors = neighbors;
@@ -156,6 +156,6 @@ int isNextTo(vector<double> nei, vector<double> point){
     }
 }
 
-int isInteger(double num){
-    return static_cast<double>(static_cast<int>(num)) == num;
-}
+// int isInteger(double num){
+//     return static_cast<double>(static_cast<int>(num)) == num;
+// }
