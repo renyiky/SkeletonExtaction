@@ -97,7 +97,7 @@ using namespace cv;
 void updateK(Mat &img, vector<skelx::Point> &pointset, int t, int c){
     if(t % c == 0){
         for(struct skelx::Point &p : pointset){
-            double dnn = 3 * p.d3nn;
+            double dnn = 4 * p.d3nn;
             int x = p.pos[0],
                 y = p.pos[1];
             vector<vector<double> > neighborsCount = {};
