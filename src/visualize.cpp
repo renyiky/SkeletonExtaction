@@ -24,7 +24,8 @@ void visualize(const Mat &img, const vector<skelx::Point> pointset, int iter){
     origin = _origin;
 
     for(skelx::Point p : pointset){
-        if(count % 10 != 0){
+        // if(count % 10 != 0){
+        if(p.pos[0] > 100){
             ++count;
             continue;
         }

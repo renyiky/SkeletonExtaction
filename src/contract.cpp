@@ -31,7 +31,7 @@ namespace skelx{
         return ret;
     }
 
-    // remove duplicates which result from moving point, and refresh d4nn for each point
+    // remove duplicates which result from moving point, and refresh d3nn for each point
     void refreshPointset(Mat &img, vector<skelx::Point> &pointset){
         unsigned int count = 0;
 
@@ -216,13 +216,16 @@ namespace skelx{
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
             // if(!isnan(xi.cosAlpha)){
-            deltaX[0] = xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0];    // deltaX[0] = max(xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0], xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
-            deltaX[1] = xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1];    // deltaX[1] = max(xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1], xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
+            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * 10.0);// - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2;    // deltaX[0] = max(xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0], xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
+            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * 10.0);// - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2;    // deltaX[1] = max(xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1], xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
             // }else{
             //     deltaX[0] = 0;
             //     deltaX[1] = 0;
             // }
             // cout<<xi.neighbors.size()<<"   "<<xi.PCAneighbors.size()<<endl;
+
+            // cout<<"x: "<<xi.pos[0]<<"   "<<xi.ui[0]<<"   "<<uiMod * cosTheta * xi.sigma * xi.principalVec[0]<<endl;
+            // cout<<"y: "<<xi.pos[1]<<"   "<<xi.ui[1]<<"   "<<uiMod * cosTheta * xi.sigma * xi.principalVec[1]<<endl;
             xi.deltaX = deltaX;
         }
     }
