@@ -5,7 +5,7 @@
 
 #include "Point.hpp"
 #include "getDbb.hpp"
-#include "getD3nn.hpp"
+#include "getD4nn.hpp"
 
 using namespace std;
 using namespace cv;
@@ -28,8 +28,8 @@ vector<struct skelx::Point> getPointsetInitialized(Mat &img){
     // set k0
     int num = pointset.size();
     for(struct skelx::Point &p : pointset){
-        p.d3nn = getD3nn(img, p);
-        double dnn = 3 * p.d3nn;
+        p.d4nn = getD4nn(img, p);
+        double dnn = 3 * p.d4nn;
         int x = p.pos[0],
             y = p.pos[1];
         vector<vector<double> > neighborsCount = {};
@@ -41,7 +41,7 @@ vector<struct skelx::Point> getPointsetInitialized(Mat &img){
             }
         }
 
-        p.k = p.k0 = neighborsCount.size(); // static_cast<int>(dbb / (pow(num, 1/3) * p.d3nn));
+        p.k = p.k0 = neighborsCount.size(); // static_cast<int>(dbb / (pow(num, 1/3) * p.d4nn));
     }
     return pointset;
 }

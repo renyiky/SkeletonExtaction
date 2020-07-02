@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "Point.hpp"
-#include "getD3nn.hpp"
+#include "getD4nn.hpp"
 #include "updateK.hpp"
 
 using namespace std;
@@ -33,7 +33,7 @@ using namespace cv;
 
 //     // refresh PCAneighbors
 //     for(skelx::Point &p : pointset){
-//         double dnn = 3 * p.d3nn, 
+//         double dnn = 4 * p.d4nn, 
 //                     x = p.pos[0],
 //                     y = p.pos[1];
 //         p.PCAneighbors = {};
@@ -78,7 +78,7 @@ using namespace cv;
 //     for(skelx::Point p : pointset){
 //         ret[p.pos[0]][p.pos[1]][0] = p.pos[0];
 //         ret[p.pos[0]][p.pos[1]][1] = p.pos[1];
-//         ret[p.pos[0]][p.pos[1]][2] = static_cast<double>(p.k0) * p.d3nn;
+//         ret[p.pos[0]][p.pos[1]][2] = static_cast<double>(p.k0) * p.d4nn;
 //         ret[p.pos[0]][p.pos[1]][3] = static_cast<double>(p.k);
 //         ret[p.pos[0]][p.pos[1]][4] = p.deltaK;
 
@@ -97,7 +97,7 @@ using namespace cv;
 void updateK(Mat &img, vector<skelx::Point> &pointset, int t, int c){
     if(t % c == 0){
         for(struct skelx::Point &p : pointset){
-            double dnn = 4 * p.d3nn;
+            double dnn = 4 * p.d4nn;
             int x = p.pos[0],
                 y = p.pos[1];
             vector<vector<double> > neighborsCount = {};
@@ -109,7 +109,7 @@ void updateK(Mat &img, vector<skelx::Point> &pointset, int t, int c){
                 }
             }
             // set the upper limit of K = 20
-            p.k = 20 < 2 * neighborsCount.size() ? 20 : 2 * neighborsCount.size(); // static_cast<int>(dbb / (pow(num, 1/3) * p.d3nn));
+            p.k = 20 < 2 * neighborsCount.size() ? 20 : 2 * neighborsCount.size(); // static_cast<int>(dbb / (pow(num, 1/3) * p.d4nn));
             // cout<<p.k<<"  "<< 2 * neighborsCount.size()<<endl;
         }
     }
