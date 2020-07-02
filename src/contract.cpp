@@ -124,8 +124,8 @@ namespace skelx{
             if(xi.sigma > threshold){
                 continue;
             }
-            // get PCA neighbors which is in 2 * 3 * d3nn distance
-            double dnn = 3 * 3 * xi.d3nn, // 9 times of d3nn
+            // get PCA neighbors which is in 3 * d3nn distance
+            double dnn = 3 * xi.d3nn, // 3 times of d3nn
                     x = xi.pos[0],
                     y = xi.pos[1];
             xi.PCAneighbors = {};
