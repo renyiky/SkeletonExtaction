@@ -94,23 +94,23 @@ using namespace cv;
 // }
 
 // update K every c iterations
-void updateK(Mat &img, vector<skelx::Point> &pointset, int t, int c){
-    if(t % c == 0){
-        for(struct skelx::Point &p : pointset){
-            double dnn = 3 * p.d3nn;
-            int x = p.pos[0],
-                y = p.pos[1];
-            vector<vector<double> > neighborsCount = {};
-            for(int i = -dnn; i < dnn + 1; ++i){
-                for(int j = -dnn; j < dnn + 1; ++j){
-                    if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-                        neighborsCount.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
-                    }
+void updateK(Mat &img, vector<skelx::Point> &pointset){
+    for(struct skelx::Point &p : pointset){
+        double dnn = 3 * p.d3nn;
+        int x = p.pos[0],
+            y = p.pos[1];
+        vector<vector<double> > neighborsCount = {};
+        for(int i = -dnn; i < dnn + 1; ++i){
+            for(int j = -dnn; j < dnn + 1; ++j){
+                if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+                    neighborsCount.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
                 }
             }
-            // set the upper limit of K = 20
-            p.k = 20 < 2 * neighborsCount.size() ? 20 : 2 * neighborsCount.size(); // static_cast<int>(dbb / (pow(num, 1/3) * p.d3nn));
-            // cout<<p.k<<"  "<< 2 * neighborsCount.size()<<endl;
         }
+        // set the upper limit of K = 20
+        p.k = 10 < neighborsCount.size() ? 20 : neighborsCount.size(); // static_cast<int>(dbb / (pow(num, 1/3) * p.d3nn));
+        // if(neighborsCount.size() >= 20){
+        //     cout<<p.k<<"  "<< neighborsCount.size()<<endl;
+        // }
     }
 }
