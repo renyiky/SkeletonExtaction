@@ -4,6 +4,6 @@
 #include <opencv2/core.hpp>
 #include "Point.hpp"
 
-double getD4nn(cv::Mat &img, const struct skelx::Point &point);
+double getD3nn(cv::Mat &img, const struct skelx::Point &point);
 
 #endif

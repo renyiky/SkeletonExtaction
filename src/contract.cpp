@@ -10,7 +10,7 @@
 #include "getPointsetInitialized.hpp"
 #include "Point.hpp"
 #include "setNeighborsOfK.hpp"
-#include "getD4nn.hpp"
+#include "getD3nn.hpp"
 #include "updateK.hpp"
 #include "visualize.hpp"
 
@@ -51,7 +51,7 @@ namespace skelx{
 
         img = skelx::draw(img, pointset);
         for(skelx::Point &p : pointset){
-            p.d4nn = getD4nn(img, p);
+            p.d3nn = getD3nn(img, p);
         }
     }
 
@@ -124,8 +124,8 @@ namespace skelx{
             if(xi.sigma > threshold){
                 continue;
             }
-            // get PCA neighbors which is in 2 * 4 * d4nn distance
-            double dnn = 2 * 4 * xi.d4nn, // 9 times of d4nn
+            // get PCA neighbors which is in 2 * 3 * d3nn distance
+            double dnn = 3 * 3 * xi.d3nn, // 9 times of d3nn
                     x = xi.pos[0],
                     y = xi.pos[1];
             xi.PCAneighbors = {};
@@ -254,7 +254,7 @@ Mat contract(Mat img, string filename){
     double sigmaHat = 0.0, preSigmaHat = sigmaHat;
     int count = 0,  // count if sigmaHat remains unchanged
         t = 0;  // times of iterations
-    vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d4nn
+    vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d3nn
 
     while(sigmaHat < 0.95){
         skelx::computeUi(img, pointset, 0.95);

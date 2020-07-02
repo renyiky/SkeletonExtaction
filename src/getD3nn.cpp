@@ -1,14 +1,14 @@
 #include <opencv2/core.hpp>
 #include <vector>
 
-#include "getD4nn.hpp"
+#include "getD3nn.hpp"
 
 using namespace std;
 using namespace cv;
 
-// get d4nn of param point
-// d4nn is the average length of edges in the four-nearest-neighbors graph
-double getD4nn(Mat &img, const struct skelx::Point &point){
+// get d3nn of param point
+// d3nn is the average length of edges in the 3-nearest-neighbors graph
+double getD3nn(Mat &img, const struct skelx::Point &point){
     int x = point.pos[0], 
         y = point.pos[1],
         rows = img.rows,
@@ -17,7 +17,7 @@ double getD4nn(Mat &img, const struct skelx::Point &point){
     vector<double> neighborsRadius = {};
 
     // rectangle search
-    while(neighborsRadius.size() < 4){
+    while(neighborsRadius.size() < 3){
         ++radius;
         for(int i = -radius; i < radius + 1; ++i){
             if(i == -radius || i == radius){
@@ -59,5 +59,5 @@ double getD4nn(Mat &img, const struct skelx::Point &point){
     //     }
     // }
     // sort(neighborsRadius.begin(), neighborsRadius.end());
-    return (neighborsRadius[0] + neighborsRadius[1] + neighborsRadius[2] + neighborsRadius[3]) / 4;   // /3
+    return (neighborsRadius[0] + neighborsRadius[1] + neighborsRadius[2]) / 3;   // /3
 }
