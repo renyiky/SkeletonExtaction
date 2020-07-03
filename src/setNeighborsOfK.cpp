@@ -74,87 +74,87 @@ int setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
     }
 }
 
-void regularize(skelx::Point &centerPoint){
-    vector<vector<double> > centerDomain = {{centerPoint.pos[0], centerPoint.pos[1]}},
-                            outerDomain = {};
+// void regularize(skelx::Point &centerPoint){
+//     vector<vector<double> > centerDomain = {{centerPoint.pos[0], centerPoint.pos[1]}},
+//                             outerDomain = {};
             
-    vector<vector<vector<double> > > domains;
-    vector<vector<double> > neighbors = centerPoint.neighbors;
+//     vector<vector<vector<double> > > domains;
+//     vector<vector<double> > neighbors = centerPoint.neighbors;
 
-    int flag = 0;
+//     int flag = 0;
             
-    for(vector<double> nei : neighbors){
-        for(vector<double> point : centerDomain){
-            if(isNextTo(nei, point)){
-                flag = 1;
-                domains = connectFunc({nei}, centerDomain, outerDomain);
-                centerDomain = domains[0];
-                outerDomain = domains[1];
-                break;
-            }
-        }
-        if(flag == 0){
-            outerDomain.push_back(nei);
-        }else{
-            flag = 0;
-        }
-    }
+//     for(vector<double> nei : neighbors){
+//         for(vector<double> point : centerDomain){
+//             if(isNextTo(nei, point)){
+//                 flag = 1;
+//                 domains = connectFunc({nei}, centerDomain, outerDomain);
+//                 centerDomain = domains[0];
+//                 outerDomain = domains[1];
+//                 break;
+//             }
+//         }
+//         if(flag == 0){
+//             outerDomain.push_back(nei);
+//         }else{
+//             flag = 0;
+//         }
+//     }
 
-    vector<vector<double> > regularizedNeighbors = {};
+//     vector<vector<double> > regularizedNeighbors = {};
     
-    centerDomain.erase(centerDomain.begin());   // erase the first point which is the center point, not the neighbor
-    for(vector<double> i : centerDomain){
-        regularizedNeighbors.push_back({i[0], i[1], 0});
-    }
-    for(vector<double> i : outerDomain){
-        regularizedNeighbors.push_back({i[0], i[1], 1});
-    }
+//     centerDomain.erase(centerDomain.begin());   // erase the first point which is the center point, not the neighbor
+//     for(vector<double> i : centerDomain){
+//         regularizedNeighbors.push_back({i[0], i[1], 0});
+//     }
+//     for(vector<double> i : outerDomain){
+//         regularizedNeighbors.push_back({i[0], i[1], 1});
+//     }
 
-    centerPoint.neighbors = regularizedNeighbors;
-}
+//     centerPoint.neighbors = regularizedNeighbors;
+// }
 
-vector<vector<vector<double> > > 
-connectFunc(vector<vector<double> > curPointset,  vector<vector<double> > centerDomain,  vector<vector<double> > outerDomain){
-    for(vector<double> i : curPointset){
-        centerDomain.push_back(i);
+// vector<vector<vector<double> > > 
+// connectFunc(vector<vector<double> > curPointset,  vector<vector<double> > centerDomain,  vector<vector<double> > outerDomain){
+//     for(vector<double> i : curPointset){
+//         centerDomain.push_back(i);
         
-        vector<vector<double> >::iterator iter = find(outerDomain.begin(), outerDomain.end(), i);
-        if(iter != outerDomain.end()){
-            outerDomain.erase(iter);
-        }
-    }
-    if(!outerDomain.size()){
-        return {centerDomain, outerDomain};
-    }
-    // cout<<outerDomain[0][0]<<"  "<<outerDomain[0][1]<<endl;
-    vector<vector<double> > newSet = {};
-    for(vector<double> i : curPointset){
-        for(vector<double> j : outerDomain){
-            if(isNextTo(i , j) && (find(newSet.begin(), newSet.end(), j) == newSet.end())){
-                newSet.push_back(j);
-            }
-        }
-    }
-    if(!newSet.size()){
-        return {centerDomain, outerDomain};
-    }
-    return connectFunc(newSet, centerDomain, outerDomain);
-}
+//         vector<vector<double> >::iterator iter = find(outerDomain.begin(), outerDomain.end(), i);
+//         if(iter != outerDomain.end()){
+//             outerDomain.erase(iter);
+//         }
+//     }
+//     if(!outerDomain.size()){
+//         return {centerDomain, outerDomain};
+//     }
+//     // cout<<outerDomain[0][0]<<"  "<<outerDomain[0][1]<<endl;
+//     vector<vector<double> > newSet = {};
+//     for(vector<double> i : curPointset){
+//         for(vector<double> j : outerDomain){
+//             if(isNextTo(i , j) && (find(newSet.begin(), newSet.end(), j) == newSet.end())){
+//                 newSet.push_back(j);
+//             }
+//         }
+//     }
+//     if(!newSet.size()){
+//         return {centerDomain, outerDomain};
+//     }
+//     return connectFunc(newSet, centerDomain, outerDomain);
+// }
 
-int isNextTo(vector<double> nei, vector<double> point){
-    if((nei[0] + 1 == point[0] && nei[1] == point[1]) ||
-        (nei[0] - 1 == point[0] && nei[1] == point[1]) ||
-        (nei[0] == point[0] && nei[1] + 1 == point[1]) ||
-        (nei[0] == point[0] && nei[1] - 1 == point[1]) ||
-        (nei[0] + 1 == point[0] && nei[1] + 1 == point[1]) ||
-        (nei[0] + 1 == point[0] && nei[1] - 1 == point[1]) ||
-        (nei[0] - 1 == point[0] && nei[1] + 1 == point[1]) ||
-        (nei[0] - 1 == point[0] && nei[1] - 1 == point[1])){
-            return 1;
-    }else{
-        return 0;
-    }
-}
+// int isNextTo(vector<double> nei, vector<double> point){
+//     if((nei[0] + 1 == point[0] && nei[1] == point[1]) ||
+//         (nei[0] - 1 == point[0] && nei[1] == point[1]) ||
+//         (nei[0] == point[0] && nei[1] + 1 == point[1]) ||
+//         (nei[0] == point[0] && nei[1] - 1 == point[1]) ||
+//         (nei[0] + 1 == point[0] && nei[1] + 1 == point[1]) ||
+//         (nei[0] + 1 == point[0] && nei[1] - 1 == point[1]) ||
+//         (nei[0] - 1 == point[0] && nei[1] + 1 == point[1]) ||
+//         (nei[0] - 1 == point[0] && nei[1] - 1 == point[1])){
+//             return 1;
+//     }else{
+//         return 0;
+//     }
+// }
 
 // int isInteger(double num){
 //     return static_cast<double>(static_cast<int>(num)) == num;
