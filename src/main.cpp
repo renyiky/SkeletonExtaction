@@ -40,9 +40,9 @@ int main(int argc, char *argv[]){
     // Mat imgHybrid = HybridAlg(img);
     // output(imgHybrid, "final_Hybrid_" + filename);
 
-    img = contract(img, filename);
-    output(img, "extracted_" + filename);
-    img = ZSalg(img);
+    // img = contract(img, filename);
+    // output(img, "extracted_" + filename);
+    img = AWalg(img);
     output(img, "final_" + filename);
     // superpose(img, filename, "results/");
     return 0;
