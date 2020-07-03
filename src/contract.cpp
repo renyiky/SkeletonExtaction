@@ -202,6 +202,10 @@ namespace skelx{
             if(xi.sigma > threshold){
                 continue;
             }
+            if(xi.ui[0] == 0 && xi.ui[1] == 0){
+                xi.deltaX = {0, 0};
+                continue;
+            }
             vector<double> deltaX{0.0, 0.0};
             double cosTheta;
             // compute cos<pV, ui>, namely cosTheta
