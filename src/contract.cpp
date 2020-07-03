@@ -230,6 +230,25 @@ namespace skelx{
         }
     }
 
+    // set the upper limit of p.k
+    int setUpperLimitOfK(Mat &img){
+        double left = img.cols + 1,
+            right = -1,
+            up = img.rows + 1,
+            down = -1;
+        for(int i = 0; i < img.rows; ++i){
+            for(int j = 0; j < img.cols; ++j){
+                if(img.at<uchar>(i, j) != 0){
+                    left = left < j ? left : j;
+                    right = right > j ? right : j;
+                    up = up < i ? up : i;
+                    down = down > i ? down : i;
+                }
+            }
+        }
+        return static_cast<int>(sqrt((right - left) * (down - up)) / 10);
+    }
+
     // remove isolate point, namely noise
     void postProcess(Mat &img){
         for(int x = 0; x< img.rows; ++x){
@@ -256,9 +275,10 @@ namespace skelx{
 Mat contract(Mat img, string filename){
     double sigmaHat = 0.0, preSigmaHat = sigmaHat;
     int count = 0,  // count if sigmaHat remains unchanged
-        t = 0;  // times of iterations
+        t = 0,  // times of iterations
+        upperLimit = skelx::setUpperLimitOfK(img);  // set the upper limit of k, it would be used when update k during each iteration
     vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d3nn
-
+    
     while(sigmaHat < 0.95){
         skelx::computeUi(img, pointset, 0.95);
         skelx::PCA(img, pointset, 0.95);
@@ -274,7 +294,7 @@ Mat contract(Mat img, string filename){
         }
         sigmaHat /= pointset.size();
 
-        updateK(img, pointset);
+        updateK(img, pointset, upperLimit);
 
         imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
         std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
