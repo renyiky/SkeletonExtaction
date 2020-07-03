@@ -97,16 +97,16 @@ namespace skelx{
             p.ui = {ui[0], ui[1]};
 
             // compute the angle of current cluster of pixels, namely alpha, represented by its cosAlpha
-            double minCosAlpha = 2.0;
-            for(vector<double> neighbor : p.neighbors){
-                vector<double> tempVec = {neighbor[0] - p.pos[0], neighbor[1] - p.pos[1]};
-                // calculate the angle by the method of arccosTheta,
-                // so calculate the inner product firstly
-                double innerProduct = tempVec[0] * p.ui[0] + tempVec[1] * p.ui[1],
-                        cosAlpha = innerProduct / (pow(tempVec[0] * tempVec[0] + tempVec[1] * tempVec[1], 0.5) * pow(p.ui[0] * p.ui[0] + p.ui[1] * p.ui[1], 0.5));
-                minCosAlpha = minCosAlpha < cosAlpha ? minCosAlpha : cosAlpha;
-            }
-            p.cosAlpha = minCosAlpha;
+            // double minCosAlpha = 2.0;
+            // for(vector<double> neighbor : p.neighbors){
+            //     vector<double> tempVec = {neighbor[0] - p.pos[0], neighbor[1] - p.pos[1]};
+            //     // calculate the angle by the method of arccosTheta,
+            //     // so calculate the inner product firstly
+            //     double innerProduct = tempVec[0] * p.ui[0] + tempVec[1] * p.ui[1],
+            //             cosAlpha = innerProduct / (pow(tempVec[0] * tempVec[0] + tempVec[1] * tempVec[1], 0.5) * pow(p.ui[0] * p.ui[0] + p.ui[1] * p.ui[1], 0.5));
+            //     minCosAlpha = minCosAlpha < cosAlpha ? minCosAlpha : cosAlpha;
+            // }
+            // p.cosAlpha = minCosAlpha;
             // cout<<p.pos[0]<<"  "<<p.pos[1]<<"  "<<p.cosAlpha<<endl;
             // if(isnan(p.cosAlpha)){
             //     cout<<"ui: "<<p.ui[0]<<"  "<<p.ui[1]<<endl;
