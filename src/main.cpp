@@ -20,7 +20,7 @@ void superpose(Mat img, string filename, string inputPath);
 int main(int argc, char *argv[]){
     string filename = argv[1], inputPath = "dataset/";
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
-    output(img, "raw");
+    output(img, "raw_" + filename);
 
     // img = invert(img);
     // output(img, "invert");
@@ -41,8 +41,9 @@ int main(int argc, char *argv[]){
     // output(imgHybrid, "final_Hybrid_" + filename);
 
     img = contract(img, filename);
+    output(img, "extracted_" + filename);
+    img = ZSalg(img);
     output(img, "final_" + filename);
-
     // superpose(img, filename, "results/");
     return 0;
 }
