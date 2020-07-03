@@ -6,6 +6,7 @@
 #include "Point.hpp"
 #include "getD3nn.hpp"
 #include "updateK.hpp"
+#include "getDbb.hpp"
 
 using namespace std;
 using namespace cv;
@@ -93,8 +94,9 @@ using namespace cv;
 //     return ret;
 // }
 
-// update K every c iterations
-void updateK(Mat &img, vector<skelx::Point> &pointset){
+// update k in each iteration
+// when k is larger than 10, we set it as the @param upperLimit
+void updateK(Mat &img, vector<skelx::Point> &pointset, int upperLimit){
     for(struct skelx::Point &p : pointset){
         double dnn = 3 * p.d3nn;
         int x = p.pos[0],
@@ -108,7 +110,7 @@ void updateK(Mat &img, vector<skelx::Point> &pointset){
             }
         }
         // set the upper limit of K = 20
-        p.k = 10 < neighborsCount.size() ? 20 : neighborsCount.size(); // static_cast<int>(dbb / (pow(num, 1/3) * p.d3nn));
+        p.k = 10 < neighborsCount.size() ? upperLimit : neighborsCount.size(); // static_cast<int>(dbb / (pow(num, 1/3) * p.d3nn));
         // if(neighborsCount.size() >= 20){
         //     cout<<p.k<<"  "<< neighborsCount.size()<<endl;
         // }
