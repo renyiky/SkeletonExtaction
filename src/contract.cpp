@@ -6,6 +6,7 @@
 #include <cmath>
 #include <opencv2/imgcodecs.hpp>
 #include <algorithm>
+#include <map>
 
 #include "getPointsetInitialized.hpp"
 #include "Point.hpp"
@@ -33,20 +34,13 @@ namespace skelx{
 
     // remove duplicates which result from moving point, and refresh d3nn for each point
     void refreshPointset(Mat &img, vector<skelx::Point> &pointset){
-        unsigned int count = 0;
-
-        while(count < pointset.size()){
-            skelx::Point temp = pointset[count];
-            unsigned int i = count + 1;
-            while (i < pointset.size())
-            {
-                if(pointset[i].pos[0] == temp.pos[0] && pointset[i].pos[1] == temp.pos[1]){
-                    pointset.erase(pointset.begin() + i);
-                }else{
-                    ++i;
-                }
-            }
-            ++count;
+        map<vector<double>, skelx::Point> dataset;
+        for(skelx::Point p : pointset){
+            dataset[p.pos] = p;
+        }
+        pointset.clear();
+        for(map<vector<double>, skelx::Point>::iterator iter = dataset.begin(); iter != dataset.end(); ++iter){
+            pointset.push_back(iter->second);
         }
 
         img = skelx::draw(img, pointset);
@@ -284,7 +278,7 @@ namespace skelx{
 Mat contract(Mat img, string filename){
     double sigmaHat = 0.0,
             preSigmaHat = sigmaHat,
-            detailFactor = 40.0;    // detail factor is used in PCA, and controls the degree of details the skeleton would have
+            detailFactor = 10.0;    // detail factor is used in PCA, and controls the degree of details the skeleton would have
     int count = 0,  // count if sigmaHat remains unchanged
         t = 0,  // times of iterations
         upperLimit = skelx::setUpperLimitOfK(img);  // set the upper limit of k, it would be used when update k during each iteration
