@@ -173,6 +173,10 @@ namespace skelx{
             if(xi.sigma > threshold){
                 continue;
             }
+            if(xi.ui[0] == 0 && xi.ui[1] == 0){
+                xi.sigma = 0.5;
+                continue;
+            }
             MatrixXd covMatEigen(2, 2);
             covMatEigen(0, 0) = xi.covMat[0][0];
             covMatEigen(0, 1) = xi.covMat[0][1];
@@ -196,7 +200,6 @@ namespace skelx{
             }
             xi.principalVec = maxEigenVec;
         }
-    
         // set deltaX for each xi
         for(skelx::Point &xi: pointset){
             if(xi.sigma > threshold){
