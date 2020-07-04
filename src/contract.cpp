@@ -284,7 +284,7 @@ namespace skelx{
 Mat contract(Mat img, string filename){
     double sigmaHat = 0.0,
             preSigmaHat = sigmaHat,
-            detailFactor = 40.0;
+            detailFactor = 40.0;    // detail factor is used in PCA, and controls the degree of details the skeleton would have
     int count = 0,  // count if sigmaHat remains unchanged
         t = 0,  // times of iterations
         upperLimit = skelx::setUpperLimitOfK(img);  // set the upper limit of k, it would be used when update k during each iteration
