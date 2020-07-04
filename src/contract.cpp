@@ -115,9 +115,11 @@ namespace skelx{
     }
 
     // pca process, after this, the sigma, principalVec, 
-    // PCAneighbors, covMat and deltaX of xi would be set
-    // only do PCA for the point whose sigma is less than the @param threshold
-    void PCA(Mat &img, vector<skelx::Point> &pointset, double threshold){
+    // PCAneighbors, covMat and deltaX of xi would be set.
+    // only do PCA for the point whose sigma is less than the parameter threshold.
+    // the parameter detailFactor which is set to 10.0 as default can control the degree of detail the algorithm would produce,
+    // the larger the detailFactor, the more details the skeleton would have.
+    void PCA(Mat &img, vector<skelx::Point> &pointset, double threshold, double detailFactor = 10.0){
 
         // get and set covMat for each xi
         for(skelx::Point &xi: pointset){
@@ -223,8 +225,8 @@ namespace skelx{
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
             // if(!isnan(xi.cosAlpha)){
-            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * 15.0);// (-1.0 / (1.0 + std::exp(-(cosTheta - 0.5) * 10.0)) + 1.0);   //std::exp(- (cosTheta * cosTheta) * 10.0);// - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2;    // deltaX[0] = max(xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0], xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
-            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * 15.0);// (-1.0 / (1.0 + std::exp(-(cosTheta - 0.5) * 10.0)) + 1.0);//std::exp(- (cosTheta * cosTheta) * 10.0);// - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2;    // deltaX[1] = max(xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1], xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
+            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor);// (-1.0 / (1.0 + std::exp(-(cosTheta - 0.5) * 10.0)) + 1.0);   //std::exp(- (cosTheta * cosTheta) * 10.0);// - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2;    // deltaX[0] = max(xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0], xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
+            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor);// (-1.0 / (1.0 + std::exp(-(cosTheta - 0.5) * 10.0)) + 1.0);//std::exp(- (cosTheta * cosTheta) * 10.0);// - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2;    // deltaX[1] = max(xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1], xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
             // }else{
             //     deltaX[0] = 0;
             //     deltaX[1] = 0;
@@ -280,7 +282,9 @@ namespace skelx{
 }
 
 Mat contract(Mat img, string filename){
-    double sigmaHat = 0.0, preSigmaHat = sigmaHat;
+    double sigmaHat = 0.0,
+            preSigmaHat = sigmaHat,
+            detailFactor = 40.0;
     int count = 0,  // count if sigmaHat remains unchanged
         t = 0,  // times of iterations
         upperLimit = skelx::setUpperLimitOfK(img);  // set the upper limit of k, it would be used when update k during each iteration
@@ -288,7 +292,7 @@ Mat contract(Mat img, string filename){
     
     while(sigmaHat < 0.95){
         skelx::computeUi(img, pointset, 0.95);
-        skelx::PCA(img, pointset, 0.95);
+        skelx::PCA(img, pointset, 0.95, detailFactor);
 
         // if(t % 10 == 0 && t != 0){
         //     visualize(img, pointset, t);
