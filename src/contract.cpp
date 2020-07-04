@@ -223,8 +223,8 @@ namespace skelx{
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
             // if(!isnan(xi.cosAlpha)){
-            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * 10.0);// - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2;    // deltaX[0] = max(xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0], xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
-            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * 10.0);// - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2;    // deltaX[1] = max(xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1], xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
+            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * 15.0);// (-1.0 / (1.0 + std::exp(-(cosTheta - 0.5) * 10.0)) + 1.0);   //std::exp(- (cosTheta * cosTheta) * 10.0);// - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2;    // deltaX[0] = max(xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0], xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
+            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * 15.0);// (-1.0 / (1.0 + std::exp(-(cosTheta - 0.5) * 10.0)) + 1.0);//std::exp(- (cosTheta * cosTheta) * 10.0);// - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2;    // deltaX[1] = max(xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1], xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
             // }else{
             //     deltaX[0] = 0;
             //     deltaX[1] = 0;
