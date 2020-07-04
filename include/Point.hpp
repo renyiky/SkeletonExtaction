@@ -7,8 +7,7 @@ namespace skelx{
     
     struct Point{
     int k0,
-        k,
-        isFull = 0; // to check if this pixel is fully surrounded by pixels
+        k;
     std::vector<double> pos{0.0,0.0}, 
                         ui,
                         deltaX,
