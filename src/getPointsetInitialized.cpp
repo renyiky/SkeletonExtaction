@@ -40,7 +40,7 @@ vector<struct skelx::Point> getPointsetInitialized(Mat &img){
                 }
             }
         }
-        p.k = p.k0 = neighborsCount.size(); // static_cast<int>(dbb / (pow(num, 1/3) * p.d3nn));
+        p.k = neighborsCount.size();
     }
     return pointset;
 }

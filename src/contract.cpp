@@ -74,37 +74,12 @@ namespace skelx{
                 std::cout<<"neighbors insufficient!"<<endl;
             }
             for(vector<double> nei: p.neighbors){
-                // if it's connected in the same domain with center point
-                // if(nei[2] == 0){
                 ui[0] += (nei[0] - p.pos[0]);
                 ui[1] += (nei[1] - p.pos[1]);
-                // }else{
-                //     // if not, decrease its influence to center point
-                //     double distance = pow((nei[0] - p.pos[0]) * (nei[0] - p.pos[0]) + (nei[1] - p.pos[1]) * (nei[1] - p.pos[1]), 0.5),
-                //             influenceRatio = exp(-(distance - 0.5) * (distance - 0.5) / 2);
-                //     ui[0] += ((nei[0] - p.pos[0]) * influenceRatio);
-                //     ui[1] += ((nei[1] - p.pos[1]) * influenceRatio);
-                // }
             }
             ui[0] = ui[0] / static_cast<double>(p.neighbors.size());
             ui[1] = ui[1] / static_cast<double>(p.neighbors.size());
             p.ui = {ui[0], ui[1]};
-
-            // compute the angle of current cluster of pixels, namely alpha, represented by its cosAlpha
-            // double minCosAlpha = 2.0;
-            // for(vector<double> neighbor : p.neighbors){
-            //     vector<double> tempVec = {neighbor[0] - p.pos[0], neighbor[1] - p.pos[1]};
-            //     // calculate the angle by the method of arccosTheta,
-            //     // so calculate the inner product firstly
-            //     double innerProduct = tempVec[0] * p.ui[0] + tempVec[1] * p.ui[1],
-            //             cosAlpha = innerProduct / (pow(tempVec[0] * tempVec[0] + tempVec[1] * tempVec[1], 0.5) * pow(p.ui[0] * p.ui[0] + p.ui[1] * p.ui[1], 0.5));
-            //     minCosAlpha = minCosAlpha < cosAlpha ? minCosAlpha : cosAlpha;
-            // }
-            // p.cosAlpha = minCosAlpha;
-            // cout<<p.pos[0]<<"  "<<p.pos[1]<<"  "<<p.cosAlpha<<endl;
-            // if(isnan(p.cosAlpha)){
-            //     cout<<"ui: "<<p.ui[0]<<"  "<<p.ui[1]<<endl;
-            // }
         }
     }
 
@@ -218,17 +193,9 @@ namespace skelx{
             }
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
-            // if(!isnan(xi.cosAlpha)){
-            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor);// (-1.0 / (1.0 + std::exp(-(cosTheta - 0.5) * 10.0)) + 1.0);   //std::exp(- (cosTheta * cosTheta) * 10.0);// - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2;    // deltaX[0] = max(xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0], xi.ui[0] - uiMod * cosTheta * xi.sigma * xi.principalVec[0] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
-            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor);// (-1.0 / (1.0 + std::exp(-(cosTheta - 0.5) * 10.0)) + 1.0);//std::exp(- (cosTheta * cosTheta) * 10.0);// - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2;    // deltaX[1] = max(xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1], xi.ui[1] - uiMod * cosTheta * xi.sigma * xi.principalVec[1] * 2 * std::exp(-(xi.cosAlpha - 1) * (xi.cosAlpha - 1)));
-            // }else{
-            //     deltaX[0] = 0;
-            //     deltaX[1] = 0;
-            // }
-            // cout<<xi.neighbors.size()<<"   "<<xi.PCAneighbors.size()<<endl;
 
-            // cout<<"x: "<<xi.pos[0]<<"   "<<xi.ui[0]<<"   "<<uiMod * cosTheta * xi.sigma * xi.principalVec[0]<<endl;
-            // cout<<"y: "<<xi.pos[1]<<"   "<<xi.ui[1]<<"   "<<uiMod * cosTheta * xi.sigma * xi.principalVec[1]<<endl;
+            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor);
+            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor);
             xi.deltaX = deltaX;
         }
     }

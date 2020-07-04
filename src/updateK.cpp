@@ -108,10 +108,7 @@ void updateK(Mat &img, vector<skelx::Point> &pointset, int upperLimit){
                 }
             }
         }
-        // set the upper limit of K = 20
+        // set the upper limit of K 
         p.k = 10 < neighborsCount.size() ? upperLimit : neighborsCount.size();
-        // if(neighborsCount.size() >= 20){
-        //     cout<<p.k<<"  "<< neighborsCount.size()<<endl;
-        // }
     }
 }
