@@ -4,6 +4,8 @@
 #include <string>
 #include <opencv2/core.hpp>
 
-cv::Mat contract(cv::Mat img, std::string filename);
+// Extract skeleton.
+// The parameter detailFactor is used in PCA, and controls the degree of details the skeleton would have
+cv::Mat contract(cv::Mat img, std::string filename, const double detailFactor);
 
 #endif

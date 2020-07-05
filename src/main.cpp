@@ -18,29 +18,29 @@ void output(Mat &img, string name);
 void superpose(Mat img, string filename, string inputPath);
 
 int main(int argc, char *argv[]){
-    string filename = argv[1], inputPath = "dataset/";
+    string filename = argv[1], inputPath = "/Users/renyi/Documents/Postgraduate/Codes/SkeletonExtraction/dataset/experiments/bg/";
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw_" + filename);
 
     // img = invert(img);
     // output(img, "invert");
 
-    img = fullfill(img);
-    output(img, "fullfill_" + filename);
+    // img = fullfill(img);
+    // output(img, "fullfill_" + filename);
 
-    // Mat imgZS = ZSalg(img);
-    // output(imgZS, "final_ZS_" + filename);
+    Mat imgZS = ZSalg(img);
+    output(imgZS, "final_ZS_" + filename);
 
-    // Mat imgGH = GHalg(img);
-    // output(imgGH, "final_GH_" + filename);
+    Mat imgGH = GHalg(img);
+    output(imgGH, "final_GH_" + filename);
 
-    // Mat imgAW = AWalg(img);
-    // output(imgAW, "final_AW_" + filename);
+    Mat imgAW = AWalg(img);
+    output(imgAW, "final_AW_" + filename);
 
-    // Mat imgHybrid = HybridAlg(img);
-    // output(imgHybrid, "final_Hybrid_" + filename);
+    Mat imgHybrid = HybridAlg(img);
+    output(imgHybrid, "final_Hybrid_" + filename);
 
-    img = contract(img, filename);
+    img = contract(img, filename, 250.0);
     output(img, "extracted_" + filename);
     img = AWalg(img);
     output(img, "final_" + filename);

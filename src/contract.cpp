@@ -242,14 +242,15 @@ namespace skelx{
     }
 }
 
-Mat contract(Mat img, string filename){
+Mat contract(Mat img, string filename, const double detailFactor){
     double sigmaHat = 0.0,
-            preSigmaHat = sigmaHat,
-            detailFactor = 10.0;    // detail factor is used in PCA, and controls the degree of details the skeleton would have
+            preSigmaHat = sigmaHat;
     int count = 0,  // count if sigmaHat remains unchanged
         t = 0,  // times of iterations
         upperLimit = skelx::setUpperLimitOfK(img);  // set the upper limit of k, it would be used when update k during each iteration
     vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d3nn
+    
+    cout<<"Current detailFactor = "<<detailFactor<<endl;
     
     while(sigmaHat < 0.95){
         skelx::computeUi(img, pointset, 0.95);
