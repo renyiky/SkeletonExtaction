@@ -2,15 +2,17 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <vector>
+#include <string>
 
 using namespace std;
 using namespace cv;
 
 int main(){
-    Mat img = imread("/Users/renyi/Documents/Postgraduate/Codes/SkeletonExtraction/dataset/GT/raw/skel/horse.png", IMREAD_GRAYSCALE);
+    string filename = "pyramid";
+    Mat img = imread("/home/renyi/Documents/Postgraduate/Codes/SkeletonExtraction/dataset/experiments/bg/" + filename +".png", IMREAD_GRAYSCALE);
     for(int i = 1; i < img.rows - 1; ++i){
         for(int j = 1; j < img.cols - 1; ++j){
-            img.at<uchar>(i, j) = img.at<uchar>(i, j) < 50 || img.at<uchar>(i, j) > 240 ? 0 : 255;
+            img.at<uchar>(i, j) = img.at<uchar>(i, j) < 200 ? 0 : 255;
         }
     }
     // Mat temp = img.clone();
@@ -34,7 +36,7 @@ int main(){
     // }
     // img = temp.clone();
 
-    imwrite("horse.png", img);
+    imwrite(filename + ".png", img);
 
     return 0;
 }
