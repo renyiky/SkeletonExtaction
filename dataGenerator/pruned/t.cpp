@@ -7,7 +7,7 @@ using namespace std;
 using namespace cv;
 
 int main(){
-    string filename ="tree09";
+    string filename ="seasnake06";
     Mat img = imread(filename + ".png", IMREAD_GRAYSCALE);
 
     for(int i = 0; i < img.rows; ++i){
