@@ -34,6 +34,7 @@ clean:
 cleanres:
 	@rm -rf results/*.png
 	@rm -rf results/visualization/*.png
+	@rm -rf experimentsMaterial/results/*.png
 	@echo Results cleaned.
 
 do: cleanres
