@@ -18,15 +18,15 @@ void output(Mat &img, string name);
 void superpose(Mat img, string filename, string inputPath);
 
 int main(int argc, char *argv[]){
-    string filename = argv[1], inputPath = "dataset/";
+    string filename = argv[1], inputPath = "experimentsMaterial/resources/";
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw_" + filename);
 
     // img = invert(img);
     // output(img, "invert");
 
-    img = fullfill(img);
-    output(img, "fullfill_" + filename);
+    // img = fullfill(img);
+    // output(img, "fullfill_" + filename);
 
     Mat imgZS = ZSalg(img);
     output(imgZS, "final_ZS_" + filename);
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
     Mat imgHybrid = HybridAlg(img);
     output(imgHybrid, "final_Hybrid_" + filename);
 
-    img = contract(img, filename, 10);
+    img = contract(img, filename, 20);
     output(img, "extracted_" + filename);
     img = AWalg(img);
     output(img, "final_" + filename);
@@ -49,6 +49,6 @@ int main(int argc, char *argv[]){
 }
 
 void output(Mat &img, string name){
-    string outputPath = "results/";
+    string outputPath = "experimentsMaterial/results/";
     imwrite(outputPath + "0_" + name + ".png", img);
 }
