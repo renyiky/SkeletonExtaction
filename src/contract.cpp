@@ -194,8 +194,8 @@ namespace skelx{
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
 
-            deltaX[0] = xi.ui[0] * (std::exp(- (cosTheta * cosTheta) * detailFactor) + 0.25);
-            deltaX[1] = xi.ui[1] * (std::exp(- (cosTheta * cosTheta) * detailFactor) + 0.25);
+            deltaX[0] = xi.ui[0] * (std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25);    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
+            deltaX[1] = xi.ui[1] * (std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25);    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
             xi.deltaX = deltaX;
         }
     }
@@ -249,9 +249,7 @@ Mat contract(Mat img, string filename, const double detailFactor){
         t = 0,  // times of iterations
         upperLimit = skelx::setUpperLimitOfK(img);  // set the upper limit of k, it would be used when update k during each iteration
     vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d3nn
-    
-    cout<<"Current detailFactor = "<<detailFactor<<endl;
-    
+
     while(sigmaHat < 0.95){
         skelx::computeUi(img, pointset, 0.95);
         skelx::PCA(img, pointset, 0.95, detailFactor);
