@@ -194,8 +194,15 @@ namespace skelx{
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
 
-            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
-            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
+            // if(abs(xi.sigma - 0.781411) < 0.001){
+            //     deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25; //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
+            //     deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25; //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
+            // }else{
+            //     deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor); //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
+            //     deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor); //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
+            // }
+            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * (0.5 / (1 + exp((xi.sigma - 0.781411) * (xi.sigma - 0.781411) * 100000.0)) + 1);
+            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * (0.5 / (1 + exp((xi.sigma - 0.781411) * (xi.sigma - 0.781411) * 100000.0)) + 1);
             xi.deltaX = deltaX;
         }
     }
