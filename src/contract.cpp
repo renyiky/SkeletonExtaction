@@ -194,8 +194,8 @@ namespace skelx{
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
 
-            deltaX[0] = xi.ui[0] * (std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25);    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
-            deltaX[1] = xi.ui[1] * (std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25);    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
+            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
+            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
             xi.deltaX = deltaX;
         }
     }
@@ -242,7 +242,7 @@ namespace skelx{
     }
 }
 
-Mat contract(Mat img, string filename, const double detailFactor){
+Mat contract(Mat img, string filename, const double detailFactor = 10.0){
     double sigmaHat = 0.0,
             preSigmaHat = sigmaHat;
     int count = 0,  // count if sigmaHat remains unchanged
@@ -267,7 +267,7 @@ Mat contract(Mat img, string filename, const double detailFactor){
 
         updateK(img, pointset, upperLimit);
 
-        imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
+        // imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
         std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
         ++t;
 
