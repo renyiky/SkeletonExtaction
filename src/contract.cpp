@@ -194,8 +194,8 @@ namespace skelx{
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
 
-            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor);
-            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor);
+            deltaX[0] = xi.ui[0] * (std::exp(- (cosTheta * cosTheta) * detailFactor) + 0.25);
+            deltaX[1] = xi.ui[1] * (std::exp(- (cosTheta * cosTheta) * detailFactor) + 0.25);
             xi.deltaX = deltaX;
         }
     }
