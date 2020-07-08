@@ -88,7 +88,7 @@ namespace skelx{
     // only do PCA for the point whose sigma is less than the parameter threshold.
     // the parameter detailFactor which is set to 10.0 as default can control the degree of detail the algorithm would produce,
     // the larger the detailFactor, the more details the skeleton would have.
-    void PCA(Mat &img, vector<skelx::Point> &pointset, double threshold, double detailFactor = 10.0){
+    void PCA(Mat &img, vector<skelx::Point> &pointset, double threshold, double detailFactor){
 
         // get and set covMat for each xi
         for(skelx::Point &xi: pointset){
