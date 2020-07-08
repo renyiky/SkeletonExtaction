@@ -6,8 +6,8 @@
 using namespace std;
 using namespace cv;
 
-int main(){
-    string filename ="seasnake06";
+int main(int argc, char *argv[]){
+    string filename = argv[1];
     Mat img = imread(filename + ".png", IMREAD_GRAYSCALE);
 
     for(int i = 0; i < img.rows; ++i){
