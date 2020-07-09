@@ -46,6 +46,7 @@ namespace skelx{
         img = skelx::draw(img, pointset);
         for(skelx::Point &p : pointset){
             p.d3nn = getD3nn(img, p);
+            // cout<<"refresh: "<<p.pos[0]<<"  "<<p.pos[1]<<"  |  ui="<<p.ui[0]<<"  "<<p.ui[1]<<"  |  prin="<<p.principalVec[0]<<"  "<<p.principalVec[1]<<"  |  deltaX="<<p.deltaX[0]<<"  "<<p.deltaX[1]<<endl;
         }
     }
 
@@ -54,8 +55,20 @@ namespace skelx{
     void movePoint(vector<skelx::Point> &pointset, double threshold){
         for(skelx::Point &p : pointset){
             if(p.sigma < threshold){
+                // cout<<"before:"<<p.pos[0]<<"  "<<p.pos[1]<<"  |  "<<p.deltaX[0]<<"  "<<p.deltaX[1]<<endl;
+                // if(abs(static_cast<double>(static_cast<int>(p.deltaX[0])) - p.deltaX[0]) >= 0.55){
+                //     p.pos[0] += p.deltaX[0] < 0 ? static_cast<int>(p.deltaX[0] - 1.0) : static_cast<int>(p.deltaX[0] + 1.0);
+                // }else{
+                //     p.pos[0] += static_cast<int>(p.deltaX[0]);
+                // }
+                // if(abs(static_cast<double>(static_cast<int>(p.deltaX[1])) - p.deltaX[1]) >= 0.55){
+                //     p.pos[1] += p.deltaX[1] < 0 ? static_cast<int>(p.deltaX[1] - 1.0) : static_cast<int>(p.deltaX[1] + 1.0);
+                // }else{
+                //     p.pos[1] += static_cast<int>(p.deltaX[1]);
+                // }
                 p.pos[0] += static_cast<int>(p.deltaX[0]);
                 p.pos[1] += static_cast<int>(p.deltaX[1]);
+                // cout<<"after: "<<p.pos[0]<<"  "<<p.pos[1]<<"  |  "<<p.deltaX[0]<<"  "<<p.deltaX[1]<<endl;
             }
         }
     }
@@ -99,15 +112,15 @@ namespace skelx{
             double dnn = 3 * xi.d3nn, // 3 times of d3nn
                     x = xi.pos[0],
                     y = xi.pos[1];
-            xi.PCAneighbors = {};
+            xi.PCAneighbors = xi.neighbors;
 
-            for(int i = -dnn; i < dnn + 1; ++i){
-                for(int j = -dnn; j < dnn + 1; ++j){
-                    if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-                        xi.PCAneighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
-                    }
-                }
-            }
+            // for(int i = -dnn; i < dnn + 1; ++i){
+            //     for(int j = -dnn; j < dnn + 1; ++j){
+            //         if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+            //             xi.PCAneighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+            //         }
+            //     }
+            // }
 
             // calculate center point, namely xi
             vector<double> centerPoint{0.0, 0.0};
@@ -178,13 +191,14 @@ namespace skelx{
             }
             if(xi.ui[0] == 0 && xi.ui[1] == 0){
                 xi.deltaX = {0, 0};
+                // cout<<"skip: "<<xi.pos[0]<<"  "<<xi.pos[1]<<endl;
                 continue;
             }
             vector<double> deltaX{0.0, 0.0};
             double cosTheta;
             // compute cos<pV, ui>, namely cosTheta
             cosTheta = xi.ui[0] * xi.principalVec[0] + xi.ui[1] * xi.principalVec[1];   // numerator
-            cosTheta /= (pow(pow(xi.principalVec[0], 2) + pow(xi.principalVec[1], 2), 0.5) + pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5));
+            cosTheta /= ((pow(pow(xi.principalVec[0], 2) + pow(xi.principalVec[1], 2), 0.5)) * (pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5)));
 
             if(cosTheta < 0){
                 xi.principalVec[0] = -xi.principalVec[0];
@@ -201,9 +215,10 @@ namespace skelx{
             //     deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor); //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
             //     deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor); //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
             // }
-            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * (0.5 / (1 + exp((xi.sigma - 0.781411) * (xi.sigma - 0.781411) * 100000.0)) + 1);
-            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * (0.5 / (1 + exp((xi.sigma - 0.781411) * (xi.sigma - 0.781411) * 100000.0)) + 1);
+            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * (10.0 / (1 + exp((xi.sigma - 0.7875) * (xi.sigma - 0.7875) * 100000.0)) + 1);
+            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * (10.0 / (1 + exp((xi.sigma - 0.7875) * (xi.sigma - 0.7875) * 100000.0)) + 1);
             xi.deltaX = deltaX;
+            // cout<<xi.pos[0]<<"  "<<xi.pos[1]<<"  |  ui="<<xi.ui[0]<<"  "<<xi.ui[1]<<"  |  prin="<<xi.principalVec[0]<<"  "<<xi.principalVec[1]<<"  |  cosTheta="<<cosTheta<<"  |  deltaX="<<xi.deltaX[0]<<"  "<<xi.deltaX[1]<<"  |  sigma="<<xi.sigma<<endl;
         }
     }
 
@@ -274,7 +289,7 @@ Mat contract(Mat img, string filename, const double detailFactor = 10.0){
 
         updateK(img, pointset, upperLimit);
 
-        // imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
+        imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
         std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
         ++t;
 
