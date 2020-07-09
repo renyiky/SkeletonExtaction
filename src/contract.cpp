@@ -99,15 +99,6 @@ namespace skelx{
             double dnn = 3 * xi.d3nn, // 3 times of d3nn
                     x = xi.pos[0],
                     y = xi.pos[1];
-            // xi.PCAneighbors = xi.neighbors; // Note that K neighbors are the same as the PCA neighbors!
-
-            // for(int i = -dnn; i < dnn + 1; ++i){
-            //     for(int j = -dnn; j < dnn + 1; ++j){
-            //         if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-            //             xi.PCAneighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
-            //         }
-            //     }
-            // }
 
             // calculate center point, namely xi
             vector<double> centerPoint{0.0, 0.0};
@@ -178,7 +169,6 @@ namespace skelx{
             }
             if(xi.ui[0] == 0 && xi.ui[1] == 0){
                 xi.deltaX = {0, 0};
-                // cout<<"skip: "<<xi.pos[0]<<"  "<<xi.pos[1]<<endl;
                 continue;
             }
             vector<double> deltaX{0.0, 0.0};
@@ -194,12 +184,11 @@ namespace skelx{
             }
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5),
-                    jumpFunction = 2.0 / (1 + exp((xi.sigma - 0.7723) * (xi.sigma - 0.7723) * 1500.0)) + 1; // the 0.7723 comes from the mean of (0.755906 + 0.7875 + 0.773625) which are refered to 3 diffenrent rectangle conditions
+                    jumpFunction = 2.0 / (1 + exp((xi.sigma - 0.7723) * (xi.sigma - 0.7723) * 1500.0)) + 1; // the 0.7723 comes from the mean of (0.755906 + 0.7875 + 0.773625) which are referred to 3 diffenrent rectangle conditions
 
             deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * jumpFunction;
             deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * jumpFunction;
             xi.deltaX = deltaX;
-            // cout<<xi.pos[0]<<"  "<<xi.pos[1]<<"  |  ui="<<xi.ui[0]<<"  "<<xi.ui[1]<<"  |  prin="<<xi.principalVec[0]<<"  "<<xi.principalVec[1]<<"  |  cosTheta="<<cosTheta<<"  |  deltaX="<<xi.deltaX[0]<<"  "<<xi.deltaX[1]<<"  |  sigma="<<xi.sigma<<endl;
         }
     }
 
