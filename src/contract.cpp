@@ -194,7 +194,7 @@ namespace skelx{
             }
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5),
-                    jumpFunction = 1.0 / (1 + exp((xi.sigma - 0.7875) * (xi.sigma - 0.7875) * 6000.0)) + 1;
+                    jumpFunction = 2.0 / (1 + exp((xi.sigma - 0.7723) * (xi.sigma - 0.7723) * 1000.0)) + 1; // the 0.7723 comes from the mean of (0.755906 + 0.7875 + 0.773625) which are refered to 3 diffenrent rectangle conditions
 
             deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * jumpFunction;
             deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * jumpFunction;
@@ -270,7 +270,7 @@ Mat contract(Mat img, string filename, const double detailFactor = 10.0){
 
         updateK(img, pointset, upperLimit);
 
-        imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
+        // imwrite("results/" + to_string(t + 1) + "_" + filename + ".png", img);
         std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
         ++t;
 
