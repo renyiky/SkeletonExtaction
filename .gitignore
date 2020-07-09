@@ -1,6 +1,3 @@
-results/
 .vscode/
 src/obj/
 app
-!experimentsMaterial/*
-experimentsMaterial/.*
