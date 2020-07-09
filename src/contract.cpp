@@ -99,7 +99,7 @@ namespace skelx{
             double dnn = 3 * xi.d3nn, // 3 times of d3nn
                     x = xi.pos[0],
                     y = xi.pos[1];
-            xi.PCAneighbors = xi.neighbors; // Note that K neighbors are the same as the PCA neighbors!
+            // xi.PCAneighbors = xi.neighbors; // Note that K neighbors are the same as the PCA neighbors!
 
             // for(int i = -dnn; i < dnn + 1; ++i){
             //     for(int j = -dnn; j < dnn + 1; ++j){
@@ -111,15 +111,15 @@ namespace skelx{
 
             // calculate center point, namely xi
             vector<double> centerPoint{0.0, 0.0};
-            for(vector<double> &xj: xi.PCAneighbors){
+            for(vector<double> &xj: xi.neighbors){
                 centerPoint[0] += xj[0];
                 centerPoint[1] += xj[1];
             }
-            centerPoint[0] /= static_cast<double>(xi.PCAneighbors.size());
-            centerPoint[1] /= static_cast<double>(xi.PCAneighbors.size());
+            centerPoint[0] /= static_cast<double>(xi.neighbors.size());
+            centerPoint[1] /= static_cast<double>(xi.neighbors.size());
 
             vector<vector<double> > covMat(2, vector<double>(2,0.0));  // create cov Matrix
-            for(vector<double> &xj: xi.PCAneighbors){
+            for(vector<double> &xj: xi.neighbors){
                 vector<double> xixj = {xj[0] - centerPoint[0], xj[1] - centerPoint[1]};
 
                 covMat[0][0] += xixj[0] * xixj[0];
@@ -128,10 +128,10 @@ namespace skelx{
                 covMat[1][1] += xixj[1] * xixj[1];
             }
 
-            covMat[0][0] /= xi.PCAneighbors.size();
-            covMat[0][1] /= xi.PCAneighbors.size();
-            covMat[1][0] /= xi.PCAneighbors.size();
-            covMat[1][1] /= xi.PCAneighbors.size();
+            covMat[0][0] /= xi.neighbors.size();
+            covMat[0][1] /= xi.neighbors.size();
+            covMat[1][0] /= xi.neighbors.size();
+            covMat[1][1] /= xi.neighbors.size();
 
             if(isnan(covMat[0][0])){
                 std::cout<<"NaN covMat occured."<<endl;
