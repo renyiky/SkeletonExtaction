@@ -25,10 +25,10 @@ void visualize(const Mat &img, const vector<skelx::Point> pointset, int iter){
 
     for(skelx::Point p : pointset){
         // if(count % 10 != 0){
-        if(p.pos[0] > 100){
-            ++count;
-            continue;
-        }
+        // if(p.pos[0] > 100){
+        //     ++count;
+        //     continue;
+        // }
         Mat KNNvisual = origin.clone();
         Mat_<Vec3b> _KNNvisual = KNNvisual;
         // draw center point, red
