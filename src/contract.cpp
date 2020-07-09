@@ -21,7 +21,7 @@ using namespace Eigen;
 
 namespace skelx{
 
-    Mat draw(Mat src, vector<struct skelx::Point> pointset){
+    Mat draw(const Mat &src, vector<struct skelx::Point> &pointset){
         int rows = src.rows, cols = src.cols;
         Mat ret = Mat::zeros(rows, cols, CV_8U);
         for(skelx::Point p : pointset){
