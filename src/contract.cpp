@@ -56,13 +56,13 @@ namespace skelx{
         for(skelx::Point &p : pointset){
             if(p.sigma < threshold){
                 // cout<<"before:"<<p.pos[0]<<"  "<<p.pos[1]<<"  |  "<<p.deltaX[0]<<"  "<<p.deltaX[1]<<endl;
-                // if(abs(static_cast<double>(static_cast<int>(p.deltaX[0])) - p.deltaX[0]) >= 0.55){
-                //     p.pos[0] += p.deltaX[0] < 0 ? static_cast<int>(p.deltaX[0] - 1.0) : static_cast<int>(p.deltaX[0] + 1.0);
+                // if(abs(static_cast<double>(static_cast<int>(p.deltaX[0])) - p.deltaX[0]) >= 0.55 && abs(p.deltaX[0]) < 1.0){
+                //     p.pos[0] += (p.deltaX[0] < 0 ? static_cast<int>(p.deltaX[0] - 1.0) : static_cast<int>(p.deltaX[0] + 1.0));
                 // }else{
                 //     p.pos[0] += static_cast<int>(p.deltaX[0]);
                 // }
-                // if(abs(static_cast<double>(static_cast<int>(p.deltaX[1])) - p.deltaX[1]) >= 0.55){
-                //     p.pos[1] += p.deltaX[1] < 0 ? static_cast<int>(p.deltaX[1] - 1.0) : static_cast<int>(p.deltaX[1] + 1.0);
+                // if(abs(static_cast<double>(static_cast<int>(p.deltaX[1])) - p.deltaX[1]) >= 0.55 && abs(p.deltaX[1] < 1.0)){
+                //     p.pos[1] += (p.deltaX[1] < 0 ? static_cast<int>(p.deltaX[1] - 1.0) : static_cast<int>(p.deltaX[1] + 1.0));
                 // }else{
                 //     p.pos[1] += static_cast<int>(p.deltaX[1]);
                 // }
@@ -206,7 +206,8 @@ namespace skelx{
                 cosTheta = -cosTheta;
             }
 
-            double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
+            double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5),
+                    jumpFunction = 1.0 / (1 + exp((xi.sigma - 0.7875) * (xi.sigma - 0.7875) * 1000.0)) + 1;
 
             // if(abs(xi.sigma - 0.781411) < 0.001){
             //     deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25; //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
@@ -215,8 +216,8 @@ namespace skelx{
             //     deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor); //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
             //     deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor); //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
             // }
-            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * (10.0 / (1 + exp((xi.sigma - 0.7875) * (xi.sigma - 0.7875) * 100000.0)) + 1);
-            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * (10.0 / (1 + exp((xi.sigma - 0.7875) * (xi.sigma - 0.7875) * 100000.0)) + 1);
+            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * jumpFunction;
+            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * jumpFunction;
             xi.deltaX = deltaX;
             // cout<<xi.pos[0]<<"  "<<xi.pos[1]<<"  |  ui="<<xi.ui[0]<<"  "<<xi.ui[1]<<"  |  prin="<<xi.principalVec[0]<<"  "<<xi.principalVec[1]<<"  |  cosTheta="<<cosTheta<<"  |  deltaX="<<xi.deltaX[0]<<"  "<<xi.deltaX[1]<<"  |  sigma="<<xi.sigma<<endl;
         }
