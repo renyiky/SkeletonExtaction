@@ -46,7 +46,6 @@ namespace skelx{
         img = skelx::draw(img, pointset);
         for(skelx::Point &p : pointset){
             p.d3nn = getD3nn(img, p);
-            // cout<<"refresh: "<<p.pos[0]<<"  "<<p.pos[1]<<"  |  ui="<<p.ui[0]<<"  "<<p.ui[1]<<"  |  prin="<<p.principalVec[0]<<"  "<<p.principalVec[1]<<"  |  deltaX="<<p.deltaX[0]<<"  "<<p.deltaX[1]<<endl;
         }
     }
 
@@ -55,20 +54,8 @@ namespace skelx{
     void movePoint(vector<skelx::Point> &pointset, double threshold){
         for(skelx::Point &p : pointset){
             if(p.sigma < threshold){
-                // cout<<"before:"<<p.pos[0]<<"  "<<p.pos[1]<<"  |  "<<p.deltaX[0]<<"  "<<p.deltaX[1]<<endl;
-                // if(abs(static_cast<double>(static_cast<int>(p.deltaX[0])) - p.deltaX[0]) >= 0.55 && abs(p.deltaX[0]) < 1.0){
-                //     p.pos[0] += (p.deltaX[0] < 0 ? static_cast<int>(p.deltaX[0] - 1.0) : static_cast<int>(p.deltaX[0] + 1.0));
-                // }else{
-                //     p.pos[0] += static_cast<int>(p.deltaX[0]);
-                // }
-                // if(abs(static_cast<double>(static_cast<int>(p.deltaX[1])) - p.deltaX[1]) >= 0.55 && abs(p.deltaX[1] < 1.0)){
-                //     p.pos[1] += (p.deltaX[1] < 0 ? static_cast<int>(p.deltaX[1] - 1.0) : static_cast<int>(p.deltaX[1] + 1.0));
-                // }else{
-                //     p.pos[1] += static_cast<int>(p.deltaX[1]);
-                // }
                 p.pos[0] += static_cast<int>(p.deltaX[0]);
                 p.pos[1] += static_cast<int>(p.deltaX[1]);
-                // cout<<"after: "<<p.pos[0]<<"  "<<p.pos[1]<<"  |  "<<p.deltaX[0]<<"  "<<p.deltaX[1]<<endl;
             }
         }
     }
@@ -112,7 +99,7 @@ namespace skelx{
             double dnn = 3 * xi.d3nn, // 3 times of d3nn
                     x = xi.pos[0],
                     y = xi.pos[1];
-            xi.PCAneighbors = xi.neighbors;
+            xi.PCAneighbors = xi.neighbors; // Note that K neighbors are the same as the PCA neighbors!
 
             // for(int i = -dnn; i < dnn + 1; ++i){
             //     for(int j = -dnn; j < dnn + 1; ++j){
@@ -207,15 +194,8 @@ namespace skelx{
             }
 
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5),
-                    jumpFunction = 1.0 / (1 + exp((xi.sigma - 0.7875) * (xi.sigma - 0.7875) * 1000.0)) + 1;
+                    jumpFunction = 1.0 / (1 + exp((xi.sigma - 0.7875) * (xi.sigma - 0.7875) * 6000.0)) + 1;
 
-            // if(abs(xi.sigma - 0.781411) < 0.001){
-            //     deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25; //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
-            //     deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * 1.25; //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
-            // }else{
-            //     deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor); //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
-            //     deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor); //* 1.25 * (1 - pow((cosTheta / 2), 2.0));    //+ 0.25) * cos(cosTheta * M_PI / 2.0);
-            // }
             deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * jumpFunction;
             deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * jumpFunction;
             xi.deltaX = deltaX;
