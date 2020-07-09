@@ -222,14 +222,16 @@ namespace skelx{
         return static_cast<int>(sqrt((right - left) * (down - up)) / 10);
     }
 
-    // remove isolate point, namely noise
+    // remove isolate point, namely noise,
+    // and fill one-pixel holes
     void postProcess(Mat &img){
-        for(int x = 0; x< img.rows; ++x){
+        // remove isolate point
+        for(int x = 0; x < img.rows; ++x){
             for(int y = 0; y < img.cols; ++y){
                 if(img.at<uchar>(x, y) != 0){
                     int flag = 0;
-                    for(int i = -1; (i < 2) && (flag == 0); ++i){
-                        for(int j = -1; (j < 2) && (flag == 0); ++j){
+                    for(int i = -1; i < 2 && flag == 0; ++i){
+                        for(int j = -1; j < 2 && flag == 0; ++j){
                             if(x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
                                 flag = 1;
                                 break;
@@ -238,6 +240,29 @@ namespace skelx{
                     }
                     if(flag == 0){
                         img.at<uchar>(x, y) = 0;
+                    }
+                }
+            }
+        }
+
+        // fill one-pixel holes
+        for(int x = 0; x < img.rows; ++x){
+            for(int y = 0; y < img.cols; ++y){
+                if(img.at<uchar>(x, y) == 0){
+                    // 4-neighbors considered
+                    vector<int> up = {x, y - 1},
+                                down = {x , y + 1},
+                                right = {x + 1, y},
+                                left = {x - 1, y};
+                    vector<vector<int> > fourNeighbors = {up, down, right, left};
+                    int sum = 0;
+                    for(vector<int> &p : fourNeighbors){
+                        if(p[0] >= 0 && p[0] < img.rows && p[1] >= 0 && p[1] < img.cols && img.at<uchar>(p[0], p[1]) == 255){
+                            sum += 1;
+                        }
+                    }
+                    if(sum == 4){
+                        img.at<uchar>(x, y) = 255;
                     }
                 }
             }
