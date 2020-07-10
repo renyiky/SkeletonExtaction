@@ -9,7 +9,7 @@ SRC_CODE := $(notdir $(wildcard $(SRC_DIR)/*.cpp)) $(notdir $(wildcard $(COMP_DI
 OBJ := $(SRC_CODE:%.cpp=%.o)
 
 CXX := clang++
-CXXFLAGS := -std=c++11 -I $(INC_DIR) `pkg-config --cflags --libs opencv` -w
+CXXFLAGS := -std=c++11 -I $(INC_DIR) `pkg-config --cflags --libs opencv4` -w
 
 
 app:makeOBJDIR $(OBJ)
@@ -21,14 +21,16 @@ makeOBJDIR:
 
 %.o:%.cpp
 	@echo Compiling $(notdir $<)...
-	@$(CXX) -c $< -o $(OBJ_DIR)/$@ $(CXXFLAGS) 
+	@$(CXX) -c $< -o $(OBJ_DIR)/$@ $(CXXFLAGS)
 
-.PHONY: clean cleanall cleanres do cleanobj ev
-
+# for evaluator
 ev:
 	@echo Generating Evaluator...
 	@$(CXX) -o ev src/evaluation/evaluation.cpp $(CXXFLAGS) 
 	@echo Done.
+
+.PHONY: clean cleanall cleanres do cleanobj ev
+
 
 cleanall: clean cleanres
 
