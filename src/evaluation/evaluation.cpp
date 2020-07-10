@@ -60,7 +60,10 @@ int main(int argc, char *argv[]){
 
     // print all results
     for(int i = 0; i < names.size(); ++i){
-        cout<<setw(7)<<names[i]<<"  |  F1 = "<<f1Scores[i]<<"  |  TR = "<<TR[i]<<"  |  CM = "<<CM[i]<<"  |  SM = "<<SM[i]<<endl;
+        cout<<setiosflags(ios::fixed)<<setprecision(7)<<flush;
+        cout<<setw(7)<<names[i]<<"  |  F1 = "<<f1Scores[i]<<"  |  TR = "<<TR[i]<<flush;
+        cout.unsetf(ios_base::fixed);
+        cout<<setw(5)<<"  |  CM = "<<setw(2)<<CM[i]<<setw(5)<<"  |  SM = "<<setw(2)<<SM[i]<<endl;
     }
 
     return 0;
