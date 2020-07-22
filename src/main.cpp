@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
     imwrite(outputPath + "0_extracted_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
     
     // postprocess
-    img = AWalg(img);
+    img = HybridAlg(img);
     imwrite(outputPath + "0_final_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
     
     cout<<filename + "'s current detail factor = "<<detailFactor<<endl;
