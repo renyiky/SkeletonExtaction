@@ -1,0 +1,69 @@
+batf
+ZS time : 1.71523
+GH time : 0.51726
+AW time : 3.06661
+Hybrid time : 0.725479
+Our time: 15.5683
+
+beetle
+ZS time : 5.45177
+GH time : 1.65308
+AW time : 9.76654
+Hybrid time : 2.26943
+Our time: 45.9274
+
+camel03
+ZS time : 6.53069
+GH time : 2.09168
+AW time : 12.4157
+Hybrid time : 2.69785
+Our time: 53.9206
+
+doodle
+ZS time : 0.690781
+GH time : 0.225155
+AW time : 1.27543
+Hybrid time : 0.302812
+Our time: 9.01022
+
+elephant19
+ZS time : 3.16929
+GH time : 0.906423
+AW time : 5.47197
+Hybrid time : 1.37098
+Our time: 24.1635
+
+horse08
+ZS time : 19.6672
+GH time : 6.60411
+AW time : 37.8213
+Hybrid time : 8.10864
+Our time: 161.737
+
+man
+ZS time : 0.51276
+GH time : 0.160002
+AW time : 0.902621
+Hybrid time : 0.220324
+Our time: 5.40052
+
+octopus12
+ZS time : 1.34834
+GH time : 0.425648
+AW time : 2.62466
+Hybrid time : 0.568498
+Our time: 16.4498
+
+tree09
+ZS time : 8.70093
+GH time : 2.68869
+AW time : 15.8147
+Hybrid time : 3.64196
+Our time: 60.7727
+
+cattle04
+ZS time : 40.9516
+GH time : 9.79115
+AW time : 61.2807
+Hybrid time : 16.5922
+Our time: 201.19
