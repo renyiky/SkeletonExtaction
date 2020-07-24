@@ -61,6 +61,7 @@ int main(int argc, char *argv[]){
     }
 
     // print all results
+    cout<<filename<<endl;
     for(int i = 0; i < names.size(); ++i){
         cout<<setiosflags(ios::fixed)<<setprecision(7)<<flush;
         cout<<setw(7)<<names[i]<<"  |  F1 = "<<f1Scores[i]<<"  |  TR = "<<TR[i]<<flush;
