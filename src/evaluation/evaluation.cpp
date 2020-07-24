@@ -16,6 +16,7 @@ double connectivityMeasureExam(const Mat &img);
 double sensitivityMeasureExam(const Mat &img);
 vector<int> searchNeighborsValue(const Mat &img, vector<vector<int> > neighbors);
 int countTriangle(const Mat &img, const vector<int> &pos);
+Mat invert(Mat &img);
 
 int main(int argc, char *argv[]){
     string filename = argv[1], 
@@ -36,6 +37,7 @@ int main(int argc, char *argv[]){
         Hybrid = imread(HybridFilePath, IMREAD_GRAYSCALE),
         groundTruth = imread(gtFilePath, IMREAD_GRAYSCALE),
         raw = imread(rawFilePath, IMREAD_GRAYSCALE);
+    groundTruth = invert(groundTruth);
     vector<Mat> resources = {src, ZS, AW, GH, Hybrid};   
     vector<string> names = {"Ours", "ZS", "AW", "GH", "Hybrid"};
     
@@ -224,3 +226,14 @@ double sensitivityMeasureExam(const Mat &img){
 // Thinning Speed.
 // used to evaluate the number of pixels thinned per time unit(second).
 
+Mat invert(Mat &img){
+    int rows = img.rows, cols = img.cols;
+    uchar *p;
+    for(int i = 0; i < rows; ++i){
+        p = img.ptr<uchar>(i);
+        for(int j = 0; j < cols; ++j){
+            p[j] = p[j] > 180 ? 0 : 255;
+        }
+    }
+    return img;
+}
