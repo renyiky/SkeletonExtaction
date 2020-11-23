@@ -28,18 +28,20 @@ int main(int argc, char *argv[]){
             AWFilePath = resultsPath + filename + "_" + argv[2] + "/0_final_AW_" + filename + ".png",
             GHFilePath = resultsPath + filename + "_" + argv[2] + "/0_final_GH_" + filename + ".png",
             HybridFilePath = resultsPath + filename + "_" + argv[2] + "/0_final_Hybrid_" + filename + ".png",
+            DMFilePath = resultsPath + filename + "_" + argv[2] + "/DM_" + filename + ".png",
             rawFilePath = resultsPath + filename + "_" + argv[2] + "/0_raw_" + filename + ".png";
-    
     Mat src = imread(srcFilePath, IMREAD_GRAYSCALE),
         ZS = imread(ZSFilePath, IMREAD_GRAYSCALE),
         AW = imread(AWFilePath, IMREAD_GRAYSCALE),
         GH = imread(GHFilePath, IMREAD_GRAYSCALE),
         Hybrid = imread(HybridFilePath, IMREAD_GRAYSCALE),
+        DM = imread(DMFilePath, IMREAD_GRAYSCALE),
         groundTruth = imread(gtFilePath, IMREAD_GRAYSCALE),
         raw = imread(rawFilePath, IMREAD_GRAYSCALE);
     groundTruth = invert(groundTruth);
-    vector<Mat> resources = {src, ZS, AW, GH, Hybrid};   
-    vector<string> names = {"Ours", "ZS", "AW", "GH", "Hybrid"};
+
+    vector<Mat> resources = {src, ZS, AW, GH, Hybrid, DM};   
+    vector<string> names = {"Ours", "ZS", "AW", "GH", "Hybrid", "DM"};
     
     // examinations are below    
     vector<double> f1Scores = {},
