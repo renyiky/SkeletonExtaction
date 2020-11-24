@@ -49,6 +49,10 @@ int main(int argc, char *argv[]){
                     CM = {},
                     SM = {};
     for(Mat &i : resources){
+        if(i.data == NULL){
+            cerr<<"IMG OPEN FAILED!"<<endl;
+            return -1;
+        }
         // F1 Score
         f1Scores.push_back(f1ScoreExam(groundTruth, i));
 
