@@ -14,7 +14,7 @@ namespace skelx{
 
     double  sigma = 0,
             d3nn,
-            cosAlpha = 0;  // to represent the angle of current cluster
+            cosTheta = 0;
 
     std::vector<std::vector<double> > neighbors, PCAneighbors, covMat;
     };

@@ -46,7 +46,7 @@ double getD3nn(Mat &img, const struct skelx::Point &point){
     //     }
     // }
 
-    // circle search
+    // circular search
     while(neighborsRadius.size() < 3){
         ++radius;
         neighborsRadius = {};

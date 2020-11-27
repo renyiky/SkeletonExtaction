@@ -84,7 +84,7 @@ namespace skelx{
     }
 
     // pca process, after this, the sigma, principalVec, 
-    // PCAneighbors, covMat and deltaX of xi would be set.
+    // PCAneighbors, covMat, cosTheta and deltaX of xi would be set.
     // only do PCA for the point whose sigma is less than the parameter threshold.
     // the parameter detailFactor which is set to 10.0 as default can control the degree of detail the algorithm would produce,
     // the larger the detailFactor, the more details the skeleton would have.
@@ -96,9 +96,9 @@ namespace skelx{
                 continue;
             }
             // get PCA neighbors which is in 3 * d3nn distance
-            double dnn = 3 * xi.d3nn, // 3 times of d3nn
-                    x = xi.pos[0],
-                    y = xi.pos[1];
+            // double dnn = 3 * xi.d3nn, // 3 times of d3nn
+            //         x = xi.pos[0],
+            //         y = xi.pos[1];
 
             // calculate center point, namely xi
             vector<double> centerPoint{0.0, 0.0};
@@ -108,7 +108,7 @@ namespace skelx{
             }
             centerPoint[0] /= static_cast<double>(xi.neighbors.size());
             centerPoint[1] /= static_cast<double>(xi.neighbors.size());
-
+            // cout<<"size::"<<xi.neighbors.size()<<endl;
             vector<vector<double> > covMat(2, vector<double>(2,0.0));  // create cov Matrix
             for(vector<double> &xj: xi.neighbors){
                 vector<double> xixj = {xj[0] - centerPoint[0], xj[1] - centerPoint[1]};
@@ -182,7 +182,7 @@ namespace skelx{
                 xi.principalVec[1] = -xi.principalVec[1];
                 cosTheta = -cosTheta;
             }
-
+            xi.cosTheta = cosTheta;
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5),
                     jumpFunction = 2.0 / (1 + exp((xi.sigma - 0.7723) * (xi.sigma - 0.7723) * 1500.0)) + 1; // the 0.7723 comes from the mean of (0.755906 + 0.7875 + 0.773625) which are referred to 3 diffenrent rectangle conditions
 
@@ -211,9 +211,20 @@ namespace skelx{
         return static_cast<int>(sqrt((right - left) * (down - up)) / 10);
     }
 
+    // thin the raw skeleton
+    // remove points whose cosTheta is less than the paramether threshold
+    // return the new final image
+    Mat thin(Mat &img, vector<skelx::Point> &pointset, float threshold){
+    vector<skelx::Point> new_pointset;
+    for(auto &i : pointset){
+        if(i.cosTheta >= threshold) new_pointset.push_back(i);
+    }
+    return draw(img, new_pointset);
+    }
+
     // remove isolate point, namely noise,
     // and fill one-pixel holes
-    void postProcess(Mat &img){
+    Mat postProcess(Mat &img, double detailFactor){
         // remove isolate point
         for(int x = 0; x < img.rows; ++x){
             for(int y = 0; y < img.cols; ++y){
@@ -256,6 +267,12 @@ namespace skelx{
                 }
             }
         }
+
+        vector<skelx::Point> pointset = getPointsetInitialized(img);
+        computeUi(img, pointset, 1.0);
+        PCA(img, pointset, 1.0, detailFactor);
+        return thin(img, pointset, 0.8);
+        // return img;
     }
 }
 
@@ -272,7 +289,7 @@ Mat contract(Mat img, string filename, const double detailFactor = 10.0){
         skelx::PCA(img, pointset, 0.95, detailFactor);
 
         // if(t % 10 == 0 && t != 0){
-        //     visualize(img, pointset, t);
+            // visualize(img, pointset, t);
         // }
 
         skelx::movePoint(pointset, 0.95);
@@ -292,8 +309,11 @@ Mat contract(Mat img, string filename, const double detailFactor = 10.0){
         // if it doesn't change for 3 times, stop extracting
         if(sigmaHat == preSigmaHat){
             if(count == 2){
-                skelx::postProcess(img);
-                return img;
+
+                // skelx::postProcess(img);
+                // visualize(img, pointset, t);
+                // img = thin(img, pointset, 0.85);
+                return skelx::postProcess(img, detailFactor);
             }else{
                 ++count;
             }
@@ -302,6 +322,6 @@ Mat contract(Mat img, string filename, const double detailFactor = 10.0){
             count = 0;
         }
     }
-    skelx::postProcess(img);
-    return img;
+    // skelx::postProcess(img);
+    return skelx::postProcess(img, detailFactor);
 }

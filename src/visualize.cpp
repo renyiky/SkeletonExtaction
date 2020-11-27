@@ -29,15 +29,18 @@ void visualize(const Mat &img, const vector<skelx::Point> pointset, int iter){
         //     ++count;
         //     continue;
         // }
+        cout << "Point" << count<< ":[ " << p.deltaX[0] << " , " << p.deltaX[1] << " ]" << "cosTheta:" << p.cosTheta << endl;
         Mat KNNvisual = origin.clone();
         Mat_<Vec3b> _KNNvisual = KNNvisual;
+
         // draw center point, red
         _KNNvisual(p.pos[0], p.pos[1])[0] = 0;
         _KNNvisual(p.pos[0], p.pos[1])[1] = 0;
         _KNNvisual(p.pos[0], p.pos[1])[2] = 255;
         KNNvisual = _KNNvisual;
-        Mat PCAvisual = KNNvisual.clone();
-        Mat_<Vec3b> _PCAvisual = PCAvisual;
+        // Mat PCAvisual = KNNvisual.clone();
+        // Mat_<Vec3b> _PCAvisual = PCAvisual;
+
         // draw KNN neighbors, green
         for(vector<double> nei : p.neighbors){
             _KNNvisual(nei[0], nei[1])[0] = 0;
@@ -45,15 +48,17 @@ void visualize(const Mat &img, const vector<skelx::Point> pointset, int iter){
             _KNNvisual(nei[0], nei[1])[2] = 0;
         }
         KNNvisual = _KNNvisual;
+        
         // draw PCA neighbors, blue
-        for(vector<double> nei : p.PCAneighbors){
-            _PCAvisual(nei[0], nei[1])[0] = 202;
-            _PCAvisual(nei[0], nei[1])[1] = 188;
-            _PCAvisual(nei[0], nei[1])[2] = 62;
-        }
-        PCAvisual = _PCAvisual;
+        // for(vector<double> nei : p.PCAneighbors){
+        //     _PCAvisual(nei[0], nei[1])[0] = 202;
+        //     _PCAvisual(nei[0], nei[1])[1] = 188;
+        //     _PCAvisual(nei[0], nei[1])[2] = 62;
+        // }
+        // PCAvisual = _PCAvisual;
         imwrite("results/visualization/iter" + to_string(iter) + "_" + to_string(count) + "_KNN.png", KNNvisual);
-        imwrite("results/visualization/iter" + to_string(iter) + "_" + to_string(count) + "_PCA.png", PCAvisual);
+        // imwrite("results/visualization/iter" + to_string(iter) + "_" + to_string(count) + "_PCA.png", PCAvisual);
         ++count;
+
     }
 }

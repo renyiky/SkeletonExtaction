@@ -19,7 +19,7 @@ void output(Mat &img, string name);
 void superpose(Mat img, string filename, string inputPath);
 
 string inputPath = "experimentsMaterial/resources/",
-        outputPath = "experimentsMaterial/results/";
+        outputPath = "results/";
 
 int main(int argc, char *argv[]){
     double detailFactor = stod(argv[2]);
@@ -49,14 +49,14 @@ int main(int argc, char *argv[]){
     imwrite(outputPath + "0_extracted_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
     
     // postprocess
-    img = AWalg(img);
-    imwrite(outputPath + "0_final_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
+    // img = AWalg(img);
+    // imwrite(outputPath + "0_final_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
     
     cout<<filename + "'s current detail factor = "<<detailFactor<<endl;
     return 0;
 }
 
 void output(Mat &img, string name){
-    string outputPath = "experimentsMaterial/results/";
+    // string outputPath = "experimentsMaterial/results/";
     imwrite(outputPath + "0_" + name + ".png", img);
 }
