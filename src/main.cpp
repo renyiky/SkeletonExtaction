@@ -22,7 +22,8 @@ string inputPath = "experimentsMaterial/resources/",
         outputPath = "results/";
 
 int main(int argc, char *argv[]){
-    double detailFactor = stod(argv[2]);
+    double detailFactor = stod(argv[2]),
+            thinningFactor = stod(argv[3]);
     string filename = argv[1];
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw_" + filename);
@@ -45,14 +46,15 @@ int main(int argc, char *argv[]){
     // Mat imgHybrid = HybridAlg(img);
     // output(imgHybrid, "final_Hybrid_" + filename);
 
-    img = contract(img, filename, detailFactor);
+    img = contract(img, filename, detailFactor, thinningFactor);
     imwrite(outputPath + "0_extracted_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
-    
+
     // postprocess
     // img = AWalg(img);
     // imwrite(outputPath + "0_final_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
     
-    cout<<filename + "'s current detail factor = "<<detailFactor<<endl;
+    cout << filename + "'s current detail factor = " << detailFactor << "\n" 
+            "thinningFactor = " << thinningFactor << endl;
     return 0;
 }
 

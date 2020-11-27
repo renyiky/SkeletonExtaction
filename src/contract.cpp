@@ -169,6 +169,7 @@ namespace skelx{
             }
             if(xi.ui[0] == 0 && xi.ui[1] == 0){
                 xi.deltaX = {0, 0};
+                xi.cosTheta = 1.0;
                 continue;
             }
             vector<double> deltaX{0.0, 0.0};
@@ -224,7 +225,7 @@ namespace skelx{
 
     // remove isolate point, namely noise,
     // and fill one-pixel holes
-    Mat postProcess(Mat &img, double detailFactor){
+    Mat postProcess(Mat &img, const double detailFactor, const double thinningFactor){
         // remove isolate point
         for(int x = 0; x < img.rows; ++x){
             for(int y = 0; y < img.cols; ++y){
@@ -271,12 +272,14 @@ namespace skelx{
         vector<skelx::Point> pointset = getPointsetInitialized(img);
         computeUi(img, pointset, 1.0);
         PCA(img, pointset, 1.0, detailFactor);
-        return thin(img, pointset, 0.8);
+
+        visualize(img, pointset, 0);
+        return thin(img, pointset, thinningFactor);
         // return img;
     }
 }
 
-Mat contract(Mat img, string filename, const double detailFactor = 10.0){
+Mat contract(Mat img, string filename, const double detailFactor, const double thinningFactor){
     double sigmaHat = 0.0,
             preSigmaHat = sigmaHat;
     int count = 0,  // count if sigmaHat remains unchanged
@@ -313,7 +316,7 @@ Mat contract(Mat img, string filename, const double detailFactor = 10.0){
                 // skelx::postProcess(img);
                 // visualize(img, pointset, t);
                 // img = thin(img, pointset, 0.85);
-                return skelx::postProcess(img, detailFactor);
+                return skelx::postProcess(img, detailFactor, thinningFactor);
             }else{
                 ++count;
             }
@@ -323,5 +326,5 @@ Mat contract(Mat img, string filename, const double detailFactor = 10.0){
         }
     }
     // skelx::postProcess(img);
-    return skelx::postProcess(img, detailFactor);
+    return skelx::postProcess(img, detailFactor, thinningFactor);
 }
