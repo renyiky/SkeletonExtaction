@@ -2,3 +2,4 @@
 src/obj/
 app
 ev
+vsversion/.*

@@ -1,0 +1,3 @@
+D:\Documents\Codes\SkeletonExtraction\vsversion\x64\Debug\vsversion.exe
+D:\Documents\Codes\SkeletonExtraction\vsversion\x64\Debug\vsversion.pdb
+D:\Documents\Codes\SkeletonExtraction\vsversion.pdb
