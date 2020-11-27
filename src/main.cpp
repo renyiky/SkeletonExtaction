@@ -22,8 +22,9 @@ string inputPath = "experimentsMaterial/resources/",
         outputPath = "results/";
 
 int main(int argc, char *argv[]){
-    double detailFactor = stod(argv[2]),
-            thinningFactor = stod(argv[3]);
+    double thinningFactor = 0.8;
+    double detailFactor = stod(argv[2]);
+    if(argc == 4) thinningFactor = stod(argv[3]);
     string filename = argv[1];
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw_" + filename);
@@ -47,7 +48,7 @@ int main(int argc, char *argv[]){
     // output(imgHybrid, "final_Hybrid_" + filename);
 
     img = contract(img, filename, detailFactor, thinningFactor);
-    imwrite(outputPath + "0_extracted_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
+    imwrite(outputPath + "0_extracted_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + "_" + to_string(thinningFactor) + ".png", img);
 
     // postprocess
     // img = AWalg(img);

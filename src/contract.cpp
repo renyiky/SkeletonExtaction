@@ -273,7 +273,7 @@ namespace skelx{
         computeUi(img, pointset, 1.0);
         PCA(img, pointset, 1.0, detailFactor);
 
-        visualize(img, pointset, 0);
+        // visualize(img, pointset, 0);
         return thin(img, pointset, thinningFactor);
         // return img;
     }
@@ -287,7 +287,7 @@ Mat contract(Mat img, string filename, const double detailFactor, const double t
         upperLimit = skelx::setUpperLimitOfK(img);  // set the upper limit of k, it would be used when update k during each iteration
     vector<skelx::Point> pointset = getPointsetInitialized(img);    // set coordinates, k0, d3nn
 
-    while(sigmaHat < 0.95){
+    while(true){    // I remove the threshold 0.95
         skelx::computeUi(img, pointset, 0.95);
         skelx::PCA(img, pointset, 0.95, detailFactor);
 
