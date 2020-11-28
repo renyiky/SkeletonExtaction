@@ -3,7 +3,7 @@
 #include <iostream>
 #include <opencv2/highgui.hpp>
 
-#include "HybridAlg.hpp"
+#include "previousAlgs.hpp"
 
 using namespace std;
 using namespace cv;

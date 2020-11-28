@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 
-#include "GHalg.hpp"
+#include "previousAlgs.hpp"
 
 using namespace std;
 using namespace cv;

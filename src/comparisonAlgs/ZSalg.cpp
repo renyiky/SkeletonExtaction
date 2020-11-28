@@ -1,7 +1,7 @@
 #include <opencv2/core.hpp>
 #include <vector>
 
-#include "ZSalg.hpp"
+#include "previousAlgs.hpp"
 
 using namespace std;
 using namespace cv;
