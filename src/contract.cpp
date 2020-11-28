@@ -1,4 +1,5 @@
 #include <opencv2/core.hpp>
+#include <opencv2/opencv.hpp>
 #include <vector>
 #include <iostream>
 #include <eigen3/Eigen/Dense>
@@ -212,15 +213,83 @@ namespace skelx{
         return static_cast<int>(sqrt((right - left) * (down - up)) / 10);
     }
 
+    bool isKeyPos(vector<vector<int> > &keyPointPos, vector<int> pos){
+        for(auto &i : keyPointPos){
+            if(i[0] == pos[0] && i[1] == pos[1]) return true;
+        }
+        return false;
+    }
+
+    bool isRemovable(Mat &img, vector<int> pos){
+        Mat bw, ret, labelImage;
+        ret = img.clone();
+        // try to remove it
+        ret.at<uchar>(pos[0], pos[1]) = 0;
+        cv::threshold(ret, bw, 0, 255, THRESH_BINARY);
+        if(connectedComponents(bw, labelImage) != 2) return false;
+        else return true;
+    }
+
     // thin the raw skeleton
     // remove points whose cosTheta is less than the paramether threshold
     // return the new final image
     Mat thin(Mat &img, vector<skelx::Point> &pointset, float threshold){
-    vector<skelx::Point> new_pointset;
-    for(auto &i : pointset){
-        if(i.cosTheta >= threshold) new_pointset.push_back(i);
-    }
-    return draw(img, new_pointset);
+        vector<vector<int> > keyPointPos;  // store the positions of key points which shall not be removed
+        for(auto &i : pointset){
+            if(i.cosTheta >= threshold) keyPointPos.push_back({static_cast<int>(i.pos[0]), static_cast<int>(i.pos[1])});
+        }
+        Mat ret = img.clone();
+        bool flag = true; // flag to show if there is no point can be removed
+        while(flag){
+            flag = false;
+
+            // from top to bottom
+            for(int y = 0; y < ret.cols; ++y){
+                for(int x = 0; x < ret.rows; ++x){
+                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointPos, {x, y}) && isRemovable(ret, {x, y})){
+                        ret.at<uchar>(x, y) = 0;
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+
+            // from bottom to top
+            for(int y = 0; y < ret.cols; ++y){
+                for(int x = ret.rows - 1; x >= 0; --x){
+                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointPos, {x, y}) && isRemovable(ret, {x, y})){
+                        ret.at<uchar>(x, y) = 0;
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            
+            // from left to right
+            for(int x = 0; x < ret.rows; ++x){
+                for(int y = 0; y < ret.cols; ++y){
+                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointPos, {x, y}) && isRemovable(ret, {x, y})){
+                        ret.at<uchar>(x, y) = 0;
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+
+            // from right to left
+            for(int x = 0; x < ret.rows; ++x){
+                for(int y = ret.cols - 1; y >= 0; --y){
+                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointPos, {x, y}) && isRemovable(ret, {x, y})){
+                        ret.at<uchar>(x, y) = 0;
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return ret;
+        // return draw(img, key_pointset);
     }
 
     // remove isolate point, namely noise,
@@ -312,7 +381,6 @@ Mat contract(Mat img, string filename, const double detailFactor, const double t
         // if it doesn't change for 3 times, stop extracting
         if(sigmaHat == preSigmaHat){
             if(count == 2){
-
                 // skelx::postProcess(img);
                 // visualize(img, pointset, t);
                 // img = thin(img, pointset, 0.85);
