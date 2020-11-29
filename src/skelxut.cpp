@@ -57,7 +57,7 @@ namespace skelx{
     }
 
     // update k in each iteration
-    // when k is larger than 10, we set it as the @param upperLimit
+    // when k is larger than 10, we set it as the parameter upperLimit
     void updateK(Mat &img, vector<skelx::Point> &pointset, int upperLimit){
         for(struct skelx::Point &p : pointset){
             double dnn = 3 * p.d3nn;
@@ -116,22 +116,23 @@ namespace skelx{
             }
         }
         // set k0
-        int num = pointset.size();
+        // int num = pointset.size();
         for(struct skelx::Point &p : pointset){
             p.d3nn = getD3nn(img, p);
-            double dnn = 3 * p.d3nn;
-            int x = p.pos[0],
-                y = p.pos[1];
-            vector<vector<double> > neighborsCount = {};
-            for(int i = -dnn; i < dnn + 1; ++i){
-                for(int j = -dnn; j < dnn + 1; ++j){
-                    if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-                        neighborsCount.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
-                    }
-                }
-            }
-            p.k = neighborsCount.size();
         }
+        //     double dnn = 3 * p.d3nn;
+        //     int x = p.pos[0],
+        //         y = p.pos[1];
+        //     vector<vector<double> > neighborsCount = {};
+        //     for(int i = -dnn; i < dnn + 1; ++i){
+        //         for(int j = -dnn; j < dnn + 1; ++j){
+        //             if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+        //                 neighborsCount.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+        //             }
+        //         }
+        //     }
+        //     p.k = neighborsCount.size();
+        // }
         return pointset;
     }
 
@@ -178,29 +179,29 @@ namespace skelx{
 
     // remove duplicates which result from moving point, and refresh d3nn for each point
     void refreshPointset(Mat &img, vector<skelx::Point> &pointset){
-        map<vector<double>, skelx::Point> dataset;
-        for(skelx::Point p : pointset){
-            dataset[p.pos] = p;
-        }
-        pointset.clear();
-        for(map<vector<double>, skelx::Point>::iterator iter = dataset.begin(); iter != dataset.end(); ++iter){
-            pointset.push_back(iter->second);
-        }
+        // map<vector<double>, skelx::Point> dataset;
+        // for(skelx::Point p : pointset){
+        //     dataset[p.pos] = p;
+        // }
+        // pointset.clear();
+        // for(map<vector<double>, skelx::Point>::iterator iter = dataset.begin(); iter != dataset.end(); ++iter){
+        //     pointset.push_back(iter->second);
+        // }
 
         img = skelx::draw(img, pointset);
-        for(skelx::Point &p : pointset){
-            p.d3nn = getD3nn(img, p);
-        }
+        // for(skelx::Point &p : pointset){
+        //     p.d3nn = getD3nn(img, p);
+        // }
     }
 
     // move points toward deltaX
     // only move the point whose sigma is less than the threshold
     void movePoint(vector<skelx::Point> &pointset, double threshold){
         for(skelx::Point &p : pointset){
-            if(p.sigma < threshold){
+            // if(p.sigma < threshold){
                 p.pos[0] += static_cast<int>(p.deltaX[0]);
                 p.pos[1] += static_cast<int>(p.deltaX[1]);
-            }
+            // }
         }
     }
 
@@ -208,9 +209,9 @@ namespace skelx{
     // neighbors and ui of xi would be set
     void computeUi(Mat &img, vector<skelx::Point> &pointset, double threshold){
         for(skelx::Point &p : pointset){
-            if(p.sigma > threshold){
-                continue;
-            }
+            // if(p.sigma > threshold){
+            //     continue;
+            // }
             // get k nearest neighbors
             vector<double> ui{0.0, 0.0};
 
@@ -235,9 +236,7 @@ namespace skelx{
     void PCA(Mat &img, vector<skelx::Point> &pointset, double threshold, double detailFactor){
 
         for(skelx::Point &xi: pointset){
-            if(xi.sigma > threshold){
-                continue;
-            }else if(xi.ui[0] == 0 && xi.ui[1] == 0){
+            if(xi.ui[0] == 0 && xi.ui[1] == 0){
                 xi.deltaX = {0, 0};
                 xi.cosTheta = 0.0;
                 continue;
@@ -334,9 +333,9 @@ namespace skelx{
         return static_cast<int>(sqrt((right - left) * (down - up)) / 10);
     }
 
-    bool isKeyPos(vector<vector<int> > &keyPointPos, vector<int> pos){
-        for(auto &i : keyPointPos){
-            if(i[0] == pos[0] && i[1] == pos[1]) return true;
+    bool isKeyPos(vector<skelx::Point > &keyPointset, vector<int> pos){
+        for(auto &i : keyPointset){
+            if(i.pos[0] == pos[0] && i.pos[1] == pos[1]) return true;
         }
         return false;
     }
@@ -351,17 +350,19 @@ namespace skelx{
         else return true;
     }
 
+    bool reverseDirectionTest(Mat &img, skelx::Point &p){
+        
+    }
+
     // thin the raw skeleton
     // remove points whose cosTheta is less than the paramether threshold
     // return the new final image
     Mat thin(Mat &img, vector<skelx::Point> &pointset, float threshold){
-        vector<vector<int> > keyPointPos;  // store the positions of key points which shall not be removed
-        vector<skelx::Point> keyPointSet;
+        vector<skelx::Point> keyPointset;   // store the key points which shall not be removed
         for(auto &i : pointset){
             if(i.cosTheta >= threshold && (abs(i.pos[0]) > 10e-3 || abs(i.pos[1]) > 10e-3)){
-                keyPointSet.push_back(i);
-                keyPointPos.push_back({static_cast<int>(i.pos[0]), static_cast<int>(i.pos[1])});
-            
+                keyPointset.push_back(i);
+                // ketPointset.push_back({static_cast<int>(i.pos[0]), static_cast<int>(i.pos[1])});
             }
         }
 
@@ -370,11 +371,10 @@ namespace skelx{
         while(flag){
             flag = false;
 
-
             // from right to left
             for(int x = 0; x < ret.rows; ++x){
                 for(int y = ret.cols - 1; y >= 0; --y){
-                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointPos, {x, y}) && isRemovable(ret, {x, y})){
+                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
                         ret.at<uchar>(x, y) = 0;
                         flag = true;
                         break;
@@ -385,7 +385,7 @@ namespace skelx{
             // from left to right
             for(int x = 0; x < ret.rows; ++x){
                 for(int y = 0; y < ret.cols; ++y){
-                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointPos, {x, y}) && isRemovable(ret, {x, y})){
+                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
                         ret.at<uchar>(x, y) = 0;
                         flag = true;
                         break;
@@ -395,7 +395,7 @@ namespace skelx{
             // from bottom to top
             for(int y = 0; y < ret.cols; ++y){
                 for(int x = ret.rows - 1; x >= 0; --x){
-                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointPos, {x, y}) && isRemovable(ret, {x, y})){
+                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
                         ret.at<uchar>(x, y) = 0;
                         flag = true;
                         break;
@@ -405,30 +405,23 @@ namespace skelx{
             // from top to bottom
             for(int y = 0; y < ret.cols; ++y){
                 for(int x = 0; x < ret.rows; ++x){
-                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointPos, {x, y}) && isRemovable(ret, {x, y})){
+                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
                         ret.at<uchar>(x, y) = 0;
                         flag = true;
                         break;
                     }
                 }
             }
-
-
-            
-
         }
         return ret;
-        // visualize(img, keyPointSet, 0);
-        // return draw(img, keyPointSet);
+        // // visualize(img, keyPointset, 0);
+        // return draw(img, keyPointset);
     }
 
     // remove isolate point, namely noise,
     // and fill one-pixel holes
-    Mat postProcess(Mat &img, const double detailFactor, const double thinningFactor, vector<skelx::Point> pointSet){
+    Mat postProcess(Mat &img, const double detailFactor, const double thinningFactor, const int upperLimit){
         // remove isolate point
-
-        
-
         for(int x = 0; x < img.rows; ++x){
             for(int y = 0; y < img.cols; ++y){
                 if(img.at<uchar>(x, y) != 0){
@@ -470,13 +463,20 @@ namespace skelx{
                 }
             }
         }
-        
+
+        vector<skelx::Point> pointset = getPointsetInitialized(img);
+        updateK(img, pointset, upperLimit);
+        computeUi(img, pointset, 1.0);
+        PCA(img, pointset, 1.0, detailFactor);
+        // movePoint(pointset, 0.95);
+        // skelx::refreshPointset(img, pointset);
+        // img = draw(img, pointset);
         // vector<skelx::Point> pointset = getPointsetInitialized(img);
+        // updateK(img, pointset, upperLimit);
         // computeUi(img, pointset, 1.0);
         // PCA(img, pointset, 1.0, detailFactor);
-
-        // visualize(img, pointset, 0);
-        return thin(img, pointSet, thinningFactor);
+        // visualize(img, new_pointset, 0);
+        return thin(img, pointset, thinningFactor);
         // return img;
     }
 }

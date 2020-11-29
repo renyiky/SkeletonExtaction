@@ -18,5 +18,5 @@ namespace skelx{
     void computeUi(cv::Mat &img, std::vector<skelx::Point> &pointset, double threshold);
     void PCA(cv::Mat &img, std::vector<skelx::Point> &pointset, double threshold, double detailFactor);
     int setUpperLimitOfK(cv::Mat &img);
-    cv::Mat postProcess(cv::Mat &img, const double detailFactor, const double thinningFactor, std::vector<skelx::Point> pointSet);
+    cv::Mat postProcess(cv::Mat &img, const double detailFactor, const double thinningFactor, const int upperLimit);
 }

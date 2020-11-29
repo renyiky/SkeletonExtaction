@@ -1,503 +1,223 @@
-iter:1   sigmaHat = 0.515493
-iter:2   sigmaHat = 0.50972
-iter:3   sigmaHat = 0.510809
-iter:4   sigmaHat = 0.512079
-iter:5   sigmaHat = 0.513142
-iter:6   sigmaHat = 0.514286
-iter:7   sigmaHat = 0.515548
-iter:8   sigmaHat = 0.516945
-iter:9   sigmaHat = 0.518496
-iter:10   sigmaHat = 0.520225
-iter:11   sigmaHat = 0.522159
-iter:12   sigmaHat = 0.524332
-iter:13   sigmaHat = 0.526784
-iter:14   sigmaHat = 0.529566
-iter:15   sigmaHat = 0.532738
-iter:16   sigmaHat = 0.53638
-iter:17   sigmaHat = 0.540589
-iter:18   sigmaHat = 0.545492
-iter:19   sigmaHat = 0.551255
-iter:20   sigmaHat = 0.558098
-iter:21   sigmaHat = 0.566322
-iter:22   sigmaHat = 0.576345
-iter:23   sigmaHat = 0.588764
-iter:24   sigmaHat = 0.604472
-iter:25   sigmaHat = 0.624844
-iter:26   sigmaHat = 0.652134
-iter:27   sigmaHat = 0.690287
-iter:28   sigmaHat = 0.746167
-iter:29   sigmaHat = 0.82002
-iter:30   sigmaHat = 0.820179
-iter:31   sigmaHat = 0.82018
-iter:32   sigmaHat = 0.82018
-iter:33   sigmaHat = 0.82018
-iter:34   sigmaHat = 0.82018
-iter:35   sigmaHat = 0.82018
-iter:36   sigmaHat = 0.82018
-iter:37   sigmaHat = 0.82018
-Point0:[ 0.00170118 , 0.000680473 ]cosTheta:0.840154
-Point1:[ 0.00170118 , -0.000680473 ]cosTheta:0.840154
-Point2:[ 0.000680473 , 0.00170118 ]cosTheta:0.840154
-Point3:[ 5.04156e-05 , 5.04156e-05 ]cosTheta:1
-Point4:[ 0.00274571 , 0.000392244 ]cosTheta:0.78351
-Point5:[ 0.00274571 , -0.000392244 ]cosTheta:0.78351
-Point6:[ 5.04156e-05 , -5.04156e-05 ]cosTheta:1
-Point7:[ 0.000680473 , -0.00170118 ]cosTheta:0.840154
-Point8:[ 0.000392244 , 0.00274571 ]cosTheta:0.78351
-Point9:[ 8.25453e-06 , 8.25453e-06 ]cosTheta:1
-Point10:[ 0.267723 , -0.133862 ]cosTheta:0.313262
-Point11:[ 0.267723 , 0.133862 ]cosTheta:0.313262
-Point12:[ 8.25453e-06 , -8.25453e-06 ]cosTheta:1
-Point13:[ 0.000392244 , -0.00274571 ]cosTheta:0.78351
-Point14:[ -0.133862 , 0.267723 ]cosTheta:0.313262
-Point15:[ 0 , 0 ]cosTheta:1
-Point16:[ 0.533333 , -0.533333 ]cosTheta:0
-Point17:[ 0.533333 , 0.533333 ]cosTheta:0
-Point18:[ 0 , 0 ]cosTheta:1
-Point19:[ -0.133862 , -0.267723 ]cosTheta:0.313262
-Point20:[ -0.533333 , 0.533333 ]cosTheta:0
-Point21:[ 0 , 0 ]cosTheta:1
-Point22:[ 0.533333 , -0.533333 ]cosTheta:0
-Point23:[ 0.533333 , 0.533333 ]cosTheta:0
-Point24:[ 0 , 0 ]cosTheta:1
-Point25:[ -0.533333 , -0.533333 ]cosTheta:0
-Point26:[ -0.533333 , 0.533333 ]cosTheta:0
-Point27:[ 0 , 0 ]cosTheta:1
-Point28:[ 0.533333 , -0.533333 ]cosTheta:0
-Point29:[ 0.533333 , 0.533333 ]cosTheta:0
-Point30:[ 0 , 0 ]cosTheta:1
-Point31:[ -0.533333 , -0.533333 ]cosTheta:0
-Point32:[ -0.533333 , 0.533333 ]cosTheta:0
-Point33:[ 0 , 0 ]cosTheta:1
-Point34:[ 0.533333 , -0.533333 ]cosTheta:0
-Point35:[ 0.533333 , 0.533333 ]cosTheta:0
-Point36:[ 0 , 0 ]cosTheta:1
-Point37:[ -0.533333 , -0.533333 ]cosTheta:0
-Point38:[ -0.533333 , 0.533333 ]cosTheta:0
-Point39:[ 0 , 0 ]cosTheta:1
-Point40:[ 0.533333 , -0.533333 ]cosTheta:0
-Point41:[ 0.533333 , 0.533333 ]cosTheta:0
-Point42:[ 0 , 0 ]cosTheta:1
-Point43:[ -0.533333 , -0.533333 ]cosTheta:0
-Point44:[ -0.533333 , 0.533333 ]cosTheta:0
-Point45:[ 0 , 0 ]cosTheta:1
-Point46:[ 0.533333 , -0.533333 ]cosTheta:0
-Point47:[ 0.533333 , 0.533333 ]cosTheta:0
-Point48:[ 0 , 0 ]cosTheta:1
-Point49:[ -0.533333 , -0.533333 ]cosTheta:0
-Point50:[ -0.533333 , 0.533333 ]cosTheta:0
-Point51:[ 0 , 0 ]cosTheta:1
-Point52:[ 0.533333 , -0.533333 ]cosTheta:0
-Point53:[ 0.533333 , 0.533333 ]cosTheta:0
-Point54:[ 0 , 0 ]cosTheta:1
-Point55:[ -0.533333 , -0.533333 ]cosTheta:0
-Point56:[ -0.533333 , 0.533333 ]cosTheta:0
-Point57:[ 0 , 0 ]cosTheta:1
-Point58:[ 0.533333 , -0.533333 ]cosTheta:0
-Point59:[ 0.533333 , 0.533333 ]cosTheta:0
-Point60:[ 0 , 0 ]cosTheta:1
-Point61:[ -0.533333 , -0.533333 ]cosTheta:0
-Point62:[ -0.533333 , 0.533333 ]cosTheta:0
-Point63:[ 0 , 0 ]cosTheta:1
-Point64:[ 0.533333 , -0.533333 ]cosTheta:0
-Point65:[ 0.533333 , 0.533333 ]cosTheta:0
-Point66:[ 0 , 0 ]cosTheta:1
-Point67:[ -0.533333 , -0.533333 ]cosTheta:0
-Point68:[ -0.533333 , 0.533333 ]cosTheta:0
-Point69:[ 0 , 0 ]cosTheta:1
-Point70:[ 0.533333 , -0.533333 ]cosTheta:0
-Point71:[ 0.533333 , 0.533333 ]cosTheta:0
-Point72:[ 0 , 0 ]cosTheta:1
-Point73:[ -0.533333 , -0.533333 ]cosTheta:0
-Point74:[ -0.533333 , 0.533333 ]cosTheta:0
-Point75:[ 0 , 0 ]cosTheta:1
-Point76:[ 0.533333 , -0.533333 ]cosTheta:0
-Point77:[ 0.533333 , 0.533333 ]cosTheta:0
-Point78:[ 0 , 0 ]cosTheta:1
-Point79:[ -0.533333 , -0.533333 ]cosTheta:0
-Point80:[ -0.533333 , 0.533333 ]cosTheta:0
-Point81:[ 0 , 0 ]cosTheta:1
-Point82:[ 0.533333 , -0.533333 ]cosTheta:0
-Point83:[ 0.533333 , 0.533333 ]cosTheta:0
-Point84:[ 0 , 0 ]cosTheta:1
-Point85:[ -0.533333 , -0.533333 ]cosTheta:0
-Point86:[ -0.533333 , 0.533333 ]cosTheta:0
-Point87:[ 0 , 0 ]cosTheta:1
-Point88:[ 0.533333 , -0.533333 ]cosTheta:0
-Point89:[ 0.533333 , 0.533333 ]cosTheta:0
-Point90:[ 0 , 0 ]cosTheta:1
-Point91:[ -0.533333 , -0.533333 ]cosTheta:0
-Point92:[ -0.533333 , 0.533333 ]cosTheta:0
-Point93:[ 0 , 0 ]cosTheta:1
-Point94:[ 0.533333 , -0.533333 ]cosTheta:0
-Point95:[ 0.533333 , 0.533333 ]cosTheta:0
-Point96:[ 0 , 0 ]cosTheta:1
-Point97:[ -0.533333 , -0.533333 ]cosTheta:0
-Point98:[ -0.533333 , 0.533333 ]cosTheta:0
-Point99:[ 0 , 0 ]cosTheta:1
-Point100:[ 0.533333 , -0.533333 ]cosTheta:0
-Point101:[ 0.533333 , 0.533333 ]cosTheta:0
-Point102:[ 0 , 0 ]cosTheta:1
-Point103:[ -0.533333 , -0.533333 ]cosTheta:0
-Point104:[ -0.533333 , 0.533333 ]cosTheta:0
-Point105:[ 0 , 0 ]cosTheta:1
-Point106:[ 0.533333 , -0.533333 ]cosTheta:0
-Point107:[ 0.533333 , 0.533333 ]cosTheta:0
-Point108:[ 0 , 0 ]cosTheta:1
-Point109:[ -0.533333 , -0.533333 ]cosTheta:0
-Point110:[ -0.533333 , 0.533333 ]cosTheta:0
-Point111:[ 0 , 0 ]cosTheta:1
-Point112:[ 0.533333 , -0.533333 ]cosTheta:0
-Point113:[ 0.533333 , 0.533333 ]cosTheta:0
-Point114:[ 0 , 0 ]cosTheta:1
-Point115:[ -0.533333 , -0.533333 ]cosTheta:0
-Point116:[ -0.533333 , 0.533333 ]cosTheta:0
-Point117:[ 0 , 0 ]cosTheta:1
-Point118:[ 0.533333 , -0.533333 ]cosTheta:0
-Point119:[ 0.533333 , 0.533333 ]cosTheta:0
-Point120:[ 0 , 0 ]cosTheta:1
-Point121:[ -0.533333 , -0.533333 ]cosTheta:0
-Point122:[ -0.533333 , 0.533333 ]cosTheta:0
-Point123:[ 0 , 0 ]cosTheta:1
-Point124:[ 0.533333 , -0.533333 ]cosTheta:0
-Point125:[ 0.533333 , 0.533333 ]cosTheta:0
-Point126:[ 0 , 0 ]cosTheta:1
-Point127:[ -0.533333 , -0.533333 ]cosTheta:0
-Point128:[ -0.533333 , 0.533333 ]cosTheta:0
-Point129:[ 0 , 0 ]cosTheta:1
-Point130:[ 0.533333 , -0.533333 ]cosTheta:0
-Point131:[ 0.533333 , 0.533333 ]cosTheta:0
-Point132:[ 0 , 0 ]cosTheta:1
-Point133:[ -0.533333 , -0.533333 ]cosTheta:0
-Point134:[ -0.533333 , 0.533333 ]cosTheta:0
-Point135:[ 0 , 0 ]cosTheta:1
-Point136:[ 0.533333 , -0.533333 ]cosTheta:0
-Point137:[ 0.533333 , 0.533333 ]cosTheta:0
-Point138:[ 0 , 0 ]cosTheta:1
-Point139:[ -0.533333 , -0.533333 ]cosTheta:0
-Point140:[ -0.533333 , 0.533333 ]cosTheta:0
-Point141:[ 0 , 0 ]cosTheta:1
-Point142:[ 0.533333 , -0.533333 ]cosTheta:0
-Point143:[ 0.533333 , 0.533333 ]cosTheta:0
-Point144:[ 0 , 0 ]cosTheta:1
-Point145:[ -0.533333 , -0.533333 ]cosTheta:0
-Point146:[ -0.533333 , 0.533333 ]cosTheta:0
-Point147:[ 0 , 0 ]cosTheta:1
-Point148:[ 0.533333 , -0.533333 ]cosTheta:0
-Point149:[ 0.533333 , 0.533333 ]cosTheta:0
-Point150:[ 0 , 0 ]cosTheta:1
-Point151:[ -0.533333 , -0.533333 ]cosTheta:0
-Point152:[ -0.160022 , 0.320045 ]cosTheta:0.258707
-Point153:[ 0 , 0 ]cosTheta:1
-Point154:[ 0.0725265 , -0.0213313 ]cosTheta:0.506621
-Point155:[ 0.0725265 , 0.0213313 ]cosTheta:0.506621
-Point156:[ 0 , 0 ]cosTheta:1
-Point157:[ -0.160022 , -0.320045 ]cosTheta:0.258707
-Point158:[ 0.000204493 , 0.00035056 ]cosTheta:0.863097
-Point159:[ 0.000544769 , 0 ]cosTheta:0.805423
-Point160:[ 0.820435 , -0.337826 ]cosTheta:0.252637
-Point161:[ 0.820435 , 0.337826 ]cosTheta:0.252637
-Point162:[ 0.000544769 , 0 ]cosTheta:0.805423
-Point163:[ 0.000204493 , -0.00035056 ]cosTheta:0.863097
-Point164:[ 0.000368156 , 0.000736312 ]cosTheta:0.789495
-Point165:[ 0.145679 , -0.0971192 ]cosTheta:0.158863
-Point166:[ 0.00668051 , -0.00668051 ]cosTheta:0.625727
-Point167:[ 0.0204864 , -0.0136576 ]cosTheta:0.558105
-Point168:[ 0.454545 , 0 ]cosTheta:0
-Point169:[ 0.454545 , 0 ]cosTheta:0
-Point170:[ 0.454545 , 0 ]cosTheta:0
-Point171:[ 0.454545 , 0 ]cosTheta:0
-Point172:[ 0.454545 , 0 ]cosTheta:0
-Point173:[ 0.454545 , 0 ]cosTheta:0
-Point174:[ 0.454545 , 0 ]cosTheta:0
-Point175:[ 0.454545 , 0 ]cosTheta:0
-Point176:[ 0.454545 , 0 ]cosTheta:0
-Point177:[ 0.454545 , 0 ]cosTheta:0
-Point178:[ 0.454545 , 0 ]cosTheta:0
-Point179:[ 0.454545 , 0 ]cosTheta:0
-Point180:[ 0.454545 , 0 ]cosTheta:0
-Point181:[ 0.454545 , 0 ]cosTheta:0
-Point182:[ 0.454545 , 0 ]cosTheta:0
-Point183:[ 0.454545 , 0 ]cosTheta:0
-Point184:[ 0.454545 , 0 ]cosTheta:0
-Point185:[ 0.454545 , 0 ]cosTheta:0
-Point186:[ 0.454545 , 0 ]cosTheta:0
-Point187:[ 0.454545 , 0 ]cosTheta:0
-Point188:[ 0.454545 , 0 ]cosTheta:0
-Point189:[ 0.454545 , 0 ]cosTheta:0
-Point190:[ 0.454545 , 0 ]cosTheta:0
-Point191:[ 0.454545 , 0 ]cosTheta:0
-Point192:[ 0.454545 , 0 ]cosTheta:0
-Point193:[ 0.454545 , 0 ]cosTheta:0
-Point194:[ 0.454545 , 0 ]cosTheta:0
-Point195:[ 0.454545 , 0 ]cosTheta:0
-Point196:[ 0.454545 , 0 ]cosTheta:0
-Point197:[ 0.454545 , 0 ]cosTheta:0
-Point198:[ 0.454545 , 0 ]cosTheta:0
-Point199:[ 0.454545 , 0 ]cosTheta:0
-Point200:[ 0.454545 , 0 ]cosTheta:0
-Point201:[ 0.454545 , 0 ]cosTheta:0
-Point202:[ 0.454545 , 0 ]cosTheta:0
-Point203:[ 0.454545 , 0 ]cosTheta:0
-Point204:[ 0.454545 , 0 ]cosTheta:0
-Point205:[ 0.454545 , 0 ]cosTheta:0
-Point206:[ 0.454545 , 0 ]cosTheta:0
-Point207:[ 0.454545 , 0 ]cosTheta:0
-Point208:[ 0.454545 , 0 ]cosTheta:0
-Point209:[ 0.454545 , 0 ]cosTheta:0
-Point210:[ 0.454545 , 0 ]cosTheta:0
-Point211:[ 0.454545 , 0 ]cosTheta:0
-Point212:[ 0.454545 , 0 ]cosTheta:0
-Point213:[ 0.454545 , 0 ]cosTheta:0
-Point214:[ 0.454545 , 0 ]cosTheta:0
-Point215:[ 0.454545 , 0 ]cosTheta:0
-Point216:[ 0.454545 , 0 ]cosTheta:0
-Point217:[ 0.454545 , 0 ]cosTheta:0
-Point218:[ 0.454545 , 0 ]cosTheta:0
-Point219:[ 0.454545 , 0 ]cosTheta:0
-Point220:[ 0.454545 , 0 ]cosTheta:0
-Point221:[ 0.454545 , 0 ]cosTheta:0
-Point222:[ 0.454545 , 0 ]cosTheta:0
-Point223:[ 0.454545 , 0 ]cosTheta:0
-Point224:[ 0.454545 , 0 ]cosTheta:0
-Point225:[ 0.454545 , 0 ]cosTheta:0
-Point226:[ 0.454545 , 0 ]cosTheta:0
-Point227:[ 0.454545 , 0 ]cosTheta:0
-Point228:[ 0.0204864 , 0.0136576 ]cosTheta:0.558105
-Point229:[ 0.00668051 , 0.00668051 ]cosTheta:0.625727
-Point230:[ 0.145679 , 0.0971192 ]cosTheta:0.158863
-Point231:[ 0.000368156 , -0.000736312 ]cosTheta:0.789495
-Point232:[ -0.000368156 , 0.000736312 ]cosTheta:0.789495
-Point233:[ -0.145679 , -0.0971192 ]cosTheta:0.158863
-Point234:[ -0.00668051 , -0.00668051 ]cosTheta:0.625727
-Point235:[ -0.0204864 , -0.0136576 ]cosTheta:0.558105
-Point236:[ -0.454545 , 0 ]cosTheta:0
-Point237:[ -0.454545 , 0 ]cosTheta:0
-Point238:[ -0.454545 , 0 ]cosTheta:0
-Point239:[ -0.454545 , 0 ]cosTheta:0
-Point240:[ -0.454545 , 0 ]cosTheta:0
-Point241:[ -0.454545 , 0 ]cosTheta:0
-Point242:[ -0.454545 , 0 ]cosTheta:0
-Point243:[ -0.454545 , 0 ]cosTheta:0
-Point244:[ -0.454545 , 0 ]cosTheta:0
-Point245:[ -0.454545 , 0 ]cosTheta:0
-Point246:[ -0.454545 , 0 ]cosTheta:0
-Point247:[ -0.454545 , 0 ]cosTheta:0
-Point248:[ -0.454545 , 0 ]cosTheta:0
-Point249:[ -0.454545 , 0 ]cosTheta:0
-Point250:[ -0.454545 , 0 ]cosTheta:0
-Point251:[ -0.454545 , 0 ]cosTheta:0
-Point252:[ -0.454545 , 0 ]cosTheta:0
-Point253:[ -0.454545 , 0 ]cosTheta:0
-Point254:[ -0.454545 , 0 ]cosTheta:0
-Point255:[ -0.454545 , 0 ]cosTheta:0
-Point256:[ -0.454545 , 0 ]cosTheta:0
-Point257:[ -0.454545 , 0 ]cosTheta:0
-Point258:[ -0.454545 , 0 ]cosTheta:0
-Point259:[ -0.454545 , 0 ]cosTheta:0
-Point260:[ -0.454545 , 0 ]cosTheta:0
-Point261:[ -0.454545 , 0 ]cosTheta:0
-Point262:[ -0.454545 , 0 ]cosTheta:0
-Point263:[ -0.454545 , 0 ]cosTheta:0
-Point264:[ -0.454545 , 0 ]cosTheta:0
-Point265:[ -0.454545 , 0 ]cosTheta:0
-Point266:[ -0.454545 , 0 ]cosTheta:0
-Point267:[ -0.454545 , 0 ]cosTheta:0
-Point268:[ -0.454545 , 0 ]cosTheta:0
-Point269:[ -0.454545 , 0 ]cosTheta:0
-Point270:[ -0.454545 , 0 ]cosTheta:0
-Point271:[ -0.454545 , 0 ]cosTheta:0
-Point272:[ -0.454545 , 0 ]cosTheta:0
-Point273:[ -0.454545 , 0 ]cosTheta:0
-Point274:[ -0.454545 , 0 ]cosTheta:0
-Point275:[ -0.454545 , 0 ]cosTheta:0
-Point276:[ -0.454545 , 0 ]cosTheta:0
-Point277:[ -0.454545 , 0 ]cosTheta:0
-Point278:[ -0.454545 , 0 ]cosTheta:0
-Point279:[ -0.454545 , 0 ]cosTheta:0
-Point280:[ -0.454545 , 0 ]cosTheta:0
-Point281:[ -0.454545 , 0 ]cosTheta:0
-Point282:[ -0.454545 , 0 ]cosTheta:0
-Point283:[ -0.454545 , 0 ]cosTheta:0
-Point284:[ -0.454545 , 0 ]cosTheta:0
-Point285:[ -0.454545 , 0 ]cosTheta:0
-Point286:[ -0.454545 , 0 ]cosTheta:0
-Point287:[ -0.454545 , 0 ]cosTheta:0
-Point288:[ -0.454545 , 0 ]cosTheta:0
-Point289:[ -0.454545 , 0 ]cosTheta:0
-Point290:[ -0.454545 , 0 ]cosTheta:0
-Point291:[ -0.454545 , 0 ]cosTheta:0
-Point292:[ -0.454545 , 0 ]cosTheta:0
-Point293:[ -0.454545 , 0 ]cosTheta:0
-Point294:[ -0.454545 , 0 ]cosTheta:0
-Point295:[ -0.454545 , 0 ]cosTheta:0
-Point296:[ -0.0204864 , 0.0136576 ]cosTheta:0.558105
-Point297:[ -0.00668051 , 0.00668051 ]cosTheta:0.625727
-Point298:[ -0.145679 , 0.0971192 ]cosTheta:0.158863
-Point299:[ -0.000368156 , -0.000736312 ]cosTheta:0.789495
-Point300:[ -0.000204493 , 0.00035056 ]cosTheta:0.863097
-Point301:[ -0.000544769 , 0 ]cosTheta:0.805423
-Point302:[ -0.820435 , -0.337826 ]cosTheta:0.252637
-Point303:[ -0.820435 , 0.337826 ]cosTheta:0.252637
-Point304:[ -0.000544769 , 0 ]cosTheta:0.805423
-Point305:[ -0.000204493 , -0.00035056 ]cosTheta:0.863097
-Point306:[ 0.160022 , 0.320045 ]cosTheta:0.258707
-Point307:[ 0 , 0 ]cosTheta:1
-Point308:[ -0.0725265 , -0.0213313 ]cosTheta:0.506621
-Point309:[ -0.0725265 , 0.0213313 ]cosTheta:0.506621
-Point310:[ 0 , 0 ]cosTheta:1
-Point311:[ 0.160022 , -0.320045 ]cosTheta:0.258707
-Point312:[ 0.533333 , 0.533333 ]cosTheta:0
-Point313:[ 0 , 0 ]cosTheta:1
-Point314:[ -0.533333 , -0.533333 ]cosTheta:0
-Point315:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point316:[ 0 , 0 ]cosTheta:1
-Point317:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point318:[ 0.533333 , 0.533333 ]cosTheta:0
-Point319:[ 0 , 0 ]cosTheta:1
-Point320:[ -0.533333 , -0.533333 ]cosTheta:0
-Point321:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point322:[ 0 , 0 ]cosTheta:1
-Point323:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point324:[ 0.533333 , 0.533333 ]cosTheta:0
-Point325:[ 0 , 0 ]cosTheta:1
-Point326:[ -0.533333 , -0.533333 ]cosTheta:0
-Point327:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point328:[ 0 , 0 ]cosTheta:1
-Point329:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point330:[ 0.533333 , 0.533333 ]cosTheta:0
-Point331:[ 0 , 0 ]cosTheta:1
-Point332:[ -0.533333 , -0.533333 ]cosTheta:0
-Point333:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point334:[ 0 , 0 ]cosTheta:1
-Point335:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point336:[ 0.533333 , 0.533333 ]cosTheta:0
-Point337:[ 0 , 0 ]cosTheta:1
-Point338:[ -0.533333 , -0.533333 ]cosTheta:0
-Point339:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point340:[ 0 , 0 ]cosTheta:1
-Point341:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point342:[ 0.533333 , 0.533333 ]cosTheta:0
-Point343:[ 0 , 0 ]cosTheta:1
-Point344:[ -0.533333 , -0.533333 ]cosTheta:0
-Point345:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point346:[ 0 , 0 ]cosTheta:1
-Point347:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point348:[ 0.533333 , 0.533333 ]cosTheta:0
-Point349:[ 0 , 0 ]cosTheta:1
-Point350:[ -0.533333 , -0.533333 ]cosTheta:0
-Point351:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point352:[ 0 , 0 ]cosTheta:1
-Point353:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point354:[ 0.533333 , 0.533333 ]cosTheta:0
-Point355:[ 0 , 0 ]cosTheta:1
-Point356:[ -0.533333 , -0.533333 ]cosTheta:0
-Point357:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point358:[ 0 , 0 ]cosTheta:1
-Point359:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point360:[ 0.533333 , 0.533333 ]cosTheta:0
-Point361:[ 0 , 0 ]cosTheta:1
-Point362:[ -0.533333 , -0.533333 ]cosTheta:0
-Point363:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point364:[ 0 , 0 ]cosTheta:1
-Point365:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point366:[ 0.533333 , 0.533333 ]cosTheta:0
-Point367:[ 0 , 0 ]cosTheta:1
-Point368:[ -0.533333 , -0.533333 ]cosTheta:0
-Point369:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point370:[ 0 , 0 ]cosTheta:1
-Point371:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point372:[ 0.533333 , 0.533333 ]cosTheta:0
-Point373:[ 0 , 0 ]cosTheta:1
-Point374:[ -0.533333 , -0.533333 ]cosTheta:0
-Point375:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point376:[ 0 , 0 ]cosTheta:1
-Point377:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point378:[ 0.533333 , 0.533333 ]cosTheta:0
-Point379:[ 0 , 0 ]cosTheta:1
-Point380:[ -0.533333 , -0.533333 ]cosTheta:0
-Point381:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point382:[ 0 , 0 ]cosTheta:1
-Point383:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point384:[ 0.533333 , 0.533333 ]cosTheta:0
-Point385:[ 0 , 0 ]cosTheta:1
-Point386:[ -0.533333 , -0.533333 ]cosTheta:0
-Point387:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point388:[ 0 , 0 ]cosTheta:1
-Point389:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point390:[ 0.533333 , 0.533333 ]cosTheta:0
-Point391:[ 0 , 0 ]cosTheta:1
-Point392:[ -0.533333 , -0.533333 ]cosTheta:0
-Point393:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point394:[ 0 , 0 ]cosTheta:1
-Point395:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point396:[ 0.533333 , 0.533333 ]cosTheta:0
-Point397:[ 0 , 0 ]cosTheta:1
-Point398:[ -0.533333 , -0.533333 ]cosTheta:0
-Point399:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point400:[ 0 , 0 ]cosTheta:1
-Point401:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point402:[ 0.533333 , 0.533333 ]cosTheta:0
-Point403:[ 0 , 0 ]cosTheta:1
-Point404:[ -0.533333 , -0.533333 ]cosTheta:0
-Point405:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point406:[ 0 , 0 ]cosTheta:1
-Point407:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point408:[ 0.533333 , 0.533333 ]cosTheta:0
-Point409:[ 0 , 0 ]cosTheta:1
-Point410:[ -0.533333 , -0.533333 ]cosTheta:0
-Point411:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point412:[ 0 , 0 ]cosTheta:1
-Point413:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point414:[ 0.533333 , 0.533333 ]cosTheta:0
-Point415:[ 0 , 0 ]cosTheta:1
-Point416:[ -0.533333 , -0.533333 ]cosTheta:0
-Point417:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point418:[ 0 , 0 ]cosTheta:1
-Point419:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point420:[ 0.533333 , 0.533333 ]cosTheta:0
-Point421:[ 0 , 0 ]cosTheta:1
-Point422:[ -0.533333 , -0.533333 ]cosTheta:0
-Point423:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point424:[ 0 , 0 ]cosTheta:1
-Point425:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point426:[ 0.533333 , 0.533333 ]cosTheta:0
-Point427:[ 0 , 0 ]cosTheta:1
-Point428:[ -0.533333 , -0.533333 ]cosTheta:0
-Point429:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point430:[ 0 , 0 ]cosTheta:1
-Point431:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point432:[ 0.533333 , 0.533333 ]cosTheta:0
-Point433:[ 0 , 0 ]cosTheta:1
-Point434:[ -0.533333 , -0.533333 ]cosTheta:0
-Point435:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point436:[ 0 , 0 ]cosTheta:1
-Point437:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point438:[ 0.533333 , 0.533333 ]cosTheta:0
-Point439:[ 0 , 0 ]cosTheta:1
-Point440:[ -0.533333 , -0.533333 ]cosTheta:0
-Point441:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point442:[ 0 , 0 ]cosTheta:1
-Point443:[ 0.533333 , -0.533333 ]cosTheta:7.35981e-17
-Point444:[ 0.133862 , 0.267723 ]cosTheta:0.313262
-Point445:[ 0 , 0 ]cosTheta:1
-Point446:[ -0.533333 , -0.533333 ]cosTheta:0
-Point447:[ -0.533333 , 0.533333 ]cosTheta:7.35981e-17
-Point448:[ 0 , 0 ]cosTheta:1
-Point449:[ 0.133862 , -0.267723 ]cosTheta:0.313262
-Point450:[ -0.000392244 , 0.00274571 ]cosTheta:0.78351
-Point451:[ -8.25453e-06 , 8.25453e-06 ]cosTheta:1
-Point452:[ -0.267723 , -0.133862 ]cosTheta:0.313262
-Point453:[ -0.267723 , 0.133862 ]cosTheta:0.313262
-Point454:[ -8.25453e-06 , -8.25453e-06 ]cosTheta:1
-Point455:[ -0.000392244 , -0.00274571 ]cosTheta:0.78351
-Point456:[ -0.000680473 , 0.00170118 ]cosTheta:0.840154
-Point457:[ -5.04156e-05 , 5.04156e-05 ]cosTheta:1
-Point458:[ -0.00274571 , 0.000392244 ]cosTheta:0.78351
-Point459:[ -0.00274571 , -0.000392244 ]cosTheta:0.78351
-Point460:[ -5.04156e-05 , -5.04156e-05 ]cosTheta:1
-Point461:[ -0.000680473 , -0.00170118 ]cosTheta:0.840154
-Point462:[ -0.00170118 , 0.000680473 ]cosTheta:0.840154
-Point463:[ -0.00170118 , -0.000680473 ]cosTheta:0.840154
-rectangle's current detail factor = 10
-thinningFactor = 0.8
+iter:1   sigmaHat = 0.0768315
+iter:2   sigmaHat = 0.0696558
+iter:3   sigmaHat = 0.0743305
+iter:4   sigmaHat = 0.0800949
+iter:5   sigmaHat = 0.0861055
+iter:6   sigmaHat = 0.0911768
+iter:7   sigmaHat = 0.0980147
+iter:8   sigmaHat = 0.103326
+iter:9   sigmaHat = 0.108958
+iter:10   sigmaHat = 0.113593
+iter:11   sigmaHat = 0.117454
+iter:12   sigmaHat = 0.121487
+iter:13   sigmaHat = 0.12555
+iter:14   sigmaHat = 0.129457
+iter:15   sigmaHat = 0.133427
+iter:16   sigmaHat = 0.138153
+iter:17   sigmaHat = 0.143201
+iter:18   sigmaHat = 0.147992
+iter:19   sigmaHat = 0.153643
+iter:20   sigmaHat = 0.159031
+iter:21   sigmaHat = 0.16467
+iter:22   sigmaHat = 0.170926
+iter:23   sigmaHat = 0.177107
+iter:24   sigmaHat = 0.18373
+iter:25   sigmaHat = 0.190493
+iter:26   sigmaHat = 0.198159
+iter:27   sigmaHat = 0.206101
+iter:28   sigmaHat = 0.214465
+iter:29   sigmaHat = 0.223105
+iter:30   sigmaHat = 0.23254
+iter:31   sigmaHat = 0.242079
+iter:32   sigmaHat = 0.252294
+iter:33   sigmaHat = 0.263372
+iter:34   sigmaHat = 0.274469
+iter:35   sigmaHat = 0.286528
+iter:36   sigmaHat = 0.298883
+iter:37   sigmaHat = 0.312001
+iter:38   sigmaHat = 0.325288
+iter:39   sigmaHat = 0.339747
+iter:40   sigmaHat = 0.354273
+iter:41   sigmaHat = 0.369646
+iter:42   sigmaHat = 0.385428
+iter:43   sigmaHat = 0.402597
+iter:44   sigmaHat = 0.420072
+iter:45   sigmaHat = 0.43753
+iter:46   sigmaHat = 0.456821
+iter:47   sigmaHat = 0.476268
+iter:48   sigmaHat = 0.496803
+iter:49   sigmaHat = 0.51756
+iter:50   sigmaHat = 0.53885
+iter:51   sigmaHat = 0.56075
+iter:52   sigmaHat = 0.582572
+iter:53   sigmaHat = 0.605117
+iter:54   sigmaHat = 0.627267
+iter:55   sigmaHat = 0.6491
+iter:56   sigmaHat = 0.670873
+iter:57   sigmaHat = 0.69167
+iter:58   sigmaHat = 0.711131
+iter:59   sigmaHat = 0.730453
+iter:60   sigmaHat = 0.748355
+iter:61   sigmaHat = 0.764872
+iter:62   sigmaHat = 0.781669
+iter:63   sigmaHat = 0.796315
+iter:64   sigmaHat = 0.809413
+iter:65   sigmaHat = 0.822527
+iter:66   sigmaHat = 0.833631
+iter:67   sigmaHat = 0.84557
+iter:68   sigmaHat = 0.856696
+iter:69   sigmaHat = 0.867586
+iter:70   sigmaHat = 0.877093
+iter:71   sigmaHat = 0.885813
+iter:72   sigmaHat = 0.892697
+iter:73   sigmaHat = 0.897952
+iter:74   sigmaHat = 0.90223
+iter:75   sigmaHat = 0.905085
+iter:76   sigmaHat = 0.905796
+iter:77   sigmaHat = 0.906482
+iter:78   sigmaHat = 0.906497
+iter:79   sigmaHat = 0.906497
+iter:80   sigmaHat = 0.906497
+iter:81   sigmaHat = 0.906497
+iter:82   sigmaHat = 0.906497
+iter:83   sigmaHat = 0.906497
+iter:84   sigmaHat = 0.906497
+Point0: deltaX:[ 3.51197e-24 , -1.40479e-24 ] cosTheta:[0.868848] ui:[ 0.3125 , -0.125 ] sigma:[0.687932]
+Point1: deltaX:[ -9.14362e-29 , 2.2859e-28 ] cosTheta:[0.943706] ui:[ -0.105263 , 0.263158 ] sigma:[0.719575]
+Point2: deltaX:[ -6.43126e-32 , 1.28625e-31 ] cosTheta:[0.995892] ui:[ -0.0625 , 0.125 ] sigma:[0.800744]
+Point3: deltaX:[ -4.71589e-32 , -4.71589e-32 ] cosTheta:[1] ui:[ -0.117647 , -0.117647 ] sigma:[0.711864]
+Point4: deltaX:[ -2.6503e-31 , -2.6503e-31 ] cosTheta:[1] ui:[ -0.666667 , -0.666667 ] sigma:[0.565789]
+Point5: deltaX:[ 2.03288e-27 , -3.04933e-27 ] cosTheta:[0.925916] ui:[ 0.117647 , -0.176471 ] sigma:[0.770627]
+Point6: deltaX:[ -2.1174e-29 , 2.1174e-29 ] cosTheta:[0.947849] ui:[ -0.0434783 , 0.0434783 ] sigma:[0.549696]
+Point7: deltaX:[ 0 , 2.2722e-30 ] cosTheta:[0.980302] ui:[ 0 , 0.333333 ] sigma:[0.815296]
+Point8: deltaX:[ -7.91407e-30 , -4.52233e-30 ] cosTheta:[0.971085] ui:[ -0.368421 , -0.210526 ] sigma:[0.665949]
+Point9: deltaX:[ 0 , -6.90308e-27 ] cosTheta:[0.911472] ui:[ 0 , -0.0625 ] sigma:[0.775446]
+Point10: deltaX:[ -5.19032e-32 , 5.19032e-32 ] cosTheta:[0.998274] ui:[ -0.0625 , 0.0625 ] sigma:[0.79469]
+Point11: deltaX:[ 1.13584e-31 , 3.40753e-31 ] cosTheta:[1] ui:[ 0.285714 , 0.857143 ] sigma:[0.617188]
+Point12: deltaX:[ 3.74738e-31 , 7.49475e-31 ] cosTheta:[0.979838] ui:[ 0.0555556 , 0.111111 ] sigma:[0.72099]
+Point13: deltaX:[ 9.37815e-26 , -4.68908e-26 ] cosTheta:[0.894999] ui:[ 0.117647 , -0.0588235 ] sigma:[0.755492]
+Point14: deltaX:[ -1.15721e-24 , -2.89302e-25 ] cosTheta:[0.876606] ui:[ -0.235294 , -0.0588235 ] sigma:[0.730089]
+Point15: deltaX:[ -1.03191e-28 , -1.71986e-29 ] cosTheta:[0.956693] ui:[ -0.4 , -0.0666667 ] sigma:[0.791805]
+Point16: deltaX:[ -5.44568e-31 , -3.81198e-31 ] cosTheta:[0.996444] ui:[ -0.833333 , -0.583333 ] sigma:[0.656818]
+Point17: deltaX:[ -6.36072e-31 , -6.36072e-31 ] cosTheta:[1] ui:[ -1.6 , -1.6 ] sigma:[0.583333]
+Point18: deltaX:[ 6.10998e-30 , 2.03666e-30 ] cosTheta:[0.972039] ui:[ 0.214286 , 0.0714286 ] sigma:[0.798989]
+Point19: deltaX:[ 1.67651e-25 , -5.58838e-26 ] cosTheta:[0.89085] ui:[ 0.2 , -0.0666667 ] sigma:[0.81504]
+Point20: deltaX:[ 0 , -3.62383e-24 ] cosTheta:[0.870952] ui:[ 0 , -0.416667 ] sigma:[0.864158]
+Point21: deltaX:[ -2.12028e-23 , 4.24057e-23 ] cosTheta:[0.850651] ui:[ -0.2 , 0.4 ] sigma:[0.723607]
+Point22: deltaX:[ 4.99753e-31 , 6.66337e-31 ] cosTheta:[0.987825] ui:[ 0.230769 , 0.307692 ] sigma:[0.843283]
+Point23: deltaX:[ -6.81152e-23 , 0 ] cosTheta:[0.855423] ui:[ -0.6 , 0 ] sigma:[0.773714]
+Point24: deltaX:[ 1.13384e-24 , 2.26769e-24 ] cosTheta:[0.865501] ui:[ 0.0666667 , 0.133333 ] sigma:[0.832854]
+Point25: deltaX:[ -1.13384e-24 , -2.26769e-24 ] cosTheta:[0.865501] ui:[ -0.0666667 , -0.133333 ] sigma:[0.832854]
+Point26: deltaX:[ -1.13384e-24 , 2.26769e-24 ] cosTheta:[0.865501] ui:[ -0.0666667 , 0.133333 ] sigma:[0.832854]
+Point27: deltaX:[ 1.13384e-24 , -2.26769e-24 ] cosTheta:[0.865501] ui:[ 0.0666667 , -0.133333 ] sigma:[0.832854]
+Point28: deltaX:[ 1.13384e-24 , 2.26769e-24 ] cosTheta:[0.865501] ui:[ 0.0666667 , 0.133333 ] sigma:[0.832854]
+Point29: deltaX:[ 1.13384e-24 , -2.26769e-24 ] cosTheta:[0.865501] ui:[ 0.0666667 , -0.133333 ] sigma:[0.832854]
+Point30: deltaX:[ -1.65059e-29 , 8.25295e-29 ] cosTheta:[0.957306] ui:[ -0.0714286 , 0.357143 ] sigma:[0.793514]
+Point31: deltaX:[ 1.13384e-24 , -2.26769e-24 ] cosTheta:[0.865501] ui:[ 0.0666667 , -0.133333 ] sigma:[0.832854]
+Point32: deltaX:[ 0 , -2.2722e-30 ] cosTheta:[0.980302] ui:[ 0 , -0.333333 ] sigma:[0.815296]
+Point33: deltaX:[ -1.13384e-24 , 2.26769e-24 ] cosTheta:[0.865501] ui:[ -0.0666667 , 0.133333 ] sigma:[0.832854]
+Point34: deltaX:[ -1.13384e-24 , -2.26769e-24 ] cosTheta:[0.865501] ui:[ -0.0666667 , -0.133333 ] sigma:[0.832854]
+Point35: deltaX:[ 3.89309e-32 , 1.16793e-31 ] cosTheta:[0.997766] ui:[ 0.0714286 , 0.214286 ] sigma:[0.837868]
+Point36: deltaX:[ -3.79034e-28 , 2.5269e-28 ] cosTheta:[0.939914] ui:[ -0.272727 , 0.181818 ] sigma:[0.883494]
+Point37: deltaX:[ 0 , 2.41789e-23 ] cosTheta:[0.853711] ui:[ 0 , 0.176471 ] sigma:[0.77912]
+Point38: deltaX:[ 0 , -2.41789e-23 ] cosTheta:[0.853711] ui:[ 0 , -0.176471 ] sigma:[0.77912]
+Point39: deltaX:[ 0 , 3.62383e-24 ] cosTheta:[0.870952] ui:[ 0 , 0.416667 ] sigma:[0.864158]
+Point40: deltaX:[ 2.2315e-23 , 1.85958e-23 ] cosTheta:[0.85772] ui:[ 0.461538 , 0.384615 ] sigma:[0.81506]
+Point41: deltaX:[ 1.72728e-28 , -1.03637e-28 ] cosTheta:[0.946006] ui:[ 0.277778 , -0.166667 ] sigma:[0.898846]
+Point42: deltaX:[ 8.0417e-32 , 1.00521e-31 ] cosTheta:[0.999919] ui:[ 0.2 , 0.25 ] sigma:[0.665611]
+Point43: deltaX:[ 0 , 3.10433e-25 ] cosTheta:[0.896803] ui:[ 0 , 0.4375 ] sigma:[0.773321]
+Point44: deltaX:[ -9.44872e-32 , -9.44872e-32 ] cosTheta:[1] ui:[ -0.125 , -0.125 ] sigma:[0.783784]
+Point45: deltaX:[ 3.62116e-32 , 3.62116e-32 ] cosTheta:[0.998272] ui:[ 0.0714286 , 0.0714286 ] sigma:[0.841903]
+Point46: deltaX:[ -5.00153e-30 , -3.33435e-30 ] cosTheta:[0.971139] ui:[ -0.2 , -0.133333 ] sigma:[0.811949]
+Point47: deltaX:[ 1.28625e-31 , 6.43126e-32 ] cosTheta:[0.995892] ui:[ 0.125 , 0.0625 ] sigma:[0.800744]
+Point48: deltaX:[ 9.43344e-25 , -1.88669e-24 ] cosTheta:[0.870952] ui:[ 0.0666667 , -0.133333 ] sigma:[0.795159]
+Point49: deltaX:[ 3.12177e-29 , 7.80443e-29 ] cosTheta:[0.956224] ui:[ 0.133333 , 0.333333 ] sigma:[0.800423]
+Point50: deltaX:[ 2.89302e-25 , 1.15721e-24 ] cosTheta:[0.876606] ui:[ 0.0588235 , 0.235294 ] sigma:[0.730089]
+Point51: deltaX:[ -7.69502e-30 , -5.13002e-30 ] cosTheta:[0.975376] ui:[ -0.642857 , -0.428571 ] sigma:[0.561933]
+Point52: deltaX:[ -5.51865e-29 , -2.75932e-29 ] cosTheta:[0.964764] ui:[ -1.09091 , -0.545455 ] sigma:[0.55]
+Point53: deltaX:[ 2.26769e-24 , -1.13384e-24 ] cosTheta:[0.865501] ui:[ 0.133333 , -0.0666667 ] sigma:[0.832854]
+Point54: deltaX:[ -2.26769e-24 , 1.13384e-24 ] cosTheta:[0.865501] ui:[ -0.133333 , 0.0666667 ] sigma:[0.832854]
+Point55: deltaX:[ 2.22393e-29 , 0 ] cosTheta:[0.954631] ui:[ 0.0625 , 0 ] sigma:[0.788627]
+Point56: deltaX:[ -9.44872e-32 , 9.44872e-32 ] cosTheta:[1] ui:[ -0.125 , 0.125 ] sigma:[0.783784]
+Point57: deltaX:[ 9.44872e-32 , -9.44872e-32 ] cosTheta:[1] ui:[ 0.125 , -0.125 ] sigma:[0.783784]
+Point58: deltaX:[ -9.44872e-32 , 9.44872e-32 ] cosTheta:[1] ui:[ -0.125 , 0.125 ] sigma:[0.783784]
+Point59: deltaX:[ 9.44872e-32 , -9.44872e-32 ] cosTheta:[1] ui:[ 0.125 , -0.125 ] sigma:[0.783784]
+Point60: deltaX:[ -9.44872e-32 , 9.44872e-32 ] cosTheta:[1] ui:[ -0.125 , 0.125 ] sigma:[0.783784]
+Point61: deltaX:[ 9.44872e-32 , -9.44872e-32 ] cosTheta:[1] ui:[ 0.125 , -0.125 ] sigma:[0.783784]
+Point62: deltaX:[ -9.44872e-32 , 9.44872e-32 ] cosTheta:[1] ui:[ -0.125 , 0.125 ] sigma:[0.783784]
+Point63: deltaX:[ 9.44872e-32 , -9.44872e-32 ] cosTheta:[1] ui:[ 0.125 , -0.125 ] sigma:[0.783784]
+Point64: deltaX:[ -9.44872e-32 , 9.44872e-32 ] cosTheta:[1] ui:[ -0.125 , 0.125 ] sigma:[0.783784]
+Point65: deltaX:[ -5.19032e-32 , 5.19032e-32 ] cosTheta:[0.998274] ui:[ -0.0625 , 0.0625 ] sigma:[0.79469]
+Point66: deltaX:[ 2.2859e-28 , 9.14362e-29 ] cosTheta:[0.943706] ui:[ 0.263158 , 0.105263 ] sigma:[0.719575]
+Point67: deltaX:[ 5.19032e-32 , -5.19032e-32 ] cosTheta:[0.998274] ui:[ 0.0625 , -0.0625 ] sigma:[0.79469]
+Point68: deltaX:[ 3.1623e-28 , 1.0541e-28 ] cosTheta:[0.941642] ui:[ 0.285714 , 0.0952381 ] sigma:[0.653904]
+Point69: deltaX:[ 4.84115e-32 , 2.42057e-32 ] cosTheta:[0.999077] ui:[ 0.1 , 0.05 ] sigma:[0.725303]
+Point70: deltaX:[ -1.13384e-24 , 2.26769e-24 ] cosTheta:[0.865501] ui:[ -0.0666667 , 0.133333 ] sigma:[0.832854]
+Point71: deltaX:[ 9.14362e-29 , 2.2859e-28 ] cosTheta:[0.943706] ui:[ 0.105263 , 0.263158 ] sigma:[0.719575]
+Point72: deltaX:[ 1.0541e-28 , 3.1623e-28 ] cosTheta:[0.941642] ui:[ 0.0952381 , 0.285714 ] sigma:[0.653904]
+Point73: deltaX:[ 1.13384e-24 , -2.26769e-24 ] cosTheta:[0.865501] ui:[ 0.0666667 , -0.133333 ] sigma:[0.832854]
+Point74: deltaX:[ 1.38427e-28 , -6.92136e-29 ] cosTheta:[0.945629] ui:[ 0.210526 , -0.105263 ] sigma:[0.710038]
+Point75: deltaX:[ 0 , 2.2722e-30 ] cosTheta:[0.980302] ui:[ 0 , 0.333333 ] sigma:[0.815296]
+Point76: deltaX:[ 2.2988e-32 , 1.60916e-31 ] cosTheta:[0.999775] ui:[ 0.0555556 , 0.388889 ] sigma:[0.712078]
+Point77: deltaX:[ -8.11809e-25 , 3.24724e-25 ] cosTheta:[0.877858] ui:[ -0.217391 , 0.0869565 ] sigma:[0.607943]
+Point78: deltaX:[ -3.1623e-28 , 1.0541e-28 ] cosTheta:[0.941642] ui:[ -0.285714 , 0.0952381 ] sigma:[0.653904]
+Point79: deltaX:[ -6.25727e-32 , -3.12863e-32 ] cosTheta:[0.999172] ui:[ -0.111111 , -0.0555556 ] sigma:[0.736766]
+Point80: deltaX:[ -2.2859e-28 , 9.14362e-29 ] cosTheta:[0.943706] ui:[ -0.263158 , 0.105263 ] sigma:[0.719575]
+Point81: deltaX:[ -1.67651e-25 , -5.58838e-26 ] cosTheta:[0.89085] ui:[ -0.2 , -0.0666667 ] sigma:[0.81504]
+Point82: deltaX:[ 9.44872e-32 , 9.44872e-32 ] cosTheta:[1] ui:[ 0.125 , 0.125 ] sigma:[0.783784]
+Point83: deltaX:[ -9.44872e-32 , -9.44872e-32 ] cosTheta:[1] ui:[ -0.125 , -0.125 ] sigma:[0.783784]
+Point84: deltaX:[ 9.44872e-32 , 9.44872e-32 ] cosTheta:[1] ui:[ 0.125 , 0.125 ] sigma:[0.783784]
+Point85: deltaX:[ -9.44872e-32 , -9.44872e-32 ] cosTheta:[1] ui:[ -0.125 , -0.125 ] sigma:[0.783784]
+Point86: deltaX:[ -5.19032e-32 , 5.19032e-32 ] cosTheta:[0.998274] ui:[ -0.0625 , 0.0625 ] sigma:[0.79469]
+Point87: deltaX:[ 9.44872e-32 , 9.44872e-32 ] cosTheta:[1] ui:[ 0.125 , 0.125 ] sigma:[0.783784]
+Point88: deltaX:[ 5.19032e-32 , -5.19032e-32 ] cosTheta:[0.998274] ui:[ 0.0625 , -0.0625 ] sigma:[0.79469]
+Point89: deltaX:[ -9.44872e-32 , -9.44872e-32 ] cosTheta:[1] ui:[ -0.125 , -0.125 ] sigma:[0.783784]
+Point90: deltaX:[ 9.44872e-32 , 9.44872e-32 ] cosTheta:[1] ui:[ 0.125 , 0.125 ] sigma:[0.783784]
+Point91: deltaX:[ -9.44872e-32 , -9.44872e-32 ] cosTheta:[1] ui:[ -0.125 , -0.125 ] sigma:[0.783784]
+Point92: deltaX:[ 9.44872e-32 , 9.44872e-32 ] cosTheta:[1] ui:[ 0.125 , 0.125 ] sigma:[0.783784]
+Point93: deltaX:[ 5.19032e-32 , 5.19032e-32 ] cosTheta:[0.998274] ui:[ 0.0625 , 0.0625 ] sigma:[0.79469]
+Point94: deltaX:[ 5.19032e-32 , 5.19032e-32 ] cosTheta:[0.998274] ui:[ 0.0625 , 0.0625 ] sigma:[0.79469]
+Point95: deltaX:[ 5.19032e-32 , 5.19032e-32 ] cosTheta:[0.998274] ui:[ 0.0625 , 0.0625 ] sigma:[0.79469]
+Point96: deltaX:[ -2.22393e-29 , 0 ] cosTheta:[0.954631] ui:[ -0.0625 , 0 ] sigma:[0.788627]
+Point97: deltaX:[ 2.26769e-24 , 1.13384e-24 ] cosTheta:[0.865501] ui:[ 0.133333 , 0.0666667 ] sigma:[0.832854]
+Point98: deltaX:[ -2.26769e-24 , -1.13384e-24 ] cosTheta:[0.865501] ui:[ -0.133333 , -0.0666667 ] sigma:[0.832854]
+Point99: deltaX:[ 7.69502e-30 , -5.13002e-30 ] cosTheta:[0.975376] ui:[ 0.642857 , -0.428571 ] sigma:[0.561933]
+Point100: deltaX:[ 1.86318e-27 , -2.48424e-27 ] cosTheta:[0.927093] ui:[ 0.25 , -0.333333 ] sigma:[0.836746]
+Point101: deltaX:[ 5.02174e-30 , -2.09239e-30 ] cosTheta:[0.98235] ui:[ 1.09091 , -0.454545 ] sigma:[0.617166]
+Point102: deltaX:[ 7.8738e-32 , -3.9369e-32 ] cosTheta:[0.99802] ui:[ 0.125 , -0.0625 ] sigma:[0.810517]
+Point103: deltaX:[ -1.86295e-25 , 3.72589e-25 ] cosTheta:[0.881375] ui:[ -0.0769231 , 0.153846 ] sigma:[0.860647]
+Point104: deltaX:[ 6.74708e-26 , 2.69883e-25 ] cosTheta:[0.890225] ui:[ 0.0833333 , 0.333333 ] sigma:[0.840395]
+Point105: deltaX:[ 2.2996e-27 , -6.89881e-27 ] cosTheta:[0.916298] ui:[ 0.0769231 , -0.230769 ] sigma:[0.865318]
+Point106: deltaX:[ -1.67651e-25 , -5.58838e-26 ] cosTheta:[0.89085] ui:[ -0.2 , -0.0666667 ] sigma:[0.81504]
+Point107: deltaX:[ 2.26769e-24 , 1.13384e-24 ] cosTheta:[0.865501] ui:[ 0.133333 , 0.0666667 ] sigma:[0.832854]
+Point108: deltaX:[ -1.13384e-24 , 2.26769e-24 ] cosTheta:[0.865501] ui:[ -0.0666667 , 0.133333 ] sigma:[0.832854]
+Point109: deltaX:[ -1.13384e-24 , -2.26769e-24 ] cosTheta:[0.865501] ui:[ -0.0666667 , -0.133333 ] sigma:[0.832854]
+Point110: deltaX:[ 1.54494e-31 , 0 ] cosTheta:[1] ui:[ 0.222222 , 0 ] sigma:[0.753799]
+Point111: deltaX:[ 1.01016e-26 , -7.07115e-26 ] cosTheta:[0.905186] ui:[ 0.0714286 , -0.5 ] sigma:[0.81339]
+Point112: deltaX:[ 1.19265e-31 , 0 ] cosTheta:[1] ui:[ 0.3 , 0 ] sigma:[0.683698]
+Point113: deltaX:[ -4.38005e-31 , -8.76011e-31 ] cosTheta:[0.981385] ui:[ -0.0833333 , -0.166667 ] sigma:[0.877608]
+Point114: deltaX:[ -3.25375e-28 , -8.13438e-28 ] cosTheta:[0.933053] ui:[ -0.0952381 , -0.238095 ] sigma:[0.658385]
+Point115: deltaX:[ 0 , 3.10433e-25 ] cosTheta:[0.896803] ui:[ 0 , 0.4375 ] sigma:[0.773321]
+Point116: deltaX:[ -6.95977e-32 , -1.04396e-31 ] cosTheta:[0.99999] ui:[ -0.111111 , -0.166667 ] sigma:[0.747647]
+Point117: deltaX:[ 0 , 4.91198e-26 ] cosTheta:[0.900867] ui:[ 0 , 0.230769 ] sigma:[0.855809]
+Point118: deltaX:[ -1.13384e-24 , 2.26769e-24 ] cosTheta:[0.865501] ui:[ -0.0666667 , 0.133333 ] sigma:[0.832854]
+Point119: deltaX:[ -1.13384e-24 , -2.26769e-24 ] cosTheta:[0.865501] ui:[ -0.0666667 , -0.133333 ] sigma:[0.832854]
+Point120: deltaX:[ 5.19032e-32 , -5.19032e-32 ] cosTheta:[0.998274] ui:[ 0.0625 , -0.0625 ] sigma:[0.79469]
+Point121: deltaX:[ -5.45459e-29 , 2.33768e-29 ] cosTheta:[0.958543] ui:[ -0.466667 , 0.2 ] sigma:[0.579361]
+Point122: deltaX:[ -1.67651e-25 , -5.58838e-26 ] cosTheta:[0.89085] ui:[ -0.2 , -0.0666667 ] sigma:[0.81504]
+Point123: deltaX:[ 2.29536e-30 , -1.75527e-30 ] cosTheta:[0.991228] ui:[ 1.7 , -1.3 ] sigma:[0.617284]
+Point124: deltaX:[ 9.23001e-28 , -4.61501e-28 ] cosTheta:[0.943859] ui:[ 0.727273 , -0.363636 ] sigma:[0.746433]
+Point125: deltaX:[ 1.17311e-27 , 5.86555e-27 ] cosTheta:[0.921025] ui:[ 0.0714286 , 0.357143 ] sigma:[0.832275]
+Point126: deltaX:[ -1.13384e-24 , -2.26769e-24 ] cosTheta:[0.865501] ui:[ -0.0666667 , -0.133333 ] sigma:[0.832854]
+Point127: deltaX:[ 6.95977e-32 , 1.04396e-31 ] cosTheta:[0.99999] ui:[ 0.111111 , 0.166667 ] sigma:[0.747647]
+Point128: deltaX:[ 3.25375e-28 , 8.13438e-28 ] cosTheta:[0.933053] ui:[ 0.0952381 , 0.238095 ] sigma:[0.658385]
+Point129: deltaX:[ -3.1623e-28 , 1.0541e-28 ] cosTheta:[0.941642] ui:[ -0.285714 , 0.0952381 ] sigma:[0.653904]
+Point130: deltaX:[ -1.48965e-24 , 0 ] cosTheta:[0.877308] ui:[ -0.357143 , 0 ] sigma:[0.822613]
+Point131: deltaX:[ 3.62116e-32 , 3.62116e-32 ] cosTheta:[0.998272] ui:[ 0.0714286 , 0.0714286 ] sigma:[0.841903]
+Point132: deltaX:[ -9.37815e-26 , -4.68908e-26 ] cosTheta:[0.894999] ui:[ -0.117647 , -0.0588235 ] sigma:[0.755492]
+Point133: deltaX:[ 7.17134e-25 , -7.17134e-25 ] cosTheta:[0.894427] ui:[ 1.5 , -1.5 ] sigma:[0.647059]
+Point134: deltaX:[ 3.35098e-30 , -5.02647e-30 ] cosTheta:[0.979637] ui:[ 0.5 , -0.75 ] sigma:[0.706495]
+Point135: deltaX:[ 1.47736e-23 , -5.90944e-23 ] cosTheta:[0.857493] ui:[ 0.333333 , -1.33333 ] sigma:[0.625]
+Point136: deltaX:[ 0 , -2.2722e-30 ] cosTheta:[0.980302] ui:[ 0 , -0.333333 ] sigma:[0.815296]
+beetle's current detail factor = 70
+thinningFactor = 0.85
