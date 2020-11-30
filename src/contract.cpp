@@ -19,20 +19,19 @@ Mat contract(Mat img, string filename, const double detailFactor, const double t
         skelx::computeUi(img, pointset, 0.95);
         skelx::PCA(img, pointset, 0.95, detailFactor);
         skelx::movePoint(pointset, 0.95);
-        // skelx::refreshPointset(img, pointset);
         img = skelx::draw(img, pointset);
-        for(skelx::Point &p : pointset){
-            sigmaHat += p.sigma;
-        }
+        // skelx::visualize(img, pointset, t);
+        for(skelx::Point &p : pointset) sigmaHat += p.sigma;
         sigmaHat /= pointset.size();
 
         std::cout<<"iter:"<<t + 1<<"   sigmaHat = "<<sigmaHat<<endl;
-        ++t;
 
+        ++t;
         // check if sigmaHat remains unchanged
         // if it doesn't change for 3 times, stop extracting
         if(sigmaHat == preSigmaHat){
-            if(count == 2) return skelx::postProcess(img, detailFactor, thinningFactor, upperLimit);
+            // if(count == 2) return skelx::postProcess(img, detailFactor, thinningFactor, upperLimit);
+            if(count == 2) return img;
             else ++count;
         }else{
             preSigmaHat = sigmaHat;

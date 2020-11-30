@@ -63,24 +63,28 @@ namespace skelx{
             double dnn = 3 * p.d3nn;
             int x = p.pos[0],
                 y = p.pos[1];
-            vector<vector<double> > neighborsCount = {};
-            for(int i = -dnn; i < dnn + 1; ++i){
-                for(int j = -dnn; j < dnn + 1; ++j){
+            int count = 0;
+            // vector<vector<double> > neighborsCount = {};
+            for(int i = -static_cast<int>(dnn); i < static_cast<int>(dnn) + 1; ++i){
+                for(int j = -static_cast<int>(dnn); j < static_cast<int>(dnn) + 1; ++j){
                     if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-                        neighborsCount.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+                        // p.neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+                        ++count;
                     }
                 }
             }
+            // cout<<p.neighbors.size()<<endl;
             // set the upper limit of K 
-            p.k = 10 < neighborsCount.size() ? upperLimit : neighborsCount.size();
+            p.k = 10 < count ? upperLimit : count;
+            // cout<<p.k<<endl;
         }
     }
 
     // get d3nn of param point
     // d3nn is the average length of edges in the 3-nearest-neighbors graph
-    double getD3nn(Mat &img, const struct skelx::Point &point){
-        int x = point.pos[0], 
-            y = point.pos[1],
+    double getD3nn(Mat &img, const vector<double> &pos){
+        int x = pos[0], 
+            y = pos[1],
             rows = img.rows,
             cols = img.cols;
         int radius = 0;
@@ -99,7 +103,7 @@ namespace skelx{
             }
         }
         sort(neighborsRadius.begin(), neighborsRadius.end());
-        return (neighborsRadius[0] + neighborsRadius[1] + neighborsRadius[2]) / 3;   // /3
+        return (neighborsRadius[0] + neighborsRadius[1] + neighborsRadius[2]) / 3;
     }
     
     // initialize the pointset
@@ -111,28 +115,12 @@ namespace skelx{
                     skelx::Point p;
                     p.pos[0] = i;
                     p.pos[1] = j;
+                    p.d3nn = getD3nn(img, {static_cast<double>(i), static_cast<double>(j)});
+                    // cout<<p.d3nn<<endl;
                     pointset.push_back(p);
                 }
             }
         }
-        // set k0
-        // int num = pointset.size();
-        for(struct skelx::Point &p : pointset){
-            p.d3nn = getD3nn(img, p);
-        }
-        //     double dnn = 3 * p.d3nn;
-        //     int x = p.pos[0],
-        //         y = p.pos[1];
-        //     vector<vector<double> > neighborsCount = {};
-        //     for(int i = -dnn; i < dnn + 1; ++i){
-        //         for(int j = -dnn; j < dnn + 1; ++j){
-        //             if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-        //                 neighborsCount.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
-        //             }
-        //         }
-        //     }
-        //     p.k = neighborsCount.size();
-        // }
         return pointset;
     }
 

@@ -9,11 +9,11 @@
 namespace skelx{
     void visualize(const cv::Mat &img, const std::vector<skelx::Point> pointset, int iter);
     void updateK(cv::Mat &img, std::vector<skelx::Point> &pointset, int upperLimit);
-    double getD3nn(cv::Mat &img, const struct skelx::Point &point);
+    // double getD3nn(cv::Mat &img, const std::vector<double> &pos);
     std::vector<struct skelx::Point> getPointsetInitialized(cv::Mat &img);
-    int setNeighborsOfK(cv::Mat &img, skelx::Point &point, const int k);
+    // int setNeighborsOfK(cv::Mat &img, skelx::Point &point, const int k);
     cv::Mat draw(const cv::Mat &src, std::vector<struct skelx::Point> &pointset);
-    void refreshPointset(cv::Mat &img, std::vector<skelx::Point> &pointset);
+    // void refreshPointset(cv::Mat &img, std::vector<skelx::Point> &pointset);
     void movePoint(std::vector<skelx::Point> &pointset, double threshold);
     void computeUi(cv::Mat &img, std::vector<skelx::Point> &pointset, double threshold);
     void PCA(cv::Mat &img, std::vector<skelx::Point> &pointset, double threshold, double detailFactor);
