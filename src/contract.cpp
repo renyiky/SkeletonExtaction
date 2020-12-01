@@ -16,9 +16,9 @@ Mat contract(Mat img, string filename, const double detailFactor, const double t
     while(true){    // I remove the threshold 0.95
         vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);    // set coordinates, k0, d3nn
         updateK(img, pointset, upperLimit);
-        skelx::computeUi(img, pointset, 0.95);
-        skelx::PCA(img, pointset, 0.95, detailFactor);
-        skelx::movePoint(pointset, 0.95);
+        skelx::computeUi(img, pointset);
+        skelx::PCA(img, pointset, detailFactor);
+        skelx::movePoint(pointset);
         img = skelx::draw(img, pointset);
         // skelx::visualize(img, pointset, t);
         for(skelx::Point &p : pointset) sigmaHat += p.sigma;
@@ -30,8 +30,8 @@ Mat contract(Mat img, string filename, const double detailFactor, const double t
         // check if sigmaHat remains unchanged
         // if it doesn't change for 3 times, stop extracting
         if(sigmaHat == preSigmaHat){
-            // if(count == 2) return skelx::postProcess(img, detailFactor, thinningFactor, upperLimit);
-            if(count == 2) return img;
+            if(count == 2) return skelx::postProcess(img, detailFactor, thinningFactor, upperLimit);
+            // if(count == 2) return img;
             else ++count;
         }else{
             preSigmaHat = sigmaHat;

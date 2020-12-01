@@ -60,22 +60,23 @@ namespace skelx{
     // when k is larger than 10, we set it as the parameter upperLimit
     void updateK(Mat &img, vector<skelx::Point> &pointset, int upperLimit){
         for(struct skelx::Point &p : pointset){
-            double dnn = 3 * p.d3nn;
-            int x = p.pos[0],
-                y = p.pos[1];
-            int count = 0;
-            // vector<vector<double> > neighborsCount = {};
-            for(int i = -static_cast<int>(dnn); i < static_cast<int>(dnn) + 1; ++i){
-                for(int j = -static_cast<int>(dnn); j < static_cast<int>(dnn) + 1; ++j){
-                    if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-                        // p.neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
-                        ++count;
-                    }
-                }
-            }
+            // double dnn = 3 * p.d3nn;
+            // int x = p.pos[0],
+            //     y = p.pos[1];
+            // int count = 0;
+            // // vector<vector<double> > neighborsCount = {};
+            // for(int i = -static_cast<int>(dnn); i < static_cast<int>(dnn) + 1; ++i){
+            //     for(int j = -static_cast<int>(dnn); j < static_cast<int>(dnn) + 1; ++j){
+            //         if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+            //             // p.neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+            //             ++count;
+            //         }
+            //     }
+            // }
             // cout<<p.neighbors.size()<<endl;
             // set the upper limit of K 
-            p.k = 10 < count ? upperLimit : count;
+            // p.k = 10 < count ? upperLimit : count;
+            p.k = upperLimit;
             // cout<<p.k<<endl;
         }
     }
@@ -159,7 +160,7 @@ namespace skelx{
         Mat ret = Mat::zeros(rows, cols, CV_8U);
         for(skelx::Point p : pointset){
             if(p.pos[0] >= 0 && p.pos[0] < rows && p.pos[1] >= 0 && p.pos[1] < cols){
-                ret.at<uchar>(p.pos[0],p.pos[1]) = 255;
+                ret.at<uchar>(p.pos[0], p.pos[1]) = 255;
             }
         }
         return ret;
@@ -184,7 +185,7 @@ namespace skelx{
 
     // move points toward deltaX
     // only move the point whose sigma is less than the threshold
-    void movePoint(vector<skelx::Point> &pointset, double threshold){
+    void movePoint(vector<skelx::Point> &pointset){
         for(skelx::Point &p : pointset){
             // if(p.sigma < threshold){
                 p.pos[0] += static_cast<int>(p.deltaX[0]);
@@ -195,11 +196,8 @@ namespace skelx{
 
     // set ui for each xi based on p.k,
     // neighbors and ui of xi would be set
-    void computeUi(Mat &img, vector<skelx::Point> &pointset, double threshold){
+    void computeUi(Mat &img, vector<skelx::Point> &pointset){
         for(skelx::Point &p : pointset){
-            // if(p.sigma > threshold){
-            //     continue;
-            // }
             // get k nearest neighbors
             vector<double> ui{0.0, 0.0};
 
@@ -221,7 +219,7 @@ namespace skelx{
     // only do PCA for the point whose sigma is less than the parameter threshold.
     // the parameter detailFactor which is set to 10.0 as default can control the degree of detail the algorithm would produce,
     // the larger the detailFactor, the more details the skeleton would have.
-    void PCA(Mat &img, vector<skelx::Point> &pointset, double threshold, double detailFactor){
+    void PCA(Mat &img, vector<skelx::Point> &pointset, double detailFactor){
 
         for(skelx::Point &xi: pointset){
             if(xi.ui[0] == 0 && xi.ui[1] == 0){
@@ -295,9 +293,9 @@ namespace skelx{
             xi.cosTheta = cosTheta;
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5),
                     jumpFunction = 2.0 / (1 + exp((xi.sigma - 0.7723) * (xi.sigma - 0.7723) * 1500.0)) + 1; // the 0.7723 comes from the mean of (0.755906 + 0.7875 + 0.773625) which are referred to 3 diffenrent rectangle conditions
-
-            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor) * jumpFunction;
-            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor) * jumpFunction;
+            double scale = 10.0;            
+            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor * scale) * jumpFunction;
+            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor * scale) * jumpFunction;
             xi.deltaX = deltaX;
         }
     }
@@ -454,8 +452,8 @@ namespace skelx{
 
         vector<skelx::Point> pointset = getPointsetInitialized(img);
         updateK(img, pointset, upperLimit);
-        computeUi(img, pointset, 1.0);
-        PCA(img, pointset, 1.0, detailFactor);
+        computeUi(img, pointset);
+        PCA(img, pointset, detailFactor);
         // movePoint(pointset, 0.95);
         // skelx::refreshPointset(img, pointset);
         // img = draw(img, pointset);

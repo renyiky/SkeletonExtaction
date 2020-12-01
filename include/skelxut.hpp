@@ -14,9 +14,9 @@ namespace skelx{
     // int setNeighborsOfK(cv::Mat &img, skelx::Point &point, const int k);
     cv::Mat draw(const cv::Mat &src, std::vector<struct skelx::Point> &pointset);
     // void refreshPointset(cv::Mat &img, std::vector<skelx::Point> &pointset);
-    void movePoint(std::vector<skelx::Point> &pointset, double threshold);
-    void computeUi(cv::Mat &img, std::vector<skelx::Point> &pointset, double threshold);
-    void PCA(cv::Mat &img, std::vector<skelx::Point> &pointset, double threshold, double detailFactor);
+    void movePoint(std::vector<skelx::Point> &pointset);
+    void computeUi(cv::Mat &img, std::vector<skelx::Point> &pointset);
+    void PCA(cv::Mat &img, std::vector<skelx::Point> &pointset, double detailFactor);
     int setUpperLimitOfK(cv::Mat &img);
     cv::Mat postProcess(cv::Mat &img, const double detailFactor, const double thinningFactor, const int upperLimit);
 }
