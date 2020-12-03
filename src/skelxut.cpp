@@ -12,6 +12,11 @@
 #include "skelxut.hpp"
 #include "Point.hpp"
 
+#define LEFT_RIGHT 1
+#define UP_DOWN 2
+#define UPPER_LEFT_LOWER_RIGHT 3
+#define UPPER_RIGHT_LOWER_LEFT 4
+
 using namespace std;
 using namespace cv;
 using namespace Eigen;
@@ -339,8 +344,19 @@ namespace skelx{
         else return true;
     }
 
-    bool reverseDirectionTest(Mat &img, skelx::Point &p){
-        
+    int canBeFilled(Mat &img, const vector<int> &pos){
+        if(img.at<uchar>(pos[0], pos[1]) == 0){
+            // up and down
+            if(pos[0] - 1 >= 0 && pos[0] + 1 < img.rows && img.at<uchar>(pos[0] - 1, pos[1]) == 255 && img.at<uchar>(pos[0] + 1, pos[1]) == 255) return UP_DOWN;
+            // left and right
+            else if(pos[1] - 1 >= 0 && pos[1] + 1 < img.cols && img.at<uchar>(pos[0], pos[1] - 1) == 255 && img.at<uchar>(pos[0], pos[1] + 1) == 255) return LEFT_RIGHT;
+            // upper left and lower right
+            else if(pos[0] - 1 >= 0 && pos[0] + 1 < img.rows && pos[1] + 1 < img.cols && pos[1] - 1 >= 0 && img.at<uchar>(pos[0] - 1, pos[1] - 1) == 255 && img.at<uchar>(pos[0] + 1, pos[1] + 1) == 255) return UPPER_LEFT_LOWER_RIGHT;
+            // upper right and lower left
+            else if(pos[0] - 1 >= 0 && pos[0] + 1 < img.rows && pos[1] + 1 < img.cols && pos[1] - 1 >= 0 && img.at<uchar>(pos[0] + 1, pos[1] - 1) == 255 && img.at<uchar>(pos[0] - 1, pos[1] + 1) == 255) return UPPER_RIGHT_LOWER_LEFT;
+            else return 0;
+        }
+        return 0;
     }
 
     // thin the raw skeleton
@@ -349,11 +365,11 @@ namespace skelx{
     Mat thin(Mat &img, vector<skelx::Point> &pointset, float threshold){
         vector<skelx::Point> keyPointset;   // store the key points which shall not be removed
         for(auto &i : pointset){
-            if(i.cosTheta >= threshold && (abs(i.pos[0]) > 10e-3 || abs(i.pos[1]) > 10e-3)){
+            if(i.cosTheta >= threshold){
                 keyPointset.push_back(i);
-                // ketPointset.push_back({static_cast<int>(i.pos[0]), static_cast<int>(i.pos[1])});
             }
         }
+        imwrite("results/1_keypoint.png", draw(img, keyPointset));
 
         Mat ret = img.clone();
         bool flag = true; // flag to show if there is no point can be removed
@@ -402,7 +418,102 @@ namespace skelx{
                 }
             }
         }
-        return ret;
+        imwrite("results/2_before_fill.png", ret);
+        // regenerate new key points
+        for(int i = 0; i < ret.rows; ++i){
+            for(int j = 0; j < ret.cols; ++j){
+                skelx::Point p;
+                switch(canBeFilled(ret, {i, j})){
+                    case LEFT_RIGHT:
+                                    ret.at<uchar>(i, j) = 255;
+                                    p.pos[0] = i;
+                                    p.pos[1] = j;
+                                    keyPointset.push_back(p);
+                                    ret.at<uchar>(i - 1, j) = 0;
+                                    ret.at<uchar>(i + 1, j) = 0;
+                                    break;
+                    case UP_DOWN:
+                                    ret.at<uchar>(i, j) = 255;
+                                    p.pos[0] = i;
+                                    p.pos[1] = j;
+                                    keyPointset.push_back(p);
+                                    ret.at<uchar>(i, j + 1) = 0;
+                                    ret.at<uchar>(i, j - 1) = 0;
+                                    break;
+                    case UPPER_LEFT_LOWER_RIGHT:
+                                    ret.at<uchar>(i, j) = 255;
+                                    p.pos[0] = i;
+                                    p.pos[1] = j;
+                                    keyPointset.push_back(p);
+                                    ret.at<uchar>(i - 1, j + 1) = 0;
+                                    ret.at<uchar>(i + 1, j - 1) = 0;
+                                    break;
+                    case UPPER_RIGHT_LOWER_LEFT:
+                                    ret.at<uchar>(i, j) = 255;
+                                    p.pos[0] = i;
+                                    p.pos[1] = j;
+                                    keyPointset.push_back(p);
+                                    ret.at<uchar>(i - 1, j - 1) = 0;
+                                    ret.at<uchar>(i + 1, j + 1) = 0;
+                                    break;
+                    case 0:
+                        break;
+                }
+
+            }
+        }
+
+        imwrite("results/3_new_key.png", draw(ret, keyPointset));
+
+        Mat ret_new = img.clone();
+        flag = true; // flag to show if there is no point can be removed
+        while(flag){
+            flag = false;
+
+            // from right to left
+            for(int x = 0; x < ret_new.rows; ++x){
+                for(int y = ret_new.cols - 1; y >= 0; --y){
+                    if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
+                        ret_new.at<uchar>(x, y) = 0;
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+
+            // from left to right
+            for(int x = 0; x < ret_new.rows; ++x){
+                for(int y = 0; y < ret_new.cols; ++y){
+                    if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
+                        ret_new.at<uchar>(x, y) = 0;
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            // from bottom to top
+            for(int y = 0; y < ret_new.cols; ++y){
+                for(int x = ret_new.rows - 1; x >= 0; --x){
+                    if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
+                        ret_new.at<uchar>(x, y) = 0;
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            // from top to bottom
+            for(int y = 0; y < ret_new.cols; ++y){
+                for(int x = 0; x < ret_new.rows; ++x){
+                    if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
+                        ret_new.at<uchar>(x, y) = 0;
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return ret_new;
         // // visualize(img, keyPointset, 0);
         // return draw(img, keyPointset);
     }

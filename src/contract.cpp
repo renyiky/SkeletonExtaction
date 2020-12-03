@@ -32,7 +32,9 @@ Mat contract(Mat img, string filename, const double detailFactor, const double t
         // check if sigmaHat remains unchanged
         // if it doesn't change for 3 times, stop extracting
         if(sigmaHat == preSigmaHat){
-            if(count == 2) return skelx::postProcess(img, detailFactor, thinningFactor, upperLimit);
+            if(count == 2) {
+                imwrite("results/0_raw_skel.png", draw(img, pointset));
+                return skelx::postProcess(img, detailFactor, thinningFactor, upperLimit);}
             // if(count == 2) return img;
             else ++count;
         }else{
