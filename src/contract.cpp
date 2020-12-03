@@ -14,13 +14,15 @@ Mat contract(Mat img, string filename, const double detailFactor, const double t
         upperLimit = skelx::setUpperLimitOfK(img);  // set the upper limit of k, it would be used when update k during each iteration
 
     while(true){    // I remove the threshold 0.95
-        vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);    // set coordinates, k0, d3nn
-        updateK(img, pointset, upperLimit);
+        vector<skelx::Point> pointset = skelx::getPointsetInitialized(img, upperLimit);    // set coordinates, k0, d3nn
+        // updateK(img, pointset, upperLimit);
         skelx::computeUi(img, pointset);
         skelx::PCA(img, pointset, detailFactor);
         skelx::movePoint(pointset);
         img = skelx::draw(img, pointset);
-        // skelx::visualize(img, pointset, t);
+
+        // if(t % 10 == 0 && t != 0) skelx::visualize(img, pointset, t);
+
         for(skelx::Point &p : pointset) sigmaHat += p.sigma;
         sigmaHat /= pointset.size();
 

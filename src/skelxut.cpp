@@ -60,22 +60,24 @@ namespace skelx{
     // when k is larger than 10, we set it as the parameter upperLimit
     void updateK(Mat &img, vector<skelx::Point> &pointset, int upperLimit){
         for(struct skelx::Point &p : pointset){
-            // double dnn = 3 * p.d3nn;
+            // double dnn = 3.5 * p.d3nn;
             // int x = p.pos[0],
             //     y = p.pos[1];
             // int count = 0;
             // // vector<vector<double> > neighborsCount = {};
-            // for(int i = -static_cast<int>(dnn); i < static_cast<int>(dnn) + 1; ++i){
-            //     for(int j = -static_cast<int>(dnn); j < static_cast<int>(dnn) + 1; ++j){
+            // for(int i = -static_cast<int>(dnn); i < static_cast<int>(dnn + 0.5) + 1; ++i){
+            //     for(int j = -static_cast<int>(dnn); j < static_cast<int>(dnn + 0.5) + 1; ++j){
             //         if(pow((i * i + j * j), 0.5) <= dnn && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-            //             // p.neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
-            //             ++count;
+            //             p.neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+            //             // ++count;
             //         }
             //     }
             // }
             // cout<<p.neighbors.size()<<endl;
-            // set the upper limit of K 
-            // p.k = 10 < count ? upperLimit : count;
+            // set the upper limit of K  
+            // p.k = upperLimit < count ? upperLimit : count;
+            // p.k = count;
+            // cout<<count<<endl;
             p.k = upperLimit;
             // cout<<p.k<<endl;
         }
@@ -92,7 +94,7 @@ namespace skelx{
         vector<double> neighborsRadius = {};
 
         // circular search
-        while(neighborsRadius.size() < 3){
+        while(neighborsRadius.size() < 4){
             ++radius;
             neighborsRadius = {};
             for(double i = -radius; i < radius + 1; ++i){
@@ -104,11 +106,11 @@ namespace skelx{
             }
         }
         sort(neighborsRadius.begin(), neighborsRadius.end());
-        return (neighborsRadius[0] + neighborsRadius[1] + neighborsRadius[2]) / 3;
+        return (neighborsRadius[0] + neighborsRadius[1] + neighborsRadius[2] + neighborsRadius[3]) / 4;
     }
     
     // initialize the pointset
-    vector<struct skelx::Point> getPointsetInitialized(Mat &img){
+    vector<struct skelx::Point> getPointsetInitialized(Mat &img, const int numNeighbor){
         vector<struct skelx::Point> pointset;
         for(int i = 0; i < img.rows; ++i){
             for(int j = 0; j < img.cols; ++j){
@@ -116,7 +118,8 @@ namespace skelx{
                     skelx::Point p;
                     p.pos[0] = i;
                     p.pos[1] = j;
-                    p.d3nn = getD3nn(img, {static_cast<double>(i), static_cast<double>(j)});
+                    p.k = numNeighbor;
+                    // p.d3nn = getD3nn(img, {static_cast<double>(i), static_cast<double>(j)});
                     // cout<<p.d3nn<<endl;
                     pointset.push_back(p);
                 }
@@ -145,7 +148,7 @@ namespace skelx{
                 }
             }
         }
-
+        // cout<<"k:" << k << "  " <<"neightbors:"<<neighbors.size()<<endl;
         if(neighbors.size() != 0){
             point.neighbors = neighbors;
             return 1;
@@ -406,7 +409,7 @@ namespace skelx{
 
     // remove isolate point, namely noise,
     // and fill one-pixel holes
-    Mat postProcess(Mat &img, const double detailFactor, const double thinningFactor, const int upperLimit){
+    Mat postProcess(Mat &img, const double detailFactor, const double thinningFactor, const int numNeighbor){
         // remove isolate point
         for(int x = 0; x < img.rows; ++x){
             for(int y = 0; y < img.cols; ++y){
@@ -450,8 +453,8 @@ namespace skelx{
             }
         }
 
-        vector<skelx::Point> pointset = getPointsetInitialized(img);
-        updateK(img, pointset, upperLimit);
+        vector<skelx::Point> pointset = getPointsetInitialized(img, numNeighbor);
+        // updateK(img, pointset, numNeighbor);
         computeUi(img, pointset);
         PCA(img, pointset, detailFactor);
         // movePoint(pointset, 0.95);
