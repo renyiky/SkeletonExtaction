@@ -1,4 +1,4 @@
-VPATH := include:src:src/comparisonAlgs
+VPATH := include:src:src/comparisonAlgs:src/obj
 ROOT := $(shell pwd)
 INC_DIR := $(ROOT)/include
 SRC_DIR := $(ROOT)/src
