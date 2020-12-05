@@ -3,3 +3,4 @@ src/obj/
 app
 ev
 vsversion/.*
+results/visualization/*
