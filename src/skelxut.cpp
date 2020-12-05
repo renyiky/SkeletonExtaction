@@ -302,8 +302,8 @@ namespace skelx{
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5),
                     jumpFunction = 2.0 / (1 + exp((xi.sigma - 0.7723) * (xi.sigma - 0.7723) * 1500.0)) + 1; // the 0.7723 comes from the mean of (0.755906 + 0.7875 + 0.773625) which are referred to 3 diffenrent rectangle conditions
             double scale = 10.0;            
-            deltaX[0] = xi.ui[0] * std::exp(- (cosTheta * cosTheta) * detailFactor * scale) * jumpFunction;
-            deltaX[1] = xi.ui[1] * std::exp(- (cosTheta * cosTheta) * detailFactor * scale) * jumpFunction;
+            deltaX[0] = xi.ui[0] * std::exp(- pow(cosTheta, 2.0) * detailFactor * scale) * jumpFunction;
+            deltaX[1] = xi.ui[1] * std::exp(- pow(cosTheta, 2.0) * detailFactor * scale) * jumpFunction;
             xi.deltaX = deltaX;
         }
     }

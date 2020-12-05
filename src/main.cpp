@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
     // output(imgHybrid, "final_Hybrid_" + filename);
 
     img = contract(img, filename, detailFactor, thinningFactor);
-    imwrite(outputPath + "0_final_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + "_" + to_string(thinningFactor) + ".png", img);
+    imwrite(outputPath + "4_final_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + "_" + to_string(thinningFactor) + ".png", img);
 
     // postprocess
     // img = AWalg(img);
