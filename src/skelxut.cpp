@@ -597,7 +597,7 @@ namespace skelx{
         //         preSigmaHat = sigmaHat;
         //         countTimes = 0;
         //     }
-        }
+        // }
         // movePoint(pointset, 0.95);
         // skelx::refreshPointset(img, pointset);
         // img = draw(img, pointset);
