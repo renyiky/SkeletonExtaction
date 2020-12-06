@@ -115,7 +115,7 @@ namespace skelx{
     }
     
     // initialize the pointset
-    vector<struct skelx::Point> getPointsetInitialized(Mat &img, const int numNeighbor){
+    vector<struct skelx::Point> getPointsetInitialized(Mat &img){
         vector<struct skelx::Point> pointset;
         for(int i = 0; i < img.rows; ++i){
             for(int j = 0; j < img.cols; ++j){
@@ -123,7 +123,7 @@ namespace skelx{
                     skelx::Point p;
                     p.pos[0] = i;
                     p.pos[1] = j;
-                    p.k = numNeighbor;
+                    // p.k = numNeighbor;
                     // p.d3nn = getD3nn(img, {static_cast<double>(i), static_cast<double>(j)});
                     // cout<<p.d3nn<<endl;
                     pointset.push_back(p);
@@ -204,12 +204,12 @@ namespace skelx{
 
     // set ui for each xi based on p.k,
     // neighbors and ui of xi would be set
-    void computeUi(Mat &img, vector<skelx::Point> &pointset){
+    void computeUi(Mat &img, vector<skelx::Point> &pointset, const int k){
         for(skelx::Point &p : pointset){
             // get k nearest neighbors
             vector<double> ui{0.0, 0.0};
 
-            if(!setNeighborsOfK(img, p, p.k)){  // set ui neighbors
+            if(!setNeighborsOfK(img, p, k)){  // set ui neighbors
                 std::cout<<"neighbors insufficient!"<<endl;
             }
             for(vector<double> nei: p.neighbors){
@@ -309,7 +309,7 @@ namespace skelx{
     }
 
     // set the upper limit of p.k
-    int setUpperLimitOfK(Mat &img){
+    int computeK(Mat &img){
         double left = img.cols + 1,
             right = -1,
             up = img.rows + 1,
@@ -520,7 +520,7 @@ namespace skelx{
 
     // remove isolate point, namely noise,
     // and fill one-pixel holes
-    Mat postProcess(Mat &img, const double detailFactor, const double thinningFactor, const int numNeighbor){
+    Mat postProcess(Mat &img, const double detailFactor, const double thinningFactor, const int k){
         // remove isolate point
         for(int x = 0; x < img.rows; ++x){
             for(int y = 0; y < img.cols; ++y){
@@ -564,10 +564,40 @@ namespace skelx{
             }
         }
 
-        vector<skelx::Point> pointset = getPointsetInitialized(img, numNeighbor);
-        // updateK(img, pointset, numNeighbor);
-        computeUi(img, pointset);
-        PCA(img, pointset, detailFactor);
+        // double sigmaHat = 0.0;
+        // double preSigmaHat = sigmaHat;
+        // int countTimes = 0;
+        // vector<skelx::Point> keyPointset;   // store the key points which shall not be removed
+        // while(true){
+        //     vector<skelx::Point> pointset = getPointsetInitialized(img);
+        //     for(auto &i : pointset){
+        //         if(i.cosTheta >= thinningFactor){
+        //             keyPointset.push_back(i);
+        //         }
+        //     }
+        //     computeUi(img, pointset, k);
+        //     PCA(img, pointset, detailFactor);
+
+        //     for(auto &p : pointset){
+        //         if((p.ui[0] >= 1.0 || p.ui[1] >= 1.0)  && isRemovable(img, {static_cast<int>(p.pos[0]), static_cast<int>(p.pos[1])}) && !isKeyPos(keyPointset, {static_cast<int>(p.pos[0]), static_cast<int>(p.pos[1])})){
+        //             p.deltaX[0] = p.ui[0] > 0 ? 1 : -1;
+        //             p.deltaX[1] = p.ui[1] > 0 ? 1 : -1;
+        //             movePoint(pointset);
+        //             // break;
+        //         }
+        //     }
+        //     img = draw(img, pointset);
+        //     for(skelx::Point &p : pointset) sigmaHat += p.sigma;
+        //     sigmaHat /= pointset.size();
+            
+        //     if(sigmaHat == preSigmaHat){
+        //         if(countTimes == 2) return img;
+        //         else ++countTimes;
+        //     }else{
+        //         preSigmaHat = sigmaHat;
+        //         countTimes = 0;
+        //     }
+        }
         // movePoint(pointset, 0.95);
         // skelx::refreshPointset(img, pointset);
         // img = draw(img, pointset);
@@ -576,7 +606,7 @@ namespace skelx{
         // computeUi(img, pointset, 1.0);
         // PCA(img, pointset, 1.0, detailFactor);
         // visualize(img, new_pointset, 0);
-        return thin(img, pointset, thinningFactor);
+        // return thin(img, pointset, thinningFactor);
         // return img;
     }
 }

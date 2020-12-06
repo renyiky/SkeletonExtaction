@@ -12,11 +12,9 @@ namespace skelx{
                         deltaX,
                         principalVec{0.0, 0.0};
 
-    double  sigma = 0,
-            d3nn,
-            cosTheta = 0;
+    double  sigma = 0, cosTheta = 0;
 
-    std::vector<std::vector<double> > neighbors, PCAneighbors, covMat;
+    std::vector<std::vector<double> > neighbors, covMat;
     };
 }
 

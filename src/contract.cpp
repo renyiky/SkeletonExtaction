@@ -6,22 +6,24 @@
 using namespace std;
 using namespace cv;
 
-Mat contract(Mat img, string filename, const double detailFactor, const double thinningFactor){
-    double sigmaHat = 0.0,
-            preSigmaHat = sigmaHat;
-    int count = 0,  // count if sigmaHat remains unchanged
-        t = 0,  // count for iterations
-        upperLimit = skelx::setUpperLimitOfK(img);  // set the upper limit of k, it would be used when update k during each iteration
+static double sigmaHat = 0.0;
+static double preSigmaHat = sigmaHat;
 
-    while(true){    // I remove the threshold 0.95
-        vector<skelx::Point> pointset = skelx::getPointsetInitialized(img, upperLimit);    // set coordinates, k0, d3nn
-        // updateK(img, pointset, upperLimit);
-        skelx::computeUi(img, pointset);
+static int countTimes = 0;   // count if sigmaHat remains unchanged
+static int t = 0;   // count for iterations
+static int k = 0;   // k nearest neighbors
+
+Mat contract(Mat img, string filename, const double detailFactor, const double thinningFactor){
+    k = skelx::computeK(img);  // compute k
+
+    while(true){
+        vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);    // set coordinates, k
+        skelx::computeUi(img, pointset, k);
         skelx::PCA(img, pointset, detailFactor);
         skelx::movePoint(pointset);
         img = skelx::draw(img, pointset);
 
-        // if(t % 10 == 0 && t != 0) skelx::visualize(img, pointset, t);
+        // if(t % 10 == 0) skelx::visualize(img, pointset, t);
 
         for(skelx::Point &p : pointset) sigmaHat += p.sigma;
         sigmaHat /= pointset.size();
@@ -32,14 +34,14 @@ Mat contract(Mat img, string filename, const double detailFactor, const double t
         // check if sigmaHat remains unchanged
         // if it doesn't change for 3 times, stop extracting
         if(sigmaHat == preSigmaHat){
-            if(count == 2) {
+            if(countTimes == 2) {
                 imwrite("results/0_raw_skel.png", draw(img, pointset));
-                return skelx::postProcess(img, detailFactor, thinningFactor, upperLimit);}
+                return skelx::postProcess(img, detailFactor, thinningFactor, k);}
             // if(count == 2) return img;
-            else ++count;
+            else ++countTimes;
         }else{
             preSigmaHat = sigmaHat;
-            count = 0;
+            countTimes = 0;
         }
     }
 }
