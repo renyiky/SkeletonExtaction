@@ -216,6 +216,7 @@ namespace skelx{
                 ui[0] += (nei[0] - p.pos[0]);
                 ui[1] += (nei[1] - p.pos[1]);
             }
+            // cout<<ui[0] <<"   "<<ui[1]<<endl;
             ui[0] = ui[0] / static_cast<double>(p.neighbors.size());
             ui[1] = ui[1] / static_cast<double>(p.neighbors.size());
             p.ui = {ui[0], ui[1]};
@@ -359,161 +360,224 @@ namespace skelx{
         return 0;
     }
 
-    // thin the raw skeleton
-    // remove points whose cosTheta is less than the paramether threshold
-    // return the new final image
-    Mat thin(Mat &img, vector<skelx::Point> &pointset, float threshold){
-        vector<skelx::Point> keyPointset;   // store the key points which shall not be removed
-        for(auto &i : pointset){
-            if(i.cosTheta >= threshold){
-                keyPointset.push_back(i);
+    bool isBoundary(Mat &img, vector<int> pos){
+        int x = static_cast<int>(pos[0]), 
+            y = static_cast<int>(pos[1]);
+        vector<int> p2 = {x - 1, y},
+                    p3 = {x - 1, y + 1},
+                    p4 = {x, y + 1},
+                    p5 = {x + 1, y + 1},
+                    p6 = {x + 1, y},
+                    p7 = {x + 1, y - 1},
+                    p8 = {x, y - 1},
+                    p9 = {x - 1, y -1};
+        vector<vector<int> > neighbors = {p2, p3, p4, p5, p6, p7, p8, p9};
+
+        for(vector<int> i : neighbors){
+            if(i[0] < 0 || i[0] >= img.rows || i[1] < 0 || i[1] >= img.cols || img.at<uchar>(i[0], i[1]) == 0){
+                return true;
             }
         }
+        return false;
+    }
+
+    // thin the raw skeleton
+    // return the new final image
+    Mat thin(Mat &img, vector<skelx::Point> &pointset, float thinningFactor, const int k){
+        vector<skelx::Point> keyPointset;   // store the key points which shall not be removed
+        // double threshold3 = 0;
+        // int n3 = (k - 2) / 3;
+        // int m3 = (k - 2) % 3;
+        // for(int i = 0; i <= n3; ++i) threshold3 += i;
+        // threshold3 = (threshold3 * 3 + m3 * (n3 + 1)) / static_cast<double>(k);
+
+        // double threshold4 = 0;
+        // int n4 = (k - 3) / 4;
+        // int m4 = (k - 3) % 4;
+        // for(int i = 0; i <= n4; ++i) threshold4 += i;
+        // threshold4 = (threshold4 * 4 + m4 * (n4 + 1)) /  static_cast<double>(k);
+
+        // int threshold = static_cast<int>(((threshold3 + threshold4) / 2.0));
+
+        for(auto &i : pointset){
+            if(i.cosTheta >= thinningFactor && (abs(i.ui[0]) >= 1.0 || abs(i.ui[1]) >= 1.0)) keyPointset.push_back(i);
+        }
+
         imwrite("results/1_keypoint.png", draw(img, keyPointset));
 
-        Mat ret = img.clone();
+        Mat ret = img.clone(),
+            img2 = img.clone();
         bool flag = true; // flag to show if there is no point can be removed
+        // vector<Point> new_pointset = pointset;
+        vector<vector<int> > boundaryPoints;
         while(flag){
             flag = false;
+            // for(Point &p : pointset){
+            //     if(isBoundary(ret, p.pos) && isRemovable(ret, p.pos) && !isKeyPos(keyPointset, p.pos)){
 
-            // from right to left
-            for(int x = 0; x < ret.rows; ++x){
-                for(int y = ret.cols - 1; y >= 0; --y){
-                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
-                        ret.at<uchar>(x, y) = 0;
-                        flag = true;
-                        break;
+            //         flag = true;
+            //     }
+            // }
+            boundaryPoints = {};
+            for(int i = 0; i < img2.rows; ++i){
+                for(int j = 0; j < img2.cols; ++j){
+                    if(img2.at<uchar>(i, j) != 0 && isBoundary(img2, {i, j})){
+                        // img2.at<uchar>(i, j) = 0;
+                        boundaryPoints.push_back({i, j});
                     }
                 }
             }
 
-            // from left to right
-            for(int x = 0; x < ret.rows; ++x){
-                for(int y = 0; y < ret.cols; ++y){
-                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
-                        ret.at<uchar>(x, y) = 0;
-                        flag = true;
-                        break;
-                    }
+            for(auto &p : boundaryPoints){
+                // cout<<p[0]<<"   "<<p[1]<<endl;
+                if(isRemovable(img2, p) && !isKeyPos(keyPointset, p)){
+                    img2.at<uchar>(p[0], p[1]) = 0;
+                    flag = true;
                 }
             }
-            // from bottom to top
-            for(int y = 0; y < ret.cols; ++y){
-                for(int x = ret.rows - 1; x >= 0; --x){
-                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
-                        ret.at<uchar>(x, y) = 0;
-                        flag = true;
-                        break;
-                    }
-                }
-            }
-            // from top to bottom
-            for(int y = 0; y < ret.cols; ++y){
-                for(int x = 0; x < ret.rows; ++x){
-                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
-                        ret.at<uchar>(x, y) = 0;
-                        flag = true;
-                        break;
-                    }
-                }
-            }
+        
+
+            // img2 = ret.clone();
+
+            // // from right to left
+            // for(int x = 0; x < ret.rows; ++x){
+            //     for(int y = ret.cols - 1; y >= 0; --y){
+            //         if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
+            //             ret.at<uchar>(x, y) = 0;
+            //             flag = true;
+            //             break;
+            //         }
+            //     }
+            // }
+
+            // // from left to right
+            // for(int x = 0; x < ret.rows; ++x){
+            //     for(int y = 0; y < ret.cols; ++y){
+            //         if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
+            //             ret.at<uchar>(x, y) = 0;
+            //             flag = true;
+            //             break;
+            //         }
+            //     }
+            // }
+            // // from bottom to top
+            // for(int y = 0; y < ret.cols; ++y){
+            //     for(int x = ret.rows - 1; x >= 0; --x){
+            //         if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
+            //             ret.at<uchar>(x, y) = 0;
+            //             flag = true;
+            //             break;
+            //         }
+            //     }
+            // }
+            // // from top to bottom
+            // for(int y = 0; y < ret.cols; ++y){
+            //     for(int x = 0; x < ret.rows; ++x){
+            //         if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
+            //             ret.at<uchar>(x, y) = 0;
+            //             flag = true;
+            //             break;
+            //         }
+            //     }
+            // }
         }
-        imwrite("results/2_before_fill.png", ret);
-        // regenerate new key points
-        for(int i = 0; i < ret.rows; ++i){
-            for(int j = 0; j < ret.cols; ++j){
-                skelx::Point p;
-                switch(canBeFilled(ret, {i, j})){
-                    case LEFT_RIGHT:
-                                    ret.at<uchar>(i, j) = 255;
-                                    p.pos[0] = i;
-                                    p.pos[1] = j;
-                                    keyPointset.push_back(p);
-                                    ret.at<uchar>(i - 1, j) = 0;
-                                    ret.at<uchar>(i + 1, j) = 0;
-                                    break;
-                    case UP_DOWN:
-                                    ret.at<uchar>(i, j) = 255;
-                                    p.pos[0] = i;
-                                    p.pos[1] = j;
-                                    keyPointset.push_back(p);
-                                    ret.at<uchar>(i, j + 1) = 0;
-                                    ret.at<uchar>(i, j - 1) = 0;
-                                    break;
-                    case UPPER_LEFT_LOWER_RIGHT:
-                                    ret.at<uchar>(i, j) = 255;
-                                    p.pos[0] = i;
-                                    p.pos[1] = j;
-                                    keyPointset.push_back(p);
-                                    ret.at<uchar>(i - 1, j + 1) = 0;
-                                    ret.at<uchar>(i + 1, j - 1) = 0;
-                                    break;
-                    case UPPER_RIGHT_LOWER_LEFT:
-                                    ret.at<uchar>(i, j) = 255;
-                                    p.pos[0] = i;
-                                    p.pos[1] = j;
-                                    keyPointset.push_back(p);
-                                    ret.at<uchar>(i - 1, j - 1) = 0;
-                                    ret.at<uchar>(i + 1, j + 1) = 0;
-                                    break;
-                    case 0:
-                        break;
-                }
+        return img2;
+        // imwrite("results/2_before_fill.png", ret);
+        // // regenerate new key points
+        // for(int i = 0; i < ret.rows; ++i){
+        //     for(int j = 0; j < ret.cols; ++j){
+        //         skelx::Point p;
+        //         switch(canBeFilled(ret, {i, j})){
+        //             case LEFT_RIGHT:
+        //                             ret.at<uchar>(i, j) = 255;
+        //                             p.pos[0] = i;
+        //                             p.pos[1] = j;
+        //                             keyPointset.push_back(p);
+        //                             ret.at<uchar>(i - 1, j) = 0;
+        //                             ret.at<uchar>(i + 1, j) = 0;
+        //                             break;
+        //             case UP_DOWN:
+        //                             ret.at<uchar>(i, j) = 255;
+        //                             p.pos[0] = i;
+        //                             p.pos[1] = j;
+        //                             keyPointset.push_back(p);
+        //                             ret.at<uchar>(i, j + 1) = 0;
+        //                             ret.at<uchar>(i, j - 1) = 0;
+        //                             break;
+        //             case UPPER_LEFT_LOWER_RIGHT:
+        //                             ret.at<uchar>(i, j) = 255;
+        //                             p.pos[0] = i;
+        //                             p.pos[1] = j;
+        //                             keyPointset.push_back(p);
+        //                             ret.at<uchar>(i - 1, j + 1) = 0;
+        //                             ret.at<uchar>(i + 1, j - 1) = 0;
+        //                             break;
+        //             case UPPER_RIGHT_LOWER_LEFT:
+        //                             ret.at<uchar>(i, j) = 255;
+        //                             p.pos[0] = i;
+        //                             p.pos[1] = j;
+        //                             keyPointset.push_back(p);
+        //                             ret.at<uchar>(i - 1, j - 1) = 0;
+        //                             ret.at<uchar>(i + 1, j + 1) = 0;
+        //                             break;
+        //             case 0:
+        //                 break;
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
-        imwrite("results/3_new_key.png", draw(ret, keyPointset));
+        // imwrite("results/3_new_key.png", draw(ret, keyPointset));
 
-        Mat ret_new = img.clone();
-        flag = true; // flag to show if there is no point can be removed
-        while(flag){
-            flag = false;
+        // Mat ret_new = img.clone();
+        // flag = true; // flag to show if there is no point can be removed
+        // while(flag){
+        //     flag = false;
 
-            // from right to left
-            for(int x = 0; x < ret_new.rows; ++x){
-                for(int y = ret_new.cols - 1; y >= 0; --y){
-                    if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
-                        ret_new.at<uchar>(x, y) = 0;
-                        flag = true;
-                        break;
-                    }
-                }
-            }
+        //     // from right to left
+        //     for(int x = 0; x < ret_new.rows; ++x){
+        //         for(int y = ret_new.cols - 1; y >= 0; --y){
+        //             if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
+        //                 ret_new.at<uchar>(x, y) = 0;
+        //                 flag = true;
+        //                 break;
+        //             }
+        //         }
+        //     }
 
-            // from left to right
-            for(int x = 0; x < ret_new.rows; ++x){
-                for(int y = 0; y < ret_new.cols; ++y){
-                    if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
-                        ret_new.at<uchar>(x, y) = 0;
-                        flag = true;
-                        break;
-                    }
-                }
-            }
-            // from bottom to top
-            for(int y = 0; y < ret_new.cols; ++y){
-                for(int x = ret_new.rows - 1; x >= 0; --x){
-                    if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
-                        ret_new.at<uchar>(x, y) = 0;
-                        flag = true;
-                        break;
-                    }
-                }
-            }
-            // from top to bottom
-            for(int y = 0; y < ret_new.cols; ++y){
-                for(int x = 0; x < ret_new.rows; ++x){
-                    if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
-                        ret_new.at<uchar>(x, y) = 0;
-                        flag = true;
-                        break;
-                    }
-                }
-            }
-        }
+        //     // from left to right
+        //     for(int x = 0; x < ret_new.rows; ++x){
+        //         for(int y = 0; y < ret_new.cols; ++y){
+        //             if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
+        //                 ret_new.at<uchar>(x, y) = 0;
+        //                 flag = true;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     // from bottom to top
+        //     for(int y = 0; y < ret_new.cols; ++y){
+        //         for(int x = ret_new.rows - 1; x >= 0; --x){
+        //             if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
+        //                 ret_new.at<uchar>(x, y) = 0;
+        //                 flag = true;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     // from top to bottom
+        //     for(int y = 0; y < ret_new.cols; ++y){
+        //         for(int x = 0; x < ret_new.rows; ++x){
+        //             if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
+        //                 ret_new.at<uchar>(x, y) = 0;
+        //                 flag = true;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        // }
 
-        return ret_new;
+        // return ret_new;
         // // visualize(img, keyPointset, 0);
         // return draw(img, keyPointset);
     }
@@ -563,6 +627,13 @@ namespace skelx{
                 }
             }
         }
+        
+        vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);    // set coordinates, k
+        skelx::computeUi(img, pointset, k);
+        skelx::PCA(img, pointset, detailFactor);
+        Mat ret = thin(img, pointset, thinningFactor, k);
+        return ret;
+
 
         // double sigmaHat = 0.0;
         // double preSigmaHat = sigmaHat;

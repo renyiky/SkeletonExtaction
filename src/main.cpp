@@ -18,7 +18,7 @@ string inputPath = "experimentsMaterial/resources/",
         outputPath = "results/";
 
 int main(int argc, char *argv[]){
-    double thinningFactor = 0.985;
+    double thinningFactor = 0.8;
     double detailFactor = stod(argv[2]);
     if(argc == 4) thinningFactor = stod(argv[3]);
     string filename = argv[1];

@@ -15,14 +15,14 @@ static int k = 0;   // k nearest neighbors
 
 Mat contract(Mat img, string filename, const double detailFactor, const double thinningFactor){
     k = skelx::computeK(img);  // compute k
-
+    // cout<<k<<endl;
     while(true){
         vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);    // set coordinates, k
         skelx::computeUi(img, pointset, k);
         skelx::PCA(img, pointset, detailFactor);
         skelx::movePoint(pointset);
         img = skelx::draw(img, pointset);
-
+        // if(t == 93){imwrite("results/0_iter94.png", draw(img, pointset)); return img;};
         // if(t % 10 == 0) skelx::visualize(img, pointset, t);
 
         for(skelx::Point &p : pointset) sigmaHat += p.sigma;
