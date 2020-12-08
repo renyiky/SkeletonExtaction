@@ -6,15 +6,15 @@
 namespace skelx{
     
     struct Point{
-    int k;
-    std::vector<double> pos{0.0,0.0}, 
-                        ui,
-                        deltaX,
-                        principalVec{0.0, 0.0};
-
-    double  sigma = 0, cosTheta = 0;
-
-    std::vector<std::vector<double> > neighbors, covMat;
+        int k;
+        double  sigma, cosTheta;
+        std::vector<std::vector<double> > neighbors, covMat;
+        std::vector<double> pos, 
+                            ui,
+                            deltaX,
+                            principalVec;
+        Point():pos{0.0, 0.0}, principalVec{0.0, 0.0}, sigma(0), cosTheta(0){}
+        Point(double x, double y):pos{x, y}{}
     };
 }
 

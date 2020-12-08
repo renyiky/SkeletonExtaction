@@ -408,19 +408,25 @@ namespace skelx{
             if(i.cosTheta >= thinningFactor && (abs(i.ui[0]) >= 1.0 || abs(i.ui[1]) >= 1.0)) keyPointset.push_back(i);
         }
 
+        imwrite("results/1_keypoint2.png", draw(img, keyPointset));
+        Mat keyMap = draw(img, keyPointset);
+        Mat binImg, labels, stats, centroids;
+        cv::threshold(keyMap, binImg, 0, 255, cv::THRESH_OTSU);
+        int nccomps = cv::connectedComponentsWithStats (binImg, labels, stats, centroids);
+        
+        keyPointset = {};
+        for(int i = 1; i < centroids.rows; ++i){    // exclude tha background label
+                keyPointset.push_back(Point(static_cast<int>(centroids.at<double>(i, 1)), static_cast<int>(centroids.at<double>(i, 0))));   // note that the generated points need to swap positions
+        }
         imwrite("results/1_keypoint.png", draw(img, keyPointset));
-        
-        
-
 
         // ui based thinning algorithm
         Mat ret = img.clone();
-        vector<Point> newPointset(pointset);
-        sort(newPointset.begin(), newPointset.end(), 
+        sort(pointset.begin(), pointset.end(), 
             [](Point &p1, Point &p2)->bool{
                 return sqrt(p1.ui[0] * p1.ui[0] + p1.ui[1] * p1.ui[1]) > sqrt(p2.ui[0] * p2.ui[0] + p2.ui[1] * p2.ui[1]);
             });
-        for(Point &p : newPointset){
+        for(Point &p : pointset){
             if(!isKeyPos(keyPointset, {static_cast<int>(p.pos[0]), static_cast<int>(p.pos[1])}) && isRemovable(ret, {static_cast<int>(p.pos[0]), static_cast<int>(p.pos[1])})){
                 ret.at<uchar>(p.pos[0], p.pos[1]) = 0;
             }
