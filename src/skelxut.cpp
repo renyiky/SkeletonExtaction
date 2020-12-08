@@ -382,6 +382,10 @@ namespace skelx{
         return false;
     }
 
+    inline bool compare(Point &p1,Point &p2){
+        return sqrt(p1.ui[0] * p1.ui[0] + p1.ui[1] * p1.ui[1]) > sqrt(p2.ui[0] * p2.ui[0] + p2.ui[1] * p2.ui[1]);
+    }
+
     // thin the raw skeleton
     // return the new final image
     Mat thin(Mat &img, vector<skelx::Point> &pointset, float thinningFactor, const int k){
@@ -405,8 +409,24 @@ namespace skelx{
         }
 
         imwrite("results/1_keypoint.png", draw(img, keyPointset));
+        
+        
 
-        // boundary search algorithm
+
+        // ui based thinning algorithm
+        Mat ret = img.clone();
+        vector<Point> newPointset(pointset);
+        sort(newPointset.begin(), newPointset.end(), 
+            [](Point &p1, Point &p2)->bool{
+                return sqrt(p1.ui[0] * p1.ui[0] + p1.ui[1] * p1.ui[1]) > sqrt(p2.ui[0] * p2.ui[0] + p2.ui[1] * p2.ui[1]);
+            });
+        for(Point &p : newPointset){
+            if(!isKeyPos(keyPointset, {static_cast<int>(p.pos[0]), static_cast<int>(p.pos[1])}) && isRemovable(ret, {static_cast<int>(p.pos[0]), static_cast<int>(p.pos[1])})){
+                ret.at<uchar>(p.pos[0], p.pos[1]) = 0;
+            }
+        }
+        return ret;
+        // different direction boundary search algorithm
         // Mat ret = img.clone(),
         //     img2 = img.clone();
         // bool flag = true; // flag to show if there is no point can be removed
@@ -423,6 +443,60 @@ namespace skelx{
         //     boundaryPoints = {};
         //     for(int i = 0; i < img2.rows; ++i){
         //         for(int j = 0; j < img2.cols; ++j){
+        //             if(img2.at<uchar>(i, j) != 0 && isBoundary(img2, {i, j})){
+        //                 // img2.at<uchar>(i, j) = 0;
+        //                 boundaryPoints.push_back({i, j});
+        //             }
+        //         }
+        //     }
+
+        //     for(auto &p : boundaryPoints){
+        //         // cout<<p[0]<<"   "<<p[1]<<endl;
+        //         if(isRemovable(img2, p) && !isKeyPos(keyPointset, p)){
+        //             img2.at<uchar>(p[0], p[1]) = 0;
+        //             flag = true;
+        //         }
+        //     }
+
+        //     boundaryPoints = {};
+        //     for(int i = 0; i < img2.rows; ++i){
+        //         for(int j = img2.cols - 1; j >= 0; --j){
+        //             if(img2.at<uchar>(i, j) != 0 && isBoundary(img2, {i, j})){
+        //                 // img2.at<uchar>(i, j) = 0;
+        //                 boundaryPoints.push_back({i, j});
+        //             }
+        //         }
+        //     }
+
+        //     for(auto &p : boundaryPoints){
+        //         // cout<<p[0]<<"   "<<p[1]<<endl;
+        //         if(isRemovable(img2, p) && !isKeyPos(keyPointset, p)){
+        //             img2.at<uchar>(p[0], p[1]) = 0;
+        //             flag = true;
+        //         }
+        //     }
+
+        //     boundaryPoints = {};
+        //     for(int j = 0; j < img2.cols; ++j){
+        //         for(int i = 0; i < img2.rows; ++i){
+        //             if(img2.at<uchar>(i, j) != 0 && isBoundary(img2, {i, j})){
+        //                 // img2.at<uchar>(i, j) = 0;
+        //                 boundaryPoints.push_back({i, j});
+        //             }
+        //         }
+        //     }
+
+        //     for(auto &p : boundaryPoints){
+        //         // cout<<p[0]<<"   "<<p[1]<<endl;
+        //         if(isRemovable(img2, p) && !isKeyPos(keyPointset, p)){
+        //             img2.at<uchar>(p[0], p[1]) = 0;
+        //             flag = true;
+        //         }
+        //     }
+
+        //     boundaryPoints = {};
+        //     for(int j = 0; j < img2.cols; ++j){
+        //         for(int i = img2.rows - 1; i >= 0; --i){
         //             if(img2.at<uchar>(i, j) != 0 && isBoundary(img2, {i, j})){
         //                 // img2.at<uchar>(i, j) = 0;
         //                 boundaryPoints.push_back({i, j});
@@ -598,60 +672,62 @@ namespace skelx{
 
 
         // improved scanning algorithm
-        bool flag = true;
-        Mat ret2 = img.clone(), 
-            ret = ret2.clone();
-        int count = 0;
-        while(flag){
-            flag = false;
-            // img2 = ret.clone();
+        // bool flag = true;
+        // Mat ret2 = img.clone(), 
+        //     ret = ret2.clone();
+        // int count = 0;
+        // imwrite("results/" + to_string(count) + "_ret2.png", ret2);
+        // while(flag){
+        //     flag = false;
+        //     // img2 = ret.clone();
 
-            // from right to left
-            for(int x = 0; x < ret.rows; ++x){
-                for(int y = ret.cols - 1; y >= 0; --y){
-                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y}) && isBoundary(ret, {x, y})){
-                        ret2.at<uchar>(x, y) = 0;
-                        flag = true;
-                    }
-                }
-            }
-            ret = ret2.clone();
-            imwrite("results/" + to_string(++count) + "_ret2.png", ret2);
-            // from left to right
-            for(int x = 0; x < ret.rows; ++x){
-                for(int y = 0; y < ret.cols; ++y){
-                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y}) && isBoundary(ret, {x, y})){
-                        ret2.at<uchar>(x, y) = 0;
-                        flag = true;
-                    }
-                }
-            }
-            ret = ret2.clone();
-            imwrite("results/" + to_string(++count) + "_ret2.png", ret2);
-            // from bottom to top
-            for(int y = 0; y < ret.cols; ++y){
-                for(int x = ret.rows - 1; x >= 0; --x){
-                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y}) && isBoundary(ret, {x, y})){
-                        ret2.at<uchar>(x, y) = 0;
-                        flag = true;
-                    }
-                }
-            }
-            ret = ret2.clone();
-            imwrite("results/" + to_string(++count) + "_ret2.png", ret2);
-            // from top to bottom
-            for(int y = 0; y < ret.cols; ++y){
-                for(int x = 0; x < ret.rows; ++x){
-                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y}) && isBoundary(ret, {x, y})){
-                        ret2.at<uchar>(x, y) = 0;
-                        flag = true;
-                    }
-                }
-            }
-            ret = ret2.clone();
-            imwrite("results/" + to_string(++count) + "_ret2.png", ret2);
-        }
-        return ret2;
+        //     // from right to left
+        //     for(int x = 0; x < ret.rows; ++x){
+        //         for(int y = ret.cols - 1; y >= 0; --y){
+        //             if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y}) && isBoundary(ret, {x, y})){
+        //                 ret2.at<uchar>(x, y) = 0;
+        //                 flag = true;
+        //             }
+        //         }
+        //     }
+        //     ret = ret2.clone();
+        //     imwrite("results/" + to_string(++count) + "_ret2.png", ret2);
+        //     // from left to right
+        //     for(int x = 0; x < ret.rows; ++x){
+        //         for(int y = 0; y < ret.cols; ++y){
+        //             if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y}) && isBoundary(ret, {x, y})){
+        //                 ret2.at<uchar>(x, y) = 0;
+        //                 flag = true;
+        //             }
+        //         }
+        //     }
+        //     ret = ret2.clone();
+        //     imwrite("results/" + to_string(++count) + "_ret2.png", ret2);
+        //     // from bottom to top
+        //     for(int y = 0; y < ret.cols; ++y){
+        //         for(int x = ret.rows - 1; x >= 0; --x){
+        //             if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y}) && isBoundary(ret, {x, y})){
+        //                 ret2.at<uchar>(x, y) = 0;
+        //                 flag = true;
+        //             }
+        //         }
+        //     }
+        //     ret = ret2.clone();
+        //     imwrite("results/" + to_string(++count) + "_ret2.png", ret2);
+        //     // from top to bottom
+        //     for(int y = 0; y < ret.cols; ++y){
+        //         for(int x = 0; x < ret.rows; ++x){
+        //             if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y}) && isBoundary(ret, {x, y})){
+        //                 ret2.at<uchar>(x, y) = 0;
+        //                 flag = true;
+        //             }
+        //         }
+        //     }
+        //     ret = ret2.clone();
+        //     imwrite("results/" + to_string(++count) + "_ret2.png", ret2);
+        // }
+        // return ret2;
+
     }
 
     // remove isolate point, namely noise,
