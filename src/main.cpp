@@ -3,6 +3,7 @@
 #include <opencv2/highgui.hpp>
 #include <string>
 #include <iostream>
+#include <functional>
 
 #include "contract.hpp"
 #include "preProcess.hpp"
@@ -11,51 +12,33 @@
 using namespace std;
 using namespace cv;
 
-void output(Mat &img, string name);
-void superpose(Mat img, string filename, string inputPath);
+void output(const Mat &img, string name);
 
 string inputPath = "experimentsMaterial/resources/",
         outputPath = "results/";
 
 int main(int argc, char *argv[]){
-    double thinningFactor = 0.8;
     double detailFactor = stod(argv[2]);
-    if(argc == 4) thinningFactor = stod(argv[3]);
     string filename = argv[1];
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw_" + filename);
 
-    // img = invert(img);
-    // output(img, "invert");
+    // vector<function<Mat(Mat)> > previousAlgs{ZSalg, GHalg, AWalg, HybridAlg};
+    // vector<string> prefixes {"final_ZS_",
+    //                         "final_GH_",
+    //                         "final_AW_",
+    //                         "final_Hybrid_"};
 
-    // img = fullfill(img);
-    // output(img, "fullfill_" + filename);
+    // for(int i = 0; i < previousAlgs.size(); ++i)
+    //     output(previousAlgs[i](img), prefixes[i] + filename);
 
-    // Mat imgZS = ZSalg(img);
-    // output(imgZS, "final_ZS_" + filename);
+    img = contract(img, filename, detailFactor);
+    imwrite(outputPath + "0_final_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
 
-    // Mat imgGH = GHalg(img);
-    // output(imgGH, "final_GH_" + filename);
-
-    // Mat imgAW = AWalg(img);
-    // output(imgAW, "final_AW_" + filename);
-
-    // Mat imgHybrid = HybridAlg(img);
-    // output(imgHybrid, "final_Hybrid_" + filename);
-
-    img = contract(img, filename, detailFactor, thinningFactor);
-    imwrite(outputPath + "4_final_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + "_" + to_string(thinningFactor) + ".png", img);
-
-    // postprocess
-    // img = AWalg(img);
-    // imwrite(outputPath + "0_final_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
-    
-    cout << filename + "'s current detail factor = " << detailFactor << "\n" 
-            "thinningFactor = " << thinningFactor << endl;
+    cout << filename + "'s current detail factor = " << detailFactor << endl;
     return 0;
 }
 
-void output(Mat &img, string name){
-    // string outputPath = "experimentsMaterial/results/";
+void output(const Mat &img, string name){
     imwrite(outputPath + "0_" + name + ".png", img);
 }

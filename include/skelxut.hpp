@@ -7,16 +7,12 @@
 #include "Point.hpp"
 
 namespace skelx{
-    void visualize(const cv::Mat &img, const std::vector<skelx::Point> pointset, int iter);
-    // void updateK(cv::Mat &img, std::vector<skelx::Point> &pointset, int upperLimit);
-    // double getD3nn(cv::Mat &img, const std::vector<double> &pos);
-    std::vector<struct skelx::Point> getPointsetInitialized(cv::Mat &img);
-    // int setNeighborsOfK(cv::Mat &img, skelx::Point &point, const int k);
-    cv::Mat draw(const cv::Mat &src, std::vector<struct skelx::Point> &pointset);
-    // void refreshPointset(cv::Mat &img, std::vector<skelx::Point> &pointset);
+    int computeK(cv::Mat &img);
     void movePoint(std::vector<skelx::Point> &pointset);
+    std::vector<struct skelx::Point> getPointsetInitialized(cv::Mat &img);
+    cv::Mat draw(const cv::Mat &src, std::vector<struct skelx::Point> &pointset);
     void computeUi(cv::Mat &img, std::vector<skelx::Point> &pointset, const int k);
     void PCA(cv::Mat &img, std::vector<skelx::Point> &pointset, double detailFactor);
-    int computeK(cv::Mat &img);
-    cv::Mat postProcess(cv::Mat &img, const double detailFactor, const double thinningFactor, const int k);
+    void visualize(const cv::Mat &img, const std::vector<skelx::Point> pointset, const int iter);
+    cv::Mat postProcess(cv::Mat &img, const double detailFactor, const int k);
 }
