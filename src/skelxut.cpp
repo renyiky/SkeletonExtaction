@@ -8,6 +8,7 @@
 #include <opencv2/imgcodecs.hpp>
 #include <algorithm>
 #include <map>
+#include <string>
 
 #include "skelxut.hpp"
 #include "Point.hpp"
@@ -405,113 +406,125 @@ namespace skelx{
 
         imwrite("results/1_keypoint.png", draw(img, keyPointset));
 
-        Mat ret = img.clone(),
-            img2 = img.clone();
-        bool flag = true; // flag to show if there is no point can be removed
-        // vector<Point> new_pointset = pointset;
-        vector<vector<int> > boundaryPoints;
-        while(flag){
-            flag = false;
-            // for(Point &p : pointset){
-            //     if(isBoundary(ret, p.pos) && isRemovable(ret, p.pos) && !isKeyPos(keyPointset, p.pos)){
+        // boundary search algorithm
+        // Mat ret = img.clone(),
+        //     img2 = img.clone();
+        // bool flag = true; // flag to show if there is no point can be removed
+        // // vector<Point> new_pointset = pointset;
+        // vector<vector<int> > boundaryPoints;
+        // while(flag){
+        //     flag = false;
+        //     // for(Point &p : pointset){
+        //     //     if(isBoundary(ret, p.pos) && isRemovable(ret, p.pos) && !isKeyPos(keyPointset, p.pos)){
 
-            //         flag = true;
-            //     }
-            // }
-            boundaryPoints = {};
-            for(int i = 0; i < img2.rows; ++i){
-                for(int j = 0; j < img2.cols; ++j){
-                    if(img2.at<uchar>(i, j) != 0 && isBoundary(img2, {i, j})){
-                        // img2.at<uchar>(i, j) = 0;
-                        boundaryPoints.push_back({i, j});
-                    }
-                }
-            }
+        //     //         flag = true;
+        //     //     }
+        //     // }
+        //     boundaryPoints = {};
+        //     for(int i = 0; i < img2.rows; ++i){
+        //         for(int j = 0; j < img2.cols; ++j){
+        //             if(img2.at<uchar>(i, j) != 0 && isBoundary(img2, {i, j})){
+        //                 // img2.at<uchar>(i, j) = 0;
+        //                 boundaryPoints.push_back({i, j});
+        //             }
+        //         }
+        //     }
 
-            for(auto &p : boundaryPoints){
-                // cout<<p[0]<<"   "<<p[1]<<endl;
-                if(isRemovable(img2, p) && !isKeyPos(keyPointset, p)){
-                    img2.at<uchar>(p[0], p[1]) = 0;
-                    flag = true;
-                }
-            }
-        
+        //     for(auto &p : boundaryPoints){
+        //         // cout<<p[0]<<"   "<<p[1]<<endl;
+        //         if(isRemovable(img2, p) && !isKeyPos(keyPointset, p)){
+        //             img2.at<uchar>(p[0], p[1]) = 0;
+        //             flag = true;
+        //         }
+        //     }
+        // }
+        // return img2;
 
-            // img2 = ret.clone();
+        // normal scanning algorithm
+        // Mat ret = img.clone();
+        // bool flag = true;
+        // while(flag){
+        //     flag = false;
 
-            // // from right to left
-            // for(int x = 0; x < ret.rows; ++x){
-            //     for(int y = ret.cols - 1; y >= 0; --y){
-            //         if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
-            //             ret.at<uchar>(x, y) = 0;
-            //             flag = true;
-            //             break;
-            //         }
-            //     }
-            // }
+        //     // img2 = ret.clone();
 
-            // // from left to right
-            // for(int x = 0; x < ret.rows; ++x){
-            //     for(int y = 0; y < ret.cols; ++y){
-            //         if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
-            //             ret.at<uchar>(x, y) = 0;
-            //             flag = true;
-            //             break;
-            //         }
-            //     }
-            // }
-            // // from bottom to top
-            // for(int y = 0; y < ret.cols; ++y){
-            //     for(int x = ret.rows - 1; x >= 0; --x){
-            //         if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
-            //             ret.at<uchar>(x, y) = 0;
-            //             flag = true;
-            //             break;
-            //         }
-            //     }
-            // }
-            // // from top to bottom
-            // for(int y = 0; y < ret.cols; ++y){
-            //     for(int x = 0; x < ret.rows; ++x){
-            //         if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
-            //             ret.at<uchar>(x, y) = 0;
-            //             flag = true;
-            //             break;
-            //         }
-            //     }
-            // }
-        }
-        return img2;
+        //     // from right to left
+        //     for(int x = 0; x < ret.rows; ++x){
+        //         for(int y = ret.cols - 1; y >= 0; --y){
+        //             if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
+        //                 ret.at<uchar>(x, y) = 0;
+        //                 flag = true;
+        //                 break;
+        //             }
+        //         }
+        //     }
+
+        //     // from left to right
+        //     for(int x = 0; x < ret.rows; ++x){
+        //         for(int y = 0; y < ret.cols; ++y){
+        //             if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
+        //                 ret.at<uchar>(x, y) = 0;
+        //                 flag = true;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     // from bottom to top
+        //     for(int y = 0; y < ret.cols; ++y){
+        //         for(int x = ret.rows - 1; x >= 0; --x){
+        //             if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
+        //                 ret.at<uchar>(x, y) = 0;
+        //                 flag = true;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     // from top to bottom
+        //     for(int y = 0; y < ret.cols; ++y){
+        //         for(int x = 0; x < ret.rows; ++x){
+        //             if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y})){
+        //                 ret.at<uchar>(x, y) = 0;
+        //                 flag = true;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        // }
+        // // return ret;
+
+        // Mat ret_new;
         // imwrite("results/2_before_fill.png", ret);
         // // regenerate new key points
-        // for(int i = 0; i < ret.rows; ++i){
-        //     for(int j = 0; j < ret.cols; ++j){
-        //         skelx::Point p;
-        //         switch(canBeFilled(ret, {i, j})){
-        //             case LEFT_RIGHT:
-        //                             ret.at<uchar>(i, j) = 255;
-        //                             p.pos[0] = i;
-        //                             p.pos[1] = j;
-        //                             keyPointset.push_back(p);
-        //                             ret.at<uchar>(i - 1, j) = 0;
-        //                             ret.at<uchar>(i + 1, j) = 0;
-        //                             break;
-        //             case UP_DOWN:
-        //                             ret.at<uchar>(i, j) = 255;
-        //                             p.pos[0] = i;
-        //                             p.pos[1] = j;
-        //                             keyPointset.push_back(p);
-        //                             ret.at<uchar>(i, j + 1) = 0;
-        //                             ret.at<uchar>(i, j - 1) = 0;
-        //                             break;
-        //             case UPPER_LEFT_LOWER_RIGHT:
-        //                             ret.at<uchar>(i, j) = 255;
-        //                             p.pos[0] = i;
-        //                             p.pos[1] = j;
-        //                             keyPointset.push_back(p);
-        //                             ret.at<uchar>(i - 1, j + 1) = 0;
-        //                             ret.at<uchar>(i + 1, j - 1) = 0;
-        //                             break;
+        // int count = 0;
+        // while(count < 3){
+        //     for(int i = 0; i < ret.rows; ++i){
+        //         for(int j = 0; j < ret.cols; ++j){
+        //             skelx::Point p;
+        //             switch(canBeFilled(ret, {i, j})){
+        //                 case LEFT_RIGHT:
+        //                                 ret.at<uchar>(i, j) = 255;
+        //                                 p.pos[0] = i;
+        //                                 p.pos[1] = j;
+        //                                 keyPointset.push_back(p);
+        //                                 ret.at<uchar>(i - 1, j) = 0;
+        //                                 ret.at<uchar>(i + 1, j) = 0;
+        //                                 break;
+        //                 case UP_DOWN:
+        //                                 ret.at<uchar>(i, j) = 255;
+        //                                 p.pos[0] = i;
+        //                                 p.pos[1] = j;
+        //                                 keyPointset.push_back(p);
+        //                                 ret.at<uchar>(i, j + 1) = 0;
+        //                                 ret.at<uchar>(i, j - 1) = 0;
+        //                                 break;
+        //                 case UPPER_LEFT_LOWER_RIGHT:
+        //                                 ret.at<uchar>(i, j) = 255;
+        //                                 p.pos[0] = i;
+        //                                 p.pos[1] = j;
+        //                                 keyPointset.push_back(p);
+        //                                 ret.at<uchar>(i - 1, j + 1) = 0;
+        //                                 ret.at<uchar>(i + 1, j - 1) = 0;
+        //                                 break;
         //             case UPPER_RIGHT_LOWER_LEFT:
         //                             ret.at<uchar>(i, j) = 255;
         //                             p.pos[0] = i;
@@ -522,64 +535,123 @@ namespace skelx{
         //                             break;
         //             case 0:
         //                 break;
-        //         }
-
-        //     }
-        // }
-
-        // imwrite("results/3_new_key.png", draw(ret, keyPointset));
-
-        // Mat ret_new = img.clone();
-        // flag = true; // flag to show if there is no point can be removed
-        // while(flag){
-        //     flag = false;
-
-        //     // from right to left
-        //     for(int x = 0; x < ret_new.rows; ++x){
-        //         for(int y = ret_new.cols - 1; y >= 0; --y){
-        //             if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
-        //                 ret_new.at<uchar>(x, y) = 0;
-        //                 flag = true;
-        //                 break;
         //             }
         //         }
         //     }
 
-        //     // from left to right
-        //     for(int x = 0; x < ret_new.rows; ++x){
-        //         for(int y = 0; y < ret_new.cols; ++y){
-        //             if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
-        //                 ret_new.at<uchar>(x, y) = 0;
-        //                 flag = true;
-        //                 break;
-        //             }
-        //         }
-        //     }
-        //     // from bottom to top
-        //     for(int y = 0; y < ret_new.cols; ++y){
-        //         for(int x = ret_new.rows - 1; x >= 0; --x){
-        //             if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
-        //                 ret_new.at<uchar>(x, y) = 0;
-        //                 flag = true;
-        //                 break;
-        //             }
-        //         }
-        //     }
-        //     // from top to bottom
-        //     for(int y = 0; y < ret_new.cols; ++y){
+        //     imwrite("results/3_new_key.png", draw(ret, keyPointset));
+
+        //     ret_new = img.clone();
+        //     flag = true; // flag to show if there is no point can be removed
+        //     while(flag){
+        //         flag = false;
+
+        //         // from right to left
         //         for(int x = 0; x < ret_new.rows; ++x){
-        //             if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
-        //                 ret_new.at<uchar>(x, y) = 0;
-        //                 flag = true;
-        //                 break;
+        //             for(int y = ret_new.cols - 1; y >= 0; --y){
+        //                 if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
+        //                     ret_new.at<uchar>(x, y) = 0;
+        //                     flag = true;
+        //                     break;
+        //                 }
+        //             }
+        //         }
+
+        //         // from left to right
+        //         for(int x = 0; x < ret_new.rows; ++x){
+        //             for(int y = 0; y < ret_new.cols; ++y){
+        //                 if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
+        //                     ret_new.at<uchar>(x, y) = 0;
+        //                     flag = true;
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //         // from bottom to top
+        //         for(int y = 0; y < ret_new.cols; ++y){
+        //             for(int x = ret_new.rows - 1; x >= 0; --x){
+        //                 if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
+        //                     ret_new.at<uchar>(x, y) = 0;
+        //                     flag = true;
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //         // from top to bottom
+        //         for(int y = 0; y < ret_new.cols; ++y){
+        //             for(int x = 0; x < ret_new.rows; ++x){
+        //                 if(ret_new.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret_new, {x, y})){
+        //                     ret_new.at<uchar>(x, y) = 0;
+        //                     flag = true;
+        //                     break;
+        //                 }
         //             }
         //         }
         //     }
+        //     ++count;
         // }
 
         // return ret_new;
         // // visualize(img, keyPointset, 0);
         // return draw(img, keyPointset);
+
+
+
+        // improved scanning algorithm
+        bool flag = true;
+        Mat ret2 = img.clone(), 
+            ret = ret2.clone();
+        int count = 0;
+        while(flag){
+            flag = false;
+            // img2 = ret.clone();
+
+            // from right to left
+            for(int x = 0; x < ret.rows; ++x){
+                for(int y = ret.cols - 1; y >= 0; --y){
+                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y}) && isBoundary(ret, {x, y})){
+                        ret2.at<uchar>(x, y) = 0;
+                        flag = true;
+                    }
+                }
+            }
+            ret = ret2.clone();
+            imwrite("results/" + to_string(++count) + "_ret2.png", ret2);
+            // from left to right
+            for(int x = 0; x < ret.rows; ++x){
+                for(int y = 0; y < ret.cols; ++y){
+                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y}) && isBoundary(ret, {x, y})){
+                        ret2.at<uchar>(x, y) = 0;
+                        flag = true;
+                    }
+                }
+            }
+            ret = ret2.clone();
+            imwrite("results/" + to_string(++count) + "_ret2.png", ret2);
+            // from bottom to top
+            for(int y = 0; y < ret.cols; ++y){
+                for(int x = ret.rows - 1; x >= 0; --x){
+                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y}) && isBoundary(ret, {x, y})){
+                        ret2.at<uchar>(x, y) = 0;
+                        flag = true;
+                    }
+                }
+            }
+            ret = ret2.clone();
+            imwrite("results/" + to_string(++count) + "_ret2.png", ret2);
+            // from top to bottom
+            for(int y = 0; y < ret.cols; ++y){
+                for(int x = 0; x < ret.rows; ++x){
+                    if(ret.at<uchar>(x, y) != 0 && !isKeyPos(keyPointset, {x, y}) && isRemovable(ret, {x, y}) && isBoundary(ret, {x, y})){
+                        ret2.at<uchar>(x, y) = 0;
+                        flag = true;
+                    }
+                }
+            }
+            ret = ret2.clone();
+            imwrite("results/" + to_string(++count) + "_ret2.png", ret2);
+        }
+        return ret2;
     }
 
     // remove isolate point, namely noise,
