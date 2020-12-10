@@ -22,7 +22,7 @@ int main(int argc, char *argv[]){
     string filename = argv[1], 
             resultsPath = "experimentsMaterial/results/",
             groundTruthPath = "experimentsMaterial/groundtruth/",
-            gtFilePath = groundTruthPath + filename + ".png",
+            // gtFilePath = groundTruthPath + filename + ".png",
             srcFilePath = resultsPath + filename + "_" + argv[2] + "/" + "0_final_" + filename +"_" + argv[2] + ".png",
             ZSFilePath = resultsPath + filename + "_" + argv[2] + "/0_final_ZS_" + filename + ".png",
             AWFilePath = resultsPath + filename + "_" + argv[2] + "/0_final_AW_" + filename + ".png",
@@ -36,16 +36,15 @@ int main(int argc, char *argv[]){
         GH = imread(GHFilePath, IMREAD_GRAYSCALE),
         Hybrid = imread(HybridFilePath, IMREAD_GRAYSCALE),
         DM = imread(DMFilePath, IMREAD_GRAYSCALE),
-        groundTruth = imread(gtFilePath, IMREAD_GRAYSCALE),
+        // groundTruth = imread(gtFilePath, IMREAD_GRAYSCALE),
         raw = imread(rawFilePath, IMREAD_GRAYSCALE);
-    groundTruth = invert(groundTruth);
+    // groundTruth = invert(groundTruth);
 
-    vector<Mat> resources = {src, ZS, AW, GH, Hybrid, DM};   
-    vector<string> names = {"Ours", "ZS", "AW", "GH", "Hybrid", "DM"};
+    vector<Mat> resources = {ZS, AW, GH, Hybrid, DM, src};   
+    vector<string> names = {"ZS", "AW", "GH", "Hybrid", "DM", "Ours"};
     
     // examinations are below    
-    vector<double> f1Scores = {},
-                    TR = {},
+    vector<double>  TR = {},
                     CM = {},
                     SM = {};
     for(Mat &i : resources){
@@ -54,7 +53,7 @@ int main(int argc, char *argv[]){
             return -1;
         }
         // F1 Score
-        f1Scores.push_back(f1ScoreExam(groundTruth, i));
+        // f1Scores.push_back(f1ScoreExam(groundTruth, i));
 
         // Thinning Rate
         TR.push_back(thinningRateExam(i));
@@ -70,7 +69,7 @@ int main(int argc, char *argv[]){
     cout<<filename<<endl;
     for(int i = 0; i < names.size(); ++i){
         cout<<setiosflags(ios::fixed)<<setprecision(7)<<flush;
-        cout<<setw(7)<<names[i]<<"  |  F1 = "<<f1Scores[i]<<"  |  TR = "<<TR[i]<<flush;
+        cout<<setw(7)<<names[i]/*<<"  |  F1 = "<<f1Scores[i]*/<<"  |  TR = "<<TR[i]<<flush;
         cout.unsetf(ios_base::fixed);
         cout<<setw(5)<<"  |  CM = "<<setw(2)<<CM[i]<<setw(5)<<"  |  SM = "<<setw(2)<<SM[i]<<endl;
     }
@@ -79,29 +78,29 @@ int main(int argc, char *argv[]){
 }
 
 // F1 score examination
-double f1ScoreExam(const Mat &groundTruth, const Mat &src){
-    int truePositive = 0, trueNegative = 0,
-        falsePositive = 0, falseNegative = 0;
-    for(int i = 0; i < groundTruth.rows; ++i){
-        for(int j = 0; j < groundTruth.cols; ++j){
-            // when it should be predicted as negtive
-            if(groundTruth.at<uchar>(i, j) == 0 && src.at<uchar>(i, j) == 0){
-                ++trueNegative;
-            }else if(groundTruth.at<uchar>(i, j) == 0 && src.at<uchar>(i, j) != 0){
-                ++falsePositive;
-            // when it should be predicted as positive
-            }else if(groundTruth.at<uchar>(i, j) != 0 && src.at<uchar>(i, j) == 0){
-                ++falseNegative;
-            }else{
-                ++truePositive;
-            }
-        }
-    }
-    double precision = static_cast<double>(truePositive) / (static_cast<double>(truePositive) + static_cast<double>(falsePositive)),
-            recall = static_cast<double>(truePositive) / (static_cast<double>(truePositive) + static_cast<double>(falseNegative));
+// double f1ScoreExam(const Mat &groundTruth, const Mat &src){
+//     int truePositive = 0, trueNegative = 0,
+//         falsePositive = 0, falseNegative = 0;
+//     for(int i = 0; i < groundTruth.rows; ++i){
+//         for(int j = 0; j < groundTruth.cols; ++j){
+//             // when it should be predicted as negtive
+//             if(groundTruth.at<uchar>(i, j) == 0 && src.at<uchar>(i, j) == 0){
+//                 ++trueNegative;
+//             }else if(groundTruth.at<uchar>(i, j) == 0 && src.at<uchar>(i, j) != 0){
+//                 ++falsePositive;
+//             // when it should be predicted as positive
+//             }else if(groundTruth.at<uchar>(i, j) != 0 && src.at<uchar>(i, j) == 0){
+//                 ++falseNegative;
+//             }else{
+//                 ++truePositive;
+//             }
+//         }
+//     }
+//     double precision = static_cast<double>(truePositive) / (static_cast<double>(truePositive) + static_cast<double>(falsePositive)),
+//             recall = static_cast<double>(truePositive) / (static_cast<double>(truePositive) + static_cast<double>(falseNegative));
     
-    return (2 * precision * recall) / (precision + recall);
-}
+//     return (2 * precision * recall) / (precision + recall);
+// }
 
 // Thinning Rate(TR) examination,
 // when it equals to 1, means that the image is perfectly thinned.

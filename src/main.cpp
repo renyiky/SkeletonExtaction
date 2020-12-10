@@ -18,6 +18,7 @@ string inputPath = "experimentsMaterial/resources/",
         outputPath = "results/";
 
 int main(int argc, char *argv[]){
+    if(argc <= 2){cout<<"parameter insufficient."<<endl; return -1;}
     double detailFactor = stod(argv[2]);
     string filename = argv[1];
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);

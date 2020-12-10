@@ -1,4 +1,4 @@
-VPATH := include:src:src/comparisonAlgs:src/obj
+VPATH := include:src:src/comparisonAlgs:src/obj:src/synthesizer
 ROOT := $(shell pwd)
 INC_DIR := $(ROOT)/include
 SRC_DIR := $(ROOT)/src
@@ -29,8 +29,13 @@ ev:
 	@$(CXX) -o ev src/evaluation/evaluation.cpp $(CXXFLAGS) 
 	@echo Done.
 
-.PHONY: clean cleanall cleanres do cleanobj ev
+# for synthesizer
+syn:
+	@echo Generating Synthesizer...
+	@$(CXX) -o syn src/synthesizer/synthesizer.cpp $(CXXFLAGS) 
+	@echo Done.
 
+.PHONY: clean cleanall cleanres do cleanobj ev syn
 
 cleanall: clean cleanres
 
