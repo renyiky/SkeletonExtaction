@@ -15,7 +15,7 @@ using namespace cv;
 
 void output(const Mat &img, string name);
 
-string inputPath = "experimentsMaterial/resources/",
+string inputPath = "experimentsMaterial/resources/supplement/",
         outputPath = "results/";
 
 int main(int argc, char *argv[]){
@@ -27,18 +27,18 @@ int main(int argc, char *argv[]){
 
     clock_t start_t;
     double total_t;
-    // vector<function<Mat(Mat)> > previousAlgs{ZSalg, AWalg, GHalg, HybridAlg};
-    // vector<string> prefixes {"ZS",
-    //                         "AW",
-    //                         "GH",
-    //                         "Hybrid"};
+    vector<function<Mat(Mat)> > previousAlgs{ZSalg, AWalg, GHalg, HybridAlg};
+    vector<string> prefixes {"ZS",
+                            "AW",
+                            "GH",
+                            "Hybrid"};
 
-    // for(int i = 0; i < previousAlgs.size(); ++i){
-    //     start_t = clock();
-    //     output(previousAlgs[i](img), "0_final_" + prefixes[i] + "_" + filename);
-    //     total_t = static_cast<double>(clock() - start_t) / CLOCKS_PER_SEC;
-    //     cout << prefixes[i] << " time consumed: " << total_t << endl;
-    // }
+    for(int i = 0; i < previousAlgs.size(); ++i){
+        start_t = clock();
+        output(previousAlgs[i](img), "0_final_" + prefixes[i] + "_" + filename);
+        total_t = static_cast<double>(clock() - start_t) / CLOCKS_PER_SEC;
+        cout << prefixes[i] << " time consumed: " << total_t << endl;
+    }
 
     start_t = clock();
     img = contract(img, filename, detailFactor);
@@ -51,5 +51,5 @@ int main(int argc, char *argv[]){
 }
 
 void output(const Mat &img, string name){
-    imwrite(outputPath + "0_" + name + ".png", img);
+    imwrite(outputPath + name + ".png", img);
 }

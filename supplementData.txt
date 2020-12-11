@@ -1,0 +1,19 @@
+ZS time consumed: 0.480221
+AW time consumed: 0.879293
+GH time consumed: 0.140422
+Hybrid time consumed: 0.203059
+Time consumed: 2.20839
+cat12's current detail factor = 0.6
+
+ZS time consumed: 0.276525
+AW time consumed: 0.457968
+GH time consumed: 0.078932
+Hybrid time consumed: 0.117985
+Time consumed: 1.78926
+cat38's current detail factor = 1
+ZS time consumed: 0.531496
+AW time consumed: 0.931331
+GH time consumed: 0.155528
+Hybrid time consumed: 0.22654
+Time consumed: 2.52603
+cthand01's current detail factor = 0.4
