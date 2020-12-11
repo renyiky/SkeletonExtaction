@@ -54,7 +54,7 @@ void blackAndWhite(Mat &background, vector<Mat> &images, string name){
                 }
             }
         }
-        imwrite(resPath + "synthesized_black_white_" + prefixes[k] + name + ".png", ret);
+        imwrite(resPath + "synthesized_" + prefixes[k] + name + ".png", ret);
     }
 }
 
@@ -97,6 +97,7 @@ int main(int argc, char** argv){
     }
     images.push_back((imread(resPath + prefixes.back() + string(argv[1]) + +"_" + df + ".png", IMREAD_GRAYSCALE)));
 
-    grayAndBlack(background, images, argv[1]);
+    // grayAndBlack(background, images, argv[1]);
+    blackAndWhite(background, images, argv[1]);
     return 0;
 }
