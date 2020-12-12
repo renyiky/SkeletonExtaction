@@ -15,7 +15,7 @@ using namespace cv;
 
 void output(const Mat &img, string name);
 
-string inputPath = "experimentsMaterial/resources/supplement/",
+string inputPath = "experimentsMaterial/resources/",
         outputPath = "results/";
 
 int main(int argc, char *argv[]){

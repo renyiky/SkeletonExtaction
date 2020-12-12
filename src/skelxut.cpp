@@ -73,7 +73,17 @@ namespace skelx{
         return pointset;
     }
 
+    // Mat drawNeighborGraph(const Mat &img, const vector<vector<double> > &neighbors, const Point &samplePixel){
+    //     Mat ret = Mat::zeros(img.rows, img.cols, CV_8U);
+    //     for(const vector<double> &p : neighbors){
+    //         ret.at<uchar>(p[0], p[1]) = 255;
+    //     }
+    //     ret.at<uchar>(samplePixel.pos[0], samplePixel.pos[1]) = 255;
+    //     return ret;
+    // }
+
     // search k nearest neighbors
+    // and do perturbation test
     bool setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
         int radius = 0,
             rows = img.rows,
@@ -94,6 +104,14 @@ namespace skelx{
                 }
             }
         }
+
+        // // perturbation test
+        // Mat neighborGraph = drawNeighborGraph(img, neighbors, point);
+        // Mat binImg, labels, stats, centroids;
+        // cv::threshold(neighborGraph, binImg, 0, 255, cv::THRESH_OTSU);
+        // if(cv::connectedComponentsWithStats (binImg, labels, stats, centroids) != 2){
+        //     cout<<"discrete neighborhood occured."<<endl;
+        // };
         if(neighbors.size() != 0){
             point.neighbors = neighbors;
             return true;
