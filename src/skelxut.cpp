@@ -73,14 +73,47 @@ namespace skelx{
         return pointset;
     }
 
-    // Mat drawNeighborGraph(const Mat &img, const vector<vector<double> > &neighbors, const Point &samplePixel){
-    //     Mat ret = Mat::zeros(img.rows, img.cols, CV_8U);
-    //     for(const vector<double> &p : neighbors){
-    //         ret.at<uchar>(p[0], p[1]) = 255;
-    //     }
-    //     ret.at<uchar>(samplePixel.pos[0], samplePixel.pos[1]) = 255;
-    //     return ret;
-    // }
+    Mat drawNeighborGraph(const Mat &img, const vector<vector<double> > &neighbors, const Point &samplePixel){
+        Mat ret = Mat::zeros(img.rows, img.cols, CV_8U);
+        for(const vector<double> &p : neighbors){
+            ret.at<uchar>(p[0], p[1]) = 255;
+        }
+        ret.at<uchar>(samplePixel.pos[0], samplePixel.pos[1]) = 255;
+        return ret;
+    }
+
+    void BFS(const Mat &img, vector<vector<double>> &searchedNeighbors, const vector<double> &pos){
+        double x = pos[0];
+        double y = pos[1];
+        vector<vector<double>> new_neighbors;
+        vector<double> p1 = {x - 1, y - 1},
+                p2 = {x - 1, y},
+                p3 = {x - 1, y + 1},
+                p4 = {x, y + 1},
+                p5 = {x + 1, y + 1},
+                p6 = {x + 1, y},
+                p7 = {x + 1, y - 1},
+                p8 = {x, y - 1};
+        vector<vector<double> > neighbors = {p1, p2, p3, p4, p5, p6, p7, p8};
+
+        for(vector<double> i : neighbors){
+            if(i[0] >= 0 && i[0] < img.rows && i[1] >= 0 && i[1] < img.cols 
+                && img.at<uchar>(i[0], i[1]) != 0 
+                && find(searchedNeighbors.begin(), searchedNeighbors.end(), vector<double>{i[0], i[1]}) == searchedNeighbors.end()){
+                searchedNeighbors.push_back({static_cast<double>(i[0]), static_cast<double>(i[1])});
+                new_neighbors.push_back({static_cast<double>(i[0]), static_cast<double>(i[1])});
+            }
+        }
+        
+        for(auto v : new_neighbors) BFS(img, searchedNeighbors, v);
+    }
+
+    vector<vector<double>> repositionNeighbors(const Mat &img, const vector<vector<double>> &neighbors, const skelx::Point &center){
+        vector<vector<double>> ret_neighbors{{center.pos[0], center.pos[1]}};
+        BFS(img, ret_neighbors, {center.pos[0], center.pos[1]});
+        ret_neighbors.erase(ret_neighbors.begin());
+        return ret_neighbors;
+    }
 
     // search k nearest neighbors
     // and do perturbation test
@@ -105,13 +138,19 @@ namespace skelx{
             }
         }
 
-        // // perturbation test
-        // Mat neighborGraph = drawNeighborGraph(img, neighbors, point);
-        // Mat binImg, labels, stats, centroids;
-        // cv::threshold(neighborGraph, binImg, 0, 255, cv::THRESH_OTSU);
-        // if(cv::connectedComponentsWithStats (binImg, labels, stats, centroids) != 2){
-        //     cout<<"discrete neighborhood occured."<<endl;
-        // };
+        // perturbation test
+        Mat neighborGraph = drawNeighborGraph(img, neighbors, point);
+        Mat binImg, labels, stats, centroids;
+        cv::threshold(neighborGraph, binImg, 0, 255, cv::THRESH_OTSU);
+        if(cv::connectedComponentsWithStats (binImg, labels, stats, centroids) != 2){
+            cout<<"discrete neighborhood occured."<<endl;
+
+            neighbors = repositionNeighbors(neighborGraph, neighbors, point);
+
+            Mat neighborGraph = drawNeighborGraph(img, neighbors, point);
+            imwrite("results/neighbors_after.png", neighborGraph);
+        };
+
         if(neighbors.size() != 0){
             point.neighbors = neighbors;
             return true;

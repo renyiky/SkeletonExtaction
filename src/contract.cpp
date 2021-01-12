@@ -26,8 +26,8 @@ Mat contract(Mat img, string filename, const double detailFactor){
         for(skelx::Point &p : pointset) sigmaHat += p.sigma;
         sigmaHat /= pointset.size();
 
-        // ++t;
-        // std::cout<<"iter:"<<t<<"   sigmaHat = "<<sigmaHat<<endl;
+        ++t;
+        std::cout<<"iter:"<<t<<"   sigmaHat = "<<sigmaHat<<endl;
 
         // check if sigmaHat remains unchanged
         // if it doesn't change for 3 times, go to postprocessing
