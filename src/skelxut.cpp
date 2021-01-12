@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <map>
 #include <string>
+#include <omp.h>
 
 #include "skelxut.hpp"
 #include "Point.hpp"
@@ -115,9 +116,10 @@ namespace skelx{
         return ret_neighbors;
     }
 
+    int perturbationCount = 0;
     // search k nearest neighbors
     // and do perturbation test
-    bool setNeighborsOfK(Mat &img, skelx::Point &point, const int k){
+    bool setNeighborsOfK(Mat &img, skelx::Point &point, const int k, bool perturbationFlag){
         int radius = 0,
             rows = img.rows,
             cols = img.cols,
@@ -125,8 +127,10 @@ namespace skelx{
             y = point.pos[1];
         vector<vector<double> > neighbors{};
 
+        // compute the minumum value of radius containing k neighbors
+        radius = sqrt(1. + 2. * k) / 2 - 0.5;
+
         while(neighbors.size() < k){
-            ++radius;
             neighbors = {};
             // circular search
             for(int i = -radius; i < radius + 1; ++i){
@@ -136,20 +140,25 @@ namespace skelx{
                     }
                 }
             }
+            ++radius;
         }
 
-        // perturbation test
-        Mat neighborGraph = drawNeighborGraph(img, neighbors, point);
-        Mat binImg, labels, stats, centroids;
-        cv::threshold(neighborGraph, binImg, 0, 255, cv::THRESH_OTSU);
-        if(cv::connectedComponentsWithStats (binImg, labels, stats, centroids) != 2){
-            cout<<"discrete neighborhood occured."<<endl;
-
-            neighbors = repositionNeighbors(neighborGraph, neighbors, point);
-
-            Mat neighborGraph = drawNeighborGraph(img, neighbors, point);
-            imwrite("results/neighbors_after.png", neighborGraph);
-        };
+        if(perturbationFlag){
+            double sumX = 0;
+            double sumY = 0;
+            for(auto i : neighbors){
+                sumX += i[0] - x;
+                sumY += i[1] - y;
+            }
+            if(sumX != 0 || sumY != 0){
+                Mat neighborGraph = drawNeighborGraph(img, neighbors, point);
+                Mat binImg, labels, stats, centroids;
+                cv::threshold(neighborGraph, binImg, 0, 255, cv::THRESH_OTSU);
+                if(cv::connectedComponentsWithStats (binImg, labels, stats, centroids) != 2){
+                    neighbors = repositionNeighbors(neighborGraph, neighbors, point);
+                }
+            }
+        }
 
         if(neighbors.size() != 0){
             point.neighbors = neighbors;
@@ -179,9 +188,9 @@ namespace skelx{
 
     // set ui for each xi based on k nearest neighbors.
     // neighbors and ui of xi would be set
-    void computeUi(Mat &img, vector<skelx::Point> &pointset, const int k){
+    void computeUi(Mat &img, vector<skelx::Point> &pointset, const int k, const bool perturbationFlag){
         for(skelx::Point &p : pointset){
-            if(!setNeighborsOfK(img, p, k)) std::cout<<"neighbors insufficient!"<<endl;
+            if(!setNeighborsOfK(img, p, k, perturbationFlag)) std::cout<<"neighbors insufficient!"<<endl;
 
             vector<double> ui{0.0, 0.0};
             for(vector<double> nei: p.neighbors){
@@ -200,6 +209,9 @@ namespace skelx{
     // the larger the detailFactor, the more detail is included in the final result.
     void PCA(Mat &img, vector<skelx::Point> &pointset, double detailFactor){
         for(skelx::Point &xi: pointset){
+        // #pragma omp parallel for
+        // for(int i = 0; i < pointset.size(); ++i){
+        //     skelx::Point &xi = pointset[i];
             if(xi.ui[0] == 0 && xi.ui[1] == 0){
                 xi.deltaX = {0, 0};
                 xi.cosTheta = 0.0;
@@ -315,7 +327,7 @@ namespace skelx{
     }
 
     // for further thinning
-    Mat postProcess(Mat &img, const double detailFactor, const int k){
+    Mat postProcess(Mat &img, const double detailFactor, const int k, const bool perturbationFlag){
         // remove isolate points
         for(int x = 0; x < img.rows; ++x){
             for(int y = 0; y < img.cols; ++y){
@@ -337,7 +349,7 @@ namespace skelx{
         }
 
         vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);
-        skelx::computeUi(img, pointset, k);
+        skelx::computeUi(img, pointset, k, perturbationFlag);
         skelx::PCA(img, pointset, detailFactor);
 
         vector<skelx::Point> keypointset;   // store keypoints which shall not be removed

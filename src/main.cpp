@@ -5,6 +5,7 @@
 #include <iostream>
 #include <functional>
 #include <ctime>
+#include <omp.h>
 
 #include "contract.hpp"
 #include "preProcess.hpp"
@@ -19,11 +20,20 @@ string inputPath = "experimentsMaterial/resources/",
         outputPath = "results/";
 
 int main(int argc, char *argv[]){
-    if(argc <= 2){cout<<"parameter insufficient."<<endl; return -1;}
-    double detailFactor = stod(argv[2]);
+    double detailFactor;
+    bool perturbationFlag = false;
+    if(argc <= 2){cout<<"parameter insufficient."<<endl; return -1;
+    }else if(argc == 3){
+        detailFactor = stod(argv[2]);
+    }else if(argc == 4){
+        detailFactor = stod(argv[2]);
+        perturbationFlag = true;
+    }
     string filename = argv[1];
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
     output(img, "raw_" + filename);
+
+
 
     clock_t start_t;
     double total_t;
@@ -41,9 +51,10 @@ int main(int argc, char *argv[]){
     // }
 
     start_t = clock();
-    img = contract(img, filename, detailFactor);
+    double s = omp_get_wtime();
+    img = contract(img, filename, detailFactor, perturbationFlag);
     total_t = static_cast<double>(clock() - start_t) / CLOCKS_PER_SEC;
-    cout << "Time consumed: " << total_t << endl;
+    cout << "Time consumed: " << omp_get_wtime() - s << endl;
     imwrite(outputPath + "0_final_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
 
     cout << filename + "'s current detail factor = " << detailFactor << endl;
