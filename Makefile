@@ -9,7 +9,7 @@ SRC_CODE := $(notdir $(wildcard $(SRC_DIR)/*.cpp)) $(notdir $(wildcard $(COMP_DI
 OBJ := $(SRC_CODE:%.cpp=%.o)
 
 CXX := clang++
-CXXFLAGS := -std=c++11 -fopenmp -I $(INC_DIR) `pkg-config --cflags --libs opencv4` -w
+CXXFLAGS := -std=c++11 -I $(INC_DIR) `pkg-config --cflags --libs opencv4` -w
 
 app:makeOBJDIR $(OBJ)
 	@echo Linking...

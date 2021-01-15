@@ -14,6 +14,7 @@ double f1ScoreExam(const Mat &groundTruth, const Mat &src);
 double thinningRateExam(const Mat &img);
 double connectivityMeasureExam(const Mat &img);
 double sensitivityMeasureExam(const Mat &img);
+double smoothness(const Mat &img);
 vector<int> searchNeighborsValue(const Mat &img, vector<vector<int> > neighbors);
 int countTriangle(const Mat &img, const vector<int> &pos);
 Mat invert(Mat &img);
@@ -46,7 +47,8 @@ int main(int argc, char *argv[]){
     // examinations are below    
     vector<double>  TR = {},
                     CM = {},
-                    SM = {};
+                    SM = {},
+                    SMOOTHNESS = {};
     for(Mat &i : resources){
         if(i.data == NULL){
             cerr<<"IMG OPEN FAILED!"<<endl;
@@ -63,6 +65,9 @@ int main(int argc, char *argv[]){
 
         // Sensitivity Measure
         SM.push_back(sensitivityMeasureExam(i));
+
+        // Smoothness Measure
+        SMOOTHNESS.push_back(smoothness(i));
     }
 
     // print all results
@@ -71,7 +76,8 @@ int main(int argc, char *argv[]){
         cout<<setiosflags(ios::fixed)<<setprecision(7)<<flush;
         cout<<setw(7)<<names[i]/*<<"  |  F1 = "<<f1Scores[i]*/<<"  |  TR = "<<TR[i]<<flush;
         cout.unsetf(ios_base::fixed);
-        cout<<setw(5)<<"  |  CM = "<<setw(2)<<CM[i]<<setw(5)<<"  |  SM = "<<setw(2)<<SM[i]<<endl;
+        cout<<setw(5)<<"  |  CM = "<<setw(2)<<CM[i]<<setw(5)<<"  |  SM = "<<setw(2)<<SM[i]
+            <<setw(5)<<"  |  Smoothness = "<<setw(2)<<SMOOTHNESS[i]<<endl;
     }
 
     return 0;
@@ -242,4 +248,35 @@ Mat invert(Mat &img){
         }
     }
     return img;
+}
+
+double smoothness(const Mat &img){
+    int SMOOTH = 0;
+    int count = 0;
+    for(int x = 0; x < img.rows; ++x){
+        for(int y = 0; y < img.cols; ++y){
+            if(img.at<uchar>(x, y) != 0){
+                ++count;
+                vector<int> p2 = {x - 1, y},
+                            p3 = {x - 1, y + 1},
+                            p4 = {x, y + 1},
+                            p5 = {x + 1, y + 1},
+                            p6 = {x + 1, y},
+                            p7 = {x + 1, y - 1},
+                            p8 = {x, y - 1},
+                            p9 = {x - 1, y - 1};
+                vector<vector<int> > neighbors = {p2, p3, p4, p5, p6, p7, p8, p9};
+                vector<int> neighborsValue = searchNeighborsValue(img, neighbors);
+                int sum = 0;
+                for(int i = 0; i < neighborsValue.size(); ++i){
+                    if(neighborsValue[i] == 1 && neighborsValue[(i + 1) % neighborsValue.size()] == 1 ||
+                        neighborsValue[i] == 1 && neighborsValue[(i + 2) % neighborsValue.size()] == 1){
+                        SMOOTH++;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return 1. / (1 + SMOOTH / static_cast<double>(count));
 }
