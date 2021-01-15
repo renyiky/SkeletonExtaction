@@ -169,10 +169,9 @@ namespace skelx{
 
     // draw points on a new img
     Mat draw(const Mat &src, vector<struct skelx::Point> &pointset){
-        int rows = src.rows, cols = src.cols;
-        Mat ret = Mat::zeros(rows, cols, CV_8U);
-        for(skelx::Point p : pointset){
-            if(p.pos[0] >= 0 && p.pos[0] < rows && p.pos[1] >= 0 && p.pos[1] < cols) 
+        Mat ret = Mat::zeros(src.rows, src.cols, CV_8U);
+        for(skelx::Point &p : pointset){
+            if(p.pos[0] >= 0 && p.pos[0] < src.rows && p.pos[1] >= 0 && p.pos[1] < src.cols) 
                 ret.at<uchar>(p.pos[0], p.pos[1]) = 255;
         }
         return ret;
@@ -381,3 +380,74 @@ namespace skelx{
         return img;
     }
 }
+
+// Mat postProcess(Mat &img, const double detailFactor, const int k, const bool perturbationFlag){
+//         // remove isolate points
+//         // for(int x = 0; x < img.rows; ++x){
+//         //     for(int y = 0; y < img.cols; ++y){
+//         //         if(img.at<uchar>(x, y) != 0){
+//         //             int flag = 0;
+//         //             for(int i = -1; i < 2 && flag == 0; ++i){
+//         //                 for(int j = -1; j < 2 && flag == 0; ++j){
+//         //                     if(x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+//         //                         flag = 1;
+//         //                         break;
+//         //                     }
+//         //                 }
+//         //             }
+//         //             if(flag == 0){
+//         //                 img.at<uchar>(x, y) = 0;
+//         //             }
+//         //         }
+//         //     }
+//         // }
+
+
+
+//         bool flag = true;
+//         int t = 0;
+//         while(flag){
+            
+//             vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);
+//             skelx::computeUi(img, pointset, k, perturbationFlag);
+//             skelx::PCA(img, pointset, detailFactor);
+//             vector<skelx::Point> keypointset;   // store keypoints which shall not be removed
+//             for(auto &i : pointset){
+//                 if(i.cosTheta >= 0.8 && (abs(i.ui[0]) >= 1.0 || abs(i.ui[1]) >= 1.0)) keypointset.push_back(i);
+//             }
+
+//             // find centroids of the clusters of keypoints
+//             Mat keyMap = draw(img, keypointset);
+//             Mat binImg, labels, stats, centroids;
+//             cv::threshold(keyMap, binImg, 0, 255, cv::THRESH_OTSU);
+//             cv::connectedComponentsWithStats (binImg, labels, stats, centroids);
+//             keypointset = {};   // clear keypointset for accpetance for centroids
+//             for(int i = 1; i < centroids.rows; ++i){    // exclude the background label
+//                     keypointset.push_back(Point(static_cast<int>(centroids.at<double>(i, 1)), static_cast<int>(centroids.at<double>(i, 0))));   // note that the generated points need to swap positions
+//             }
+
+
+//             flag = false;
+//             sort(pointset.begin(), pointset.end(), 
+//                 [](Point &p1, Point &p2)->bool{
+//                     return sqrt(p1.ui[0] * p1.ui[0] + p1.ui[1] * p1.ui[1]) > sqrt(p2.ui[0] * p2.ui[0] + p2.ui[1] * p2.ui[1]);
+//                 });
+
+//             for(Point &p : pointset){
+//                 if(sqrt(p.ui[0] * p.ui[0] + p.ui[1] * p.ui[1]) == 0) break;
+//                 if(!isKeyPos(keypointset, {static_cast<int>(p.pos[0]), static_cast<int>(p.pos[1])}) && isRemovable(img, {static_cast<int>(p.pos[0]), static_cast<int>(p.pos[1])})){
+//                     img.at<uchar>(p.pos[0], p.pos[1]) = 0;
+//                     flag = true;
+//                 }
+//             }
+
+//             imwrite("results/" + to_string(t++) + ".png", img);
+//             // pointset = skelx::getPointsetInitialized(img);
+            
+//             // skelx::computeUi(img, pointset, k, perturbationFlag);
+//             // skelx::PCA(img, pointset, detailFactor);
+//         }
+//         // ui based thinning algorithm
+//         return img;
+//     }
+// }
