@@ -28,6 +28,7 @@ Mat contract(Mat img, string filename, const double detailFactor, const bool per
         skelx::movePoint(pointset);
         img = skelx::draw(img, pointset);
 
+
         for(skelx::Point &p : pointset) sigmaHat += p.sigma;
         sigmaHat /= pointset.size();
 
