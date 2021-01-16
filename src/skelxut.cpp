@@ -19,6 +19,16 @@ using namespace cv;
 using namespace Eigen;
 
 namespace skelx{
+    int gaussCircleCount(const int r){
+        int Nr = 0; // Number of pixels in Radius r
+        int i = 0;
+        int r2 = r * r;
+        while(4 * i + 1 <= r2){
+            Nr += r2 / (4 * i + 1) - r2 / (4 * i + 3);
+            ++i;
+        }
+        return Nr * 4 + 1;
+    }
 
     void visualize(const Mat &img, const vector<skelx::Point> pointset, const int iter){
         // note that BGR ! center:(255, 0, 0), KNNneighbor:(0, 255, 0)
@@ -35,8 +45,8 @@ namespace skelx{
         origin = _origin;
 
         for(skelx::Point p : pointset){
-            cout << "Point" << count<< ": deltaX:[ " << p.deltaX[0] << " , " << p.deltaX[1] << " ]" << " cosTheta:[" << p.cosTheta << "] "
-                    << "ui:[ " << p.ui[0] << " , " << p.ui[1] << " ] sigma:[" <<p.sigma << "]"<< endl;
+            // cout << "Point" << count<< ": deltaX:[ " << p.deltaX[0] << " , " << p.deltaX[1] << " ]" << " cosTheta:[" << p.cosTheta << "] "
+            //         << "ui:[ " << p.ui[0] << " , " << p.ui[1] << " ] sigma:[" <<p.sigma << "]"<< endl;
 
             // draw center point, red
             Mat KNNvisual = origin.clone();
@@ -64,10 +74,10 @@ namespace skelx{
         for(int i = 0; i < img.rows; ++i){
             for(int j = 0; j < img.cols; ++j){
                 if(img.at<uchar>(i, j) != 0){
-                    skelx::Point p;
-                    p.pos[0] = i;
-                    p.pos[1] = j;
-                    pointset.push_back(p);
+                    // skelx::Point p(i, j);
+                    // p.pos[0] = i;
+                    // p.pos[1] = j;
+                    pointset.push_back(skelx::Point(i, j));
                 }
             }
         }
@@ -116,7 +126,6 @@ namespace skelx{
         return ret_neighbors;
     }
 
-    int perturbationCount = 0;
     // search k nearest neighbors
     // and do perturbation test
     bool setNeighborsOfK(Mat &img, skelx::Point &point, const int k, bool perturbationFlag){

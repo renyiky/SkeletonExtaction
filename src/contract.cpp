@@ -15,6 +15,7 @@ static int k = 0;   // k nearest neighbors
 
 Mat contract(Mat img, string filename, const double detailFactor, const bool perturbationFlag){
     k = skelx::computeK(img);  // compute k
+    
 
     while(true){
         vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);

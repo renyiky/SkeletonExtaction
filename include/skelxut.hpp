@@ -15,4 +15,5 @@ namespace skelx{
     void PCA(cv::Mat &img, std::vector<skelx::Point> &pointset, double detailFactor);
     void visualize(const cv::Mat &img, const std::vector<skelx::Point> pointset, const int iter);
     cv::Mat postProcess(cv::Mat &img, const double detailFactor, const int k, const bool perturbationFlag);
+    int gaussCircleCount(const int r);
 }
