@@ -16,4 +16,6 @@ namespace skelx{
     void visualize(const cv::Mat &img, const std::vector<skelx::Point> pointset, const int iter);
     cv::Mat postProcess(cv::Mat &img, const double detailFactor, const int k, const bool perturbationFlag);
     int gaussCircleCount(const int r);
+    int computeSearchRadius(const cv::Mat &img);
+    bool setRadiusNeighbors(cv::Mat &img, skelx::Point &point, const int radius, bool perturbationFlag);
 }

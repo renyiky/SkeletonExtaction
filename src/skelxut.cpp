@@ -74,9 +74,6 @@ namespace skelx{
         for(int i = 0; i < img.rows; ++i){
             for(int j = 0; j < img.cols; ++j){
                 if(img.at<uchar>(i, j) != 0){
-                    // skelx::Point p(i, j);
-                    // p.pos[0] = i;
-                    // p.pos[1] = j;
                     pointset.push_back(skelx::Point(i, j));
                 }
             }
@@ -198,15 +195,28 @@ namespace skelx{
     // neighbors and ui of xi would be set
     void computeUi(Mat &img, vector<skelx::Point> &pointset, const int k, const bool perturbationFlag){
         for(skelx::Point &p : pointset){
-            if(!setNeighborsOfK(img, p, k, perturbationFlag)) std::cout<<"neighbors insufficient!"<<endl;
+            // if(!setNeighborsOfK(img, p, k, perturbationFlag)) std::cout<<"neighbors insufficient!"<<endl;
+            if(!skelx::setRadiusNeighbors(img, p, k, perturbationFlag)) {
+                // std::cout<<"neighbors insufficient!"<<endl;
+                p.ui = {0, 0};
+                continue;
+            }
 
+            // vector<double> ui{0.0, 0.0};
+            // for(vector<double> nei: p.neighbors){
+            //     ui[0] += (nei[0] - p.pos[0]);
+            //     ui[1] += (nei[1] - p.pos[1]);
+            // }
+            // ui[0] = ui[0] / static_cast<double>(p.neighbors.size());
+            // ui[1] = ui[1] / static_cast<double>(p.neighbors.size());
+            // p.ui = {ui[0], ui[1]};
             vector<double> ui{0.0, 0.0};
-            for(vector<double> nei: p.neighbors){
+            for(vector<double> nei: p.uiNeighbors){
                 ui[0] += (nei[0] - p.pos[0]);
                 ui[1] += (nei[1] - p.pos[1]);
             }
-            ui[0] = ui[0] / static_cast<double>(p.neighbors.size());
-            ui[1] = ui[1] / static_cast<double>(p.neighbors.size());
+            ui[0] = ui[0] / static_cast<double>(p.uiNeighbors.size());
+            ui[1] = ui[1] / static_cast<double>(p.uiNeighbors.size());
             p.ui = {ui[0], ui[1]};
         }
     }
@@ -220,9 +230,11 @@ namespace skelx{
         // #pragma omp parallel for
         // for(int i = 0; i < pointset.size(); ++i){
         //     skelx::Point &xi = pointset[i];
+        
             if(xi.ui[0] == 0 && xi.ui[1] == 0){
                 xi.deltaX = {0, 0};
                 xi.cosTheta = 0.0;
+                // xi.sigma = 0.5;
                 continue;
             }
             // calculate center point, namely xi
@@ -273,6 +285,7 @@ namespace skelx{
             // }else{
             //     xi.sigma = sigma;
             // }
+
             xi.sigma = sigma;
             xi.principalVec = maxEigenVec;
 
@@ -388,75 +401,82 @@ namespace skelx{
         }
         return img;
     }
+
+    // search neighbors in radius r
+    // and do perturbation test
+    bool setRadiusNeighbors(Mat &img, skelx::Point &point, const int radius, bool perturbationFlag){
+        int rows = img.rows,
+            cols = img.cols,
+            x = point.pos[0],
+            y = point.pos[1];
+        vector<vector<double> > neighbors{};
+        // circular search
+        for(int i = -radius; i < radius + 1; ++i){
+            for(int j = -radius; j < radius + 1; ++j){
+                if(pow((i * i + j * j), 0.5) <= radius && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+                    neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+                }
+            }
+        }
+        point.neighbors = neighbors;
+        // cout<<"before:"<<neighbors.size()<<endl;
+        // if(neighbors.size() > gaussCircleCount(radius) /){
+            // symmetric counteraction
+            int n = 0;
+            while(n < neighbors.size()){
+                double tempx = neighbors[n][0];
+                double tempy = neighbors[n][1];
+                vector<vector<double>>::iterator it = find(neighbors.begin() + n + 1, neighbors.end(), vector<double>{x * 2 - tempx, y * 2 - tempy});
+                if(it != neighbors.end()){
+                    neighbors.erase(neighbors.begin() + n);
+                    vector<vector<double>>::iterator sym_it = find(neighbors.begin() + n + 1, neighbors.end(), vector<double>{x * 2 - tempx, y * 2 - tempy});
+                    neighbors.erase(sym_it);
+                }
+                else ++n;
+            }
+        // }
+        point.uiNeighbors = neighbors;
+        // cout<<"after:"<<neighbors.size()<<endl;
+        if(perturbationFlag){
+            double sumX = 0;
+            double sumY = 0;
+            for(auto i : neighbors){
+                sumX += i[0] - x;
+                sumY += i[1] - y;
+            }
+            if(sumX != 0 || sumY != 0){
+                Mat neighborGraph = drawNeighborGraph(img, neighbors, point);
+                Mat binImg, labels, stats, centroids;
+                cv::threshold(neighborGraph, binImg, 0, 255, cv::THRESH_OTSU);
+                if(cv::connectedComponentsWithStats (binImg, labels, stats, centroids) != 2){
+                    neighbors = repositionNeighbors(neighborGraph, neighbors, point);
+                }
+            }
+        }
+
+        if(neighbors.size() != 0){
+            // point.neighbors = neighbors;
+            return true;
+        }
+        else return false;
+    }
+
+    // compute the search radius
+    int computeSearchRadius(const Mat &img){
+        double left = img.cols + 1,
+            right = -1,
+            up = img.rows + 1,
+            down = -1;
+        for(int i = 0; i < img.rows; ++i){
+            for(int j = 0; j < img.cols; ++j){
+                if(img.at<uchar>(i, j) != 0){
+                    left = left < j ? left : j;
+                    right = right > j ? right : j;
+                    up = up < i ? up : i;
+                    down = down > i ? down : i;
+                }
+            }
+        }
+        return max(static_cast<int>(sqrt((right - left) * (down - up) / (400 * M_PI))), 1);
+    }
 }
-
-// Mat postProcess(Mat &img, const double detailFactor, const int k, const bool perturbationFlag){
-//         // remove isolate points
-//         // for(int x = 0; x < img.rows; ++x){
-//         //     for(int y = 0; y < img.cols; ++y){
-//         //         if(img.at<uchar>(x, y) != 0){
-//         //             int flag = 0;
-//         //             for(int i = -1; i < 2 && flag == 0; ++i){
-//         //                 for(int j = -1; j < 2 && flag == 0; ++j){
-//         //                     if(x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-//         //                         flag = 1;
-//         //                         break;
-//         //                     }
-//         //                 }
-//         //             }
-//         //             if(flag == 0){
-//         //                 img.at<uchar>(x, y) = 0;
-//         //             }
-//         //         }
-//         //     }
-//         // }
-
-
-
-//         bool flag = true;
-//         int t = 0;
-//         while(flag){
-            
-//             vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);
-//             skelx::computeUi(img, pointset, k, perturbationFlag);
-//             skelx::PCA(img, pointset, detailFactor);
-//             vector<skelx::Point> keypointset;   // store keypoints which shall not be removed
-//             for(auto &i : pointset){
-//                 if(i.cosTheta >= 0.8 && (abs(i.ui[0]) >= 1.0 || abs(i.ui[1]) >= 1.0)) keypointset.push_back(i);
-//             }
-
-//             // find centroids of the clusters of keypoints
-//             Mat keyMap = draw(img, keypointset);
-//             Mat binImg, labels, stats, centroids;
-//             cv::threshold(keyMap, binImg, 0, 255, cv::THRESH_OTSU);
-//             cv::connectedComponentsWithStats (binImg, labels, stats, centroids);
-//             keypointset = {};   // clear keypointset for accpetance for centroids
-//             for(int i = 1; i < centroids.rows; ++i){    // exclude the background label
-//                     keypointset.push_back(Point(static_cast<int>(centroids.at<double>(i, 1)), static_cast<int>(centroids.at<double>(i, 0))));   // note that the generated points need to swap positions
-//             }
-
-
-//             flag = false;
-//             sort(pointset.begin(), pointset.end(), 
-//                 [](Point &p1, Point &p2)->bool{
-//                     return sqrt(p1.ui[0] * p1.ui[0] + p1.ui[1] * p1.ui[1]) > sqrt(p2.ui[0] * p2.ui[0] + p2.ui[1] * p2.ui[1]);
-//                 });
-
-//             for(Point &p : pointset){
-//                 if(sqrt(p.ui[0] * p.ui[0] + p.ui[1] * p.ui[1]) == 0) break;
-//                 if(!isKeyPos(keypointset, {static_cast<int>(p.pos[0]), static_cast<int>(p.pos[1])}) && isRemovable(img, {static_cast<int>(p.pos[0]), static_cast<int>(p.pos[1])})){
-//                     img.at<uchar>(p.pos[0], p.pos[1]) = 0;
-//                     flag = true;
-//                 }
-//             }
-
-//             imwrite("results/" + to_string(t++) + ".png", img);
-//             // pointset = skelx::getPointsetInitialized(img);
-            
-//             // skelx::computeUi(img, pointset, k, perturbationFlag);
-//             // skelx::PCA(img, pointset, detailFactor);
-//         }
-//         // ui based thinning algorithm
-//         return img;
-//     }
-// }
