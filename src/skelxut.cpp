@@ -118,8 +118,6 @@ namespace skelx{
 
     // search k nearest neighbors
     // and do perturbation test
-
-    int minRadius = -1;
     bool setNeighborsOfK(Mat &img, skelx::Point &point, const int k, const int minRadius, bool perturbationFlag){
         int radius = minRadius,
             rows = img.rows,
