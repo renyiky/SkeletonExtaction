@@ -12,17 +12,19 @@ static double preSigmaHat = sigmaHat;
 static int countTimes = 0;   // count if sigmaHat remains unchanged
 static int t = 0;   // count for iterations
 static int k = 0;   // k nearest neighbors
-static int r = 0;
+static int minRadius = 0;
 
 Mat contract(Mat img, string filename, const double detailFactor, const bool perturbationFlag){
     k = skelx::computeK(img);  // compute k
-    
-    r = skelx::computeSearchRadius(img);
-    r = 5;
+    minRadius = skelx::computeMinimumSearchRadius(k);
+    // r = skelx::computeSearchRadius(img);
+    // r = 3;
 
+    // cout<<k<<endl;
+    // cout<<skelx::gaussCircleCount(r)<<endl;
     while(true){
         vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);
-        skelx::computeUi(img, pointset, k, perturbationFlag);
+        skelx::computeUi(img, pointset, k, minRadius, perturbationFlag);
         skelx::PCA(img, pointset, detailFactor);
         skelx::movePoint(pointset);
         img = skelx::draw(img, pointset);
@@ -37,7 +39,12 @@ Mat contract(Mat img, string filename, const double detailFactor, const bool per
         // check if sigmaHat remains unchanged
         // if it doesn't change for 3 times, go to postprocessing
         if(sigmaHat == preSigmaHat){
-            if(countTimes == 2) return skelx::postProcess(img, detailFactor, k, perturbationFlag);
+            if(countTimes == 2) {
+                vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);
+                skelx::computeUi(img, pointset, k, minRadius, perturbationFlag);
+                skelx::PCA(img, pointset, detailFactor);
+                return skelx::postProcess(img, pointset);
+            }
             else ++countTimes;
         }else{
             preSigmaHat = sigmaHat;

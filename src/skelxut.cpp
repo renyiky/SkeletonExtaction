@@ -118,16 +118,15 @@ namespace skelx{
 
     // search k nearest neighbors
     // and do perturbation test
-    bool setNeighborsOfK(Mat &img, skelx::Point &point, const int k, bool perturbationFlag){
-        int radius = 0,
+
+    int minRadius = -1;
+    bool setNeighborsOfK(Mat &img, skelx::Point &point, const int k, const int minRadius, bool perturbationFlag){
+        int radius = minRadius,
             rows = img.rows,
             cols = img.cols,
             x = point.pos[0],
             y = point.pos[1];
         vector<vector<double> > neighbors{};
-
-        // compute the minumum value of radius containing k neighbors
-        radius = sqrt(1. + 2. * k) / 2 - 0.5;
 
         while(neighbors.size() < k){
             neighbors = {};
@@ -186,10 +185,10 @@ namespace skelx{
 
     // set ui for each xi based on k nearest neighbors.
     // neighbors and ui of xi would be set
-    void computeUi(Mat &img, vector<skelx::Point> &pointset, const int k, const bool perturbationFlag){
+    void computeUi(Mat &img, vector<skelx::Point> &pointset, const int k, const int minRadius, const bool perturbationFlag){
+        // number search
         for(skelx::Point &p : pointset){
-            if(!setNeighborsOfK(img, p, k, perturbationFlag)) std::cout<<"neighbors insufficient!"<<endl;
-
+            if(!setNeighborsOfK(img, p, k, minRadius, perturbationFlag)) std::cout<<"neighbors insufficient!"<<endl;
             vector<double> ui{0.0, 0.0};
             for(vector<double> nei: p.neighbors){
                 ui[0] += (nei[0] - p.pos[0]);
@@ -199,6 +198,19 @@ namespace skelx{
             ui[1] = ui[1] / static_cast<double>(p.neighbors.size());
             p.ui = {ui[0], ui[1]};
         }
+
+        // radius search
+        // for(skelx::Point &p : pointset){
+        //     if(!setRadiusNeighbors(img, p, k, perturbationFlag)) std::cout<<"neighbors insufficient!"<<endl;
+        //     vector<double> ui{0.0, 0.0};
+        //     for(vector<double> nei: p.neighbors){
+        //         ui[0] += (nei[0] - p.pos[0]);
+        //         ui[1] += (nei[1] - p.pos[1]);
+        //     }
+        //     ui[0] = ui[0] / static_cast<double>(p.neighbors.size());
+        //     ui[1] = ui[1] / static_cast<double>(p.neighbors.size());
+        //     p.ui = {ui[0], ui[1]};
+        // }
     }
 
     // pca process, after this, the sigma, principalVec, 
@@ -325,30 +337,28 @@ namespace skelx{
     }
 
     // for further thinning
-    Mat postProcess(Mat &img, const double detailFactor, const int k, const bool perturbationFlag){
+    Mat postProcess(Mat &img, vector<skelx::Point> &pointset){
         // remove isolate points
-        for(int x = 0; x < img.rows; ++x){
-            for(int y = 0; y < img.cols; ++y){
-                if(img.at<uchar>(x, y) != 0){
-                    int flag = 0;
-                    for(int i = -1; i < 2 && flag == 0; ++i){
-                        for(int j = -1; j < 2 && flag == 0; ++j){
-                            if(x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-                                flag = 1;
-                                break;
-                            }
-                        }
-                    }
-                    if(flag == 0){
-                        img.at<uchar>(x, y) = 0;
-                    }
-                }
-            }
-        }
+        // for(int x = 0; x < img.rows; ++x){
+        //     for(int y = 0; y < img.cols; ++y){
+        //         if(img.at<uchar>(x, y) != 0){
+        //             int flag = 0;
+        //             for(int i = -1; i < 2 && flag == 0; ++i){
+        //                 for(int j = -1; j < 2 && flag == 0; ++j){
+        //                     if(x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+        //                         flag = 1;
+        //                         break;
+        //                     }
+        //                 }
+        //             }
+        //             if(flag == 0){
+        //                 img.at<uchar>(x, y) = 0;
+        //             }
+        //         }
+        //     }
+        // }
 
-        vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);
-        skelx::computeUi(img, pointset, k, perturbationFlag);
-        skelx::PCA(img, pointset, detailFactor);
+
 
         vector<skelx::Point> keypointset;   // store keypoints which shall not be removed
         for(auto &i : pointset){
@@ -447,22 +457,25 @@ namespace skelx{
     }
 
     // compute the search radius
-    int computeSearchRadius(const Mat &img){
-        double left = img.cols + 1,
-            right = -1,
-            up = img.rows + 1,
-            down = -1;
-        for(int i = 0; i < img.rows; ++i){
-            for(int j = 0; j < img.cols; ++j){
-                if(img.at<uchar>(i, j) != 0){
-                    left = left < j ? left : j;
-                    right = right > j ? right : j;
-                    up = up < i ? up : i;
-                    down = down > i ? down : i;
-                }
-            }
-        }
-        return max(static_cast<int>(sqrt((right - left) * (down - up) / (400 * M_PI))), 1);
+    int computeMinimumSearchRadius(const int k){
+        // double left = img.cols + 1,
+        //     right = -1,
+        //     up = img.rows + 1,
+        //     down = -1;
+        // for(int i = 0; i < img.rows; ++i){
+        //     for(int j = 0; j < img.cols; ++j){
+        //         if(img.at<uchar>(i, j) != 0){
+        //             left = left < j ? left : j;
+        //             right = right > j ? right : j;
+        //             up = up < i ? up : i;
+        //             down = down > i ? down : i;
+        //         }
+        //     }
+        // }
+        // return max(static_cast<int>(sqrt((right - left) * (down - up) / (400 * M_PI))), 1);
+        int r = 1;
+        while(gaussCircleCount(r++) <= k);
+        return r - 2;
     }
 }
 

@@ -11,11 +11,11 @@ namespace skelx{
     void movePoint(std::vector<skelx::Point> &pointset);
     std::vector<struct skelx::Point> getPointsetInitialized(cv::Mat &img);
     cv::Mat draw(const cv::Mat &src, std::vector<struct skelx::Point> &pointset);
-    void computeUi(cv::Mat &img, std::vector<skelx::Point> &pointset, const int k, const bool perturbationFlag);
+    void computeUi(cv::Mat &img, std::vector<skelx::Point> &pointset, const int k, const int minRadius, const bool perturbationFlag);
     void PCA(cv::Mat &img, std::vector<skelx::Point> &pointset, double detailFactor);
     void visualize(const cv::Mat &img, const std::vector<skelx::Point> pointset, const int iter);
-    cv::Mat postProcess(cv::Mat &img, const double detailFactor, const int k, const bool perturbationFlag);
+    cv::Mat postProcess(cv::Mat &img, std::vector<skelx::Point> &pointset);
     int gaussCircleCount(const int r);
     bool setRadiusNeighbors(cv::Mat &img, skelx::Point &point, const int radius, bool perturbationFlag);
-    int computeSearchRadius(const cv::Mat &img);
+    int computeMinimumSearchRadius(const int k);
 }
