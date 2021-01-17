@@ -1,45 +1,48 @@
-VPATH := include:src:src/comparisonAlgs:src/obj:src/synthesizer
-ROOT := $(shell pwd)
-INC_DIR := $(ROOT)/include
-SRC_DIR := $(ROOT)/src
-COMP_DIR := $(SRC_DIR)/comparisonAlgs
-OBJ_DIR := $(SRC_DIR)/obj
+VPATH := include:src:src/comparisonAlgs:src/synthesizer:src/evaluation
 
-SRC_CODE := $(notdir $(wildcard $(SRC_DIR)/*.cpp)) $(notdir $(wildcard $(COMP_DIR)/*.cpp))
-OBJ := $(SRC_CODE:%.cpp=%.o)
+SRC_CPP := $(notdir $(wildcard src/*.cpp))
+COM_CPP	:= $(notdir $(wildcard src/comparisonAlgs/*.cpp))
 
+OBJ := $(SRC_CPP:%.cpp=%.o) $(COM_CPP:%.cpp=%.o)
+
+CXX_STD := -std=c++17
+CXX_INC_DIR := -Iinclude
 CXX := clang++
-CXXFLAGS := -std=c++11 -I $(INC_DIR) `pkg-config --cflags --libs opencv4` -w
+CXXFLAGS := -MMD `pkg-config --cflags --libs opencv4` -w $(CXX_STD) $(CXX_INC_DIR)
 
-app:makeOBJDIR $(OBJ)
+app:$(OBJ)
 	@echo Linking...
-	@$(CXX) -o app $(wildcard $(OBJ_DIR)/*.o) $(CXXFLAGS)
+	@$(CXX) -o $@ $^ $(CXXFLAGS)
+	@echo Done.
 
-makeOBJDIR:
-	@mkdir -p $(OBJ_DIR)
+-include $(OBJ:.o=.d)
 
-%.o:%.cpp
-	@echo Compiling $(notdir $<)...
-	@$(CXX) -c $< -o $(OBJ_DIR)/$@ $(CXXFLAGS)
+# compile main app
+%.o:src/%.cpp
+	@echo Compiling $<...
+	@$(CXX) -c $< -o $@ $(CXXFLAGS)
+
+# compile comparison algs
+%.o:src/comparisonAlgs/%.cpp
+	@echo Compiling $<...
+	@$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 # for evaluator
 ev:
 	@echo Generating Evaluator...
-	@$(CXX) -o ev src/evaluation/evaluation.cpp $(CXXFLAGS) 
+	@$(CXX) -o $@ src/evaluation/evaluation.cpp $(CXXFLAGS) 
 	@echo Done.
 
 # for synthesizer
 syn:
 	@echo Generating Synthesizer...
-	@$(CXX) -o syn src/synthesizer/synthesizer.cpp $(CXXFLAGS) 
+	@$(CXX) -o $@ src/synthesizer/synthesizer.cpp $(CXXFLAGS) 
 	@echo Done.
 
-.PHONY: clean cleanall cleanres do cleanobj ev syn
-
-cleanall: clean cleanres
+.PHONY: clean cleanres do ev syn
 
 clean:
-	@rm -rf app $(OBJ_DIR)
+	@rm -rf app *.o *.d
 	@echo App and objs cleaned.
 
 cleanres:
