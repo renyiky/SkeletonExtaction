@@ -12,10 +12,13 @@ static double preSigmaHat = sigmaHat;
 static int countTimes = 0;   // count if sigmaHat remains unchanged
 static int t = 0;   // count for iterations
 static int k = 0;   // k nearest neighbors
+static int r = 0;
 
 Mat contract(Mat img, string filename, const double detailFactor, const bool perturbationFlag){
     k = skelx::computeK(img);  // compute k
     
+    r = skelx::computeSearchRadius(img);
+    r = 5;
 
     while(true){
         vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);
@@ -27,6 +30,7 @@ Mat contract(Mat img, string filename, const double detailFactor, const bool per
         for(skelx::Point &p : pointset) sigmaHat += p.sigma;
         sigmaHat /= pointset.size();
 
+        imwrite("results/" + to_string(t) + ".png", img);
         ++t;
         std::cout<<"iter:"<<t<<"   sigmaHat = "<<sigmaHat<<endl;
 
