@@ -327,7 +327,12 @@ namespace skelx{
                 }
             }
         }
+        cout<<"area:"<<(right - left) * (down - up)<<endl;
+        // return min(49,max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 10)));
         return max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 10));
+        // return max(17, static_cast<int>(pow((right - left) * (down - up), 1. / 3.) / 2.));
+        // return max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 15));
+        // return max(17, static_cast<int>(log((right - left) * (down - up))));
     }
 
     // check if the parameter pos is included in keypoints
