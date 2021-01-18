@@ -35,8 +35,8 @@ namespace skelx{
         origin = _origin;
 
         for(skelx::Point p : pointset){
-            // cout << "Point" << count<< ": deltaX:[ " << p.deltaX[0] << " , " << p.deltaX[1] << " ]" << " cosTheta:[" << p.cosTheta << "] "
-            //         << "ui:[ " << p.ui[0] << " , " << p.ui[1] << " ] sigma:[" <<p.sigma << "]"<< endl;
+            cout << "Point" << count<< ": deltaX:[ " << p.deltaX[0] << " , " << p.deltaX[1] << " ]" << " cosTheta:[" << p.cosTheta << "] "
+                    << "ui:[ " << p.ui[0] << " , " << p.ui[1] << " ] sigma:[" <<p.sigma << "]"<< endl;
 
             // draw center point, red
             Mat KNNvisual = origin.clone();
@@ -119,11 +119,12 @@ namespace skelx{
     // search k nearest neighbors
     // and do perturbation test
     bool setNeighborsOfK(Mat &img, skelx::Point &point, const int k, const int minRadius, bool perturbationFlag){
-        int radius = minRadius,
-            rows = img.rows,
-            cols = img.cols,
-            x = point.pos[0],
-            y = point.pos[1];
+        int radius = minRadius;
+        int rows = img.rows;
+        int cols = img.cols;
+        int x = point.pos[0];
+        int y = point.pos[1];
+        bool overflowFlag = false;
         vector<vector<double> > neighbors{};
 
         while(neighbors.size() < k){
@@ -137,8 +138,22 @@ namespace skelx{
                 }
             }
             ++radius;
+
+            // radius overflow control
+            if(radius > k){
+                radius = computeMinimumSearchRadius(k);
+                for(int i = -radius; i < radius + 1; ++i){
+                    for(int j = -radius; j < radius + 1; ++j){
+                        if(pow((i * i + j * j), 0.5) <= radius && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+                            neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
+                        }
+                    }
+                }
+                break;
+            }
         }
 
+        // perturbation test
         if(perturbationFlag){
             double sumX = 0;
             double sumY = 0;
@@ -287,12 +302,12 @@ namespace skelx{
                 cosTheta = -cosTheta;
             }
             xi.cosTheta = cosTheta;
-            double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5),
-                    scale = 10.0,
-                    jumpFunction = 2.0 / (1 + exp((xi.sigma - 0.7723) * (xi.sigma - 0.7723) * 1500.0)) + 1; // the 0.7723 comes from the mean of (0.755906 + 0.7875 + 0.773625) which are referred to 3 diffenrent rectangle conditions
+            double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
+            double scale = 10.0;
+                    // jumpFunction = 2.0 / (1 + exp((xi.sigma - 0.7723) * (xi.sigma - 0.7723) * 1500.0)) + 1; // the 0.7723 comes from the mean of (0.755906 + 0.7875 + 0.773625) which are referred to 3 diffenrent rectangle conditions
 
-            xi.deltaX[0] = xi.ui[0] * std::exp(- pow(cosTheta, 2.0) * detailFactor * scale) * jumpFunction;
-            xi.deltaX[1] = xi.ui[1] * std::exp(- pow(cosTheta, 2.0) * detailFactor * scale) * jumpFunction;
+            xi.deltaX[0] = xi.ui[0] * std::exp(- pow(cosTheta, 2.0) * detailFactor * scale);
+            xi.deltaX[1] = xi.ui[1] * std::exp(- pow(cosTheta, 2.0) * detailFactor * scale);
         }
     }
 
@@ -312,7 +327,7 @@ namespace skelx{
                 }
             }
         }
-        return static_cast<int>(sqrt((right - left) * (down - up)) / 10);
+        return max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 10));
     }
 
     // check if the parameter pos is included in keypoints
@@ -334,29 +349,30 @@ namespace skelx{
         else return true;
     }
 
+    // remove isolate points
+    void cleanImage(Mat &img){
+        for(int x = 0; x < img.rows; ++x){
+            for(int y = 0; y < img.cols; ++y){
+                if(img.at<uchar>(x, y) != 0){
+                    int flag = 0;
+                    for(int i = -1; i < 2 && flag == 0; ++i){
+                        for(int j = -1; j < 2 && flag == 0; ++j){
+                            if(x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
+                                flag = 1;
+                                break;
+                            }
+                        }
+                    }
+                    if(flag == 0){
+                        img.at<uchar>(x, y) = 0;
+                    }
+                }
+            }
+        }
+    }
+
     // for further thinning
     Mat postProcess(Mat &img, vector<skelx::Point> &pointset){
-        // remove isolate points
-        // for(int x = 0; x < img.rows; ++x){
-        //     for(int y = 0; y < img.cols; ++y){
-        //         if(img.at<uchar>(x, y) != 0){
-        //             int flag = 0;
-        //             for(int i = -1; i < 2 && flag == 0; ++i){
-        //                 for(int j = -1; j < 2 && flag == 0; ++j){
-        //                     if(x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-        //                         flag = 1;
-        //                         break;
-        //                     }
-        //                 }
-        //             }
-        //             if(flag == 0){
-        //                 img.at<uchar>(x, y) = 0;
-        //             }
-        //         }
-        //     }
-        // }
-
-
 
         vector<skelx::Point> keypointset;   // store keypoints which shall not be removed
         for(auto &i : pointset){

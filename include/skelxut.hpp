@@ -18,4 +18,5 @@ namespace skelx{
     int gaussCircleCount(const int r);
     bool setRadiusNeighbors(cv::Mat &img, skelx::Point &point, const int radius, bool perturbationFlag);
     int computeMinimumSearchRadius(const int k);
+    void cleanImage(cv::Mat &img);
 }

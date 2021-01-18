@@ -20,9 +20,9 @@ string inputPath = "experimentsMaterial/resources/",
         outputPath = "results/";
 
 int main(int argc, char *argv[]){
-    double detailFactor;
+    double detailFactor = 4;
     bool perturbationFlag = false;
-    if(argc <= 2){cout<<"parameter insufficient."<<endl; return -1;
+    if(argc <= 1){cout<<"parameter insufficient."<<endl; return -1;
     }else if(argc == 3){
         detailFactor = stod(argv[2]);
     }else if(argc == 4){
