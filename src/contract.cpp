@@ -18,14 +18,18 @@ Mat contract(Mat img, string filename, const double detailFactor, const bool per
     k = skelx::computeK(img);  // compute k
     minRadius = skelx::computeMinimumSearchRadius(k);
     // k = 75;
-    k = 69;
+    // k = 69;  // k for deer01 tail
+    // k = 17; // for 901  , checked and passed: 17, 18, 19
+    // k = 24; // for 902, k = 24
+    // k = 36; // for 903, k = 36
+
     cout << "k = " << k << endl;
 
     while(true){
         vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);
         skelx::computeUi(img, pointset, k, minRadius, perturbationFlag);
         skelx::PCA(img, pointset, detailFactor);
-        skelx::visualize(img, pointset, t);
+        // skelx::visualize(img, pointset, t);
         skelx::movePoint(pointset);
         img = skelx::draw(img, pointset);
         skelx::cleanImage(img);
