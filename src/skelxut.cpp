@@ -328,7 +328,8 @@ namespace skelx{
             }
         }
         cout<<"area:"<<(right - left) * (down - up)<<endl;
-        return min(36,max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 10)));
+        return min(36,max(17, static_cast<int>(sqrt((right - left) * (down - up) / 400))));
+        // return min(36,max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 10)));
         // return max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 10));
         // return max(17, static_cast<int>(pow((right - left) * (down - up), 1. / 3.) / 2.));
         // return max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 15));

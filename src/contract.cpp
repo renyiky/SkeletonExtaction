@@ -37,7 +37,7 @@ Mat contract(Mat img, string filename, const double detailFactor, const bool per
         for(skelx::Point &p : pointset) sigmaHat += p.sigma;
         sigmaHat /= pointset.size();
 
-        imwrite("results/" + to_string(t) + ".png", img);
+        // imwrite("results/" + to_string(t) + ".png", img);
         ++t;
         std::cout << "iter:" << t << "   sigmaHat = " << sigmaHat << endl;
 
