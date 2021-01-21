@@ -22,7 +22,9 @@ Mat contract(Mat img, string filename, const double detailFactor, const bool per
     // k = 17; // for 901  , checked and passed: 17, 18, 19
     // k = 24; // for 902, k = 24
     // k = 36; // for 903, k = 36
-
+    // k = 23;
+    // k max = 23, k min = 21, so k = 22
+    k = 22;
     cout << "k = " << k << endl;
 
     while(true){

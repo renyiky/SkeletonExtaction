@@ -119,7 +119,7 @@ namespace skelx{
     // search k nearest neighbors
     // and do perturbation test
     bool setNeighborsOfK(Mat &img, skelx::Point &point, const int k, const int minRadius, bool perturbationFlag){
-        int radius = minRadius;
+        double radius = minRadius;
         int rows = img.rows;
         int cols = img.cols;
         int x = point.pos[0];
@@ -130,14 +130,14 @@ namespace skelx{
         while(neighbors.size() < k){
             neighbors = {};
             // circular search
-            for(int i = -radius; i < radius + 1; ++i){
-                for(int j = -radius; j < radius + 1; ++j){
+            for(int i = -radius; i < radius + 1; i++){
+                for(int j = -radius; j < radius + 1; j++){
                     if(pow((i * i + j * j), 0.5) <= radius && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
                         neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
                     }
                 }
             }
-            ++radius;
+            radius += 0.5;
 
             // radius overflow control
             if(radius > k){
@@ -328,7 +328,7 @@ namespace skelx{
             }
         }
         cout<<"area:"<<(right - left) * (down - up)<<endl;
-        return min(36,max(17, static_cast<int>(sqrt((right - left) * (down - up) / 400))));
+        return min(36,max(21, static_cast<int>(sqrt((right - left) * (down - up) / 400))));
         // return min(36,max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 10)));
         // return max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 10));
         // return max(17, static_cast<int>(pow((right - left) * (down - up), 1. / 3.) / 2.));
