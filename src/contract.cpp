@@ -23,7 +23,7 @@ Mat contract(Mat img, string filename, const double detailFactor, const bool per
     // k = 24; // for 902, k = 24
     // k = 36; // for 903, k = 36
     // k = 23;
-    // k max = 23, k min = 21, so k = 22
+    // k max = 22, k min = 21, so k = 22
     k = 22;
     cout << "k = " << k << endl;
 
@@ -31,7 +31,7 @@ Mat contract(Mat img, string filename, const double detailFactor, const bool per
         vector<skelx::Point> pointset = skelx::getPointsetInitialized(img);
         skelx::computeUi(img, pointset, k, minRadius, perturbationFlag);
         skelx::PCA(img, pointset, detailFactor);
-        // skelx::visualize(img, pointset, t);
+        skelx::visualize(img, pointset, t);
         skelx::movePoint(pointset);
         img = skelx::draw(img, pointset);
         skelx::cleanImage(img);
