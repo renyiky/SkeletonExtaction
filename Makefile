@@ -8,7 +8,7 @@ OBJ := $(SRC_CPP:%.cpp=%.o) $(COM_CPP:%.cpp=%.o)
 CXX_STD := -std=c++17
 CXX_INC_DIR := -Iinclude
 CXX := clang++
-CXXFLAGS := -MMD `pkg-config --cflags --libs opencv4` -w $(CXX_STD) $(CXX_INC_DIR)
+CXXFLAGS := -MMD -fopenmp `pkg-config --cflags --libs opencv4` -w $(CXX_STD) $(CXX_INC_DIR)
 
 app:$(OBJ)
 	@echo Linking...

@@ -16,7 +16,8 @@ vector<string> prefixes = {"0_final_ZS_",
                             "0_final_GH_",
                             "0_final_Hybrid_",
                             "DM_",
-                            "0_final_"};
+                            "0_final_",
+                            "0_extracted_"};
 
 Mat invert(Mat img){
     int rows = img.rows, cols = img.cols;
@@ -87,7 +88,7 @@ int main(int argc, char** argv){
     string df(argv[2]);
     resPath += (string(argv[1]) + "_" + df + "/");
     Mat background = imread(resPath + "0_raw_" + string(argv[1]) + ".png", IMREAD_GRAYSCALE);
-    if(background.data == NULL) {cout << "raw image open failed." << endl; return -1;}
+    if(background.data == NULL) {cout << "Background image open failed." << endl; return -1;}
 
     vector<Mat> images;
     for(int i = 0; i < 5; ++i){
@@ -95,8 +96,8 @@ int main(int argc, char** argv){
         if(im.data == NULL) {cout<<"image loading failed."<<endl; return -1;}
         images.push_back(im);
     }
-    images.push_back((imread(resPath + prefixes.back() + string(argv[1]) + +"_" + df + ".png", IMREAD_GRAYSCALE)));
-
+    images.push_back((imread(resPath + prefixes[5] + string(argv[1]) + +"_" + df + ".png", IMREAD_GRAYSCALE)));
+    images.push_back((imread(resPath + prefixes[6] + string(argv[1]) + +"_" + df + ".png", IMREAD_GRAYSCALE)));
     grayAndBlack(background, images, argv[1]);
     // blackAndWhite(background, images, argv[1]);
     return 0;

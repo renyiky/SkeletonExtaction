@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
     }
     string filename = argv[1];
     Mat img = imread(inputPath+filename+".png", IMREAD_GRAYSCALE);
-    output(img, "raw_" + filename);
+    output(img, "0_raw_" + filename);
 
 
 
@@ -43,19 +43,19 @@ int main(int argc, char *argv[]){
                             "GH",
                             "Hybrid"};
 
-    // for(int i = 0; i < previousAlgs.size(); ++i){
-    //     start_t = clock();
-    //     output(previousAlgs[i](img), "0_final_" + prefixes[i] + "_" + filename);
-    //     total_t = static_cast<double>(clock() - start_t) / CLOCKS_PER_SEC;
-    //     cout << prefixes[i] << " time consumed: " << total_t << endl;
-    // }
+    for(int i = 0; i < previousAlgs.size(); ++i){
+        start_t = clock();
+        output(previousAlgs[i](img), "0_final_" + prefixes[i] + "_" + filename);
+        total_t = static_cast<double>(clock() - start_t) / CLOCKS_PER_SEC;
+        cout << prefixes[i] << " time consumed: " << total_t << endl;
+    }
 
     start_t = clock();
-    // double s = omp_get_wtime();
+    double s = omp_get_wtime();
     img = contract(img, filename, detailFactor, perturbationFlag);
     total_t = static_cast<double>(clock() - start_t) / CLOCKS_PER_SEC;
-    // cout << "Time consumed: " << omp_get_wtime() - s << endl;
-    cout << "Time consumed: " << total_t << endl;
+    cout << "Time consumed: " << omp_get_wtime() - s << endl;
+    // cout << "Time consumed: " << total_t << endl;
     imwrite(outputPath + "0_final_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
 
     cout << filename + "'s current detail factor = " << detailFactor << endl;

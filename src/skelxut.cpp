@@ -118,8 +118,8 @@ namespace skelx{
 
     // search k nearest neighbors
     // and do perturbation test
-    bool setNeighborsOfK(Mat &img, skelx::Point &point, const int k, const int minRadius, bool perturbationFlag){
-        double radius = minRadius;
+    bool setNeighborsOfK(Mat &img, skelx::Point &point, const int k, bool perturbationFlag){
+        double radius = 2.; // minimum radius
         int rows = img.rows;
         int cols = img.cols;
         int x = point.pos[0];
@@ -141,7 +141,8 @@ namespace skelx{
 
             // radius overflow control
             if(radius > k){
-                radius = computeMinimumSearchRadius(k);
+                // radius = computeMinimumSearchRadius(k);
+                radius = 2;
                 for(int i = -radius; i < radius + 1; ++i){
                     for(int j = -radius; j < radius + 1; ++j){
                         if(pow((i * i + j * j), 0.5) <= radius && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
@@ -198,10 +199,10 @@ namespace skelx{
 
     // set ui for each xi based on k nearest neighbors.
     // neighbors and ui of xi would be set
-    void computeUi(Mat &img, vector<skelx::Point> &pointset, const int k, const int minRadius, const bool perturbationFlag){
+    void computeUi(Mat &img, vector<skelx::Point> &pointset, const int k, const bool perturbationFlag){
         // number search
         for(skelx::Point &p : pointset){
-            if(!setNeighborsOfK(img, p, k, minRadius, perturbationFlag)) std::cout<<"neighbors insufficient!"<<endl;
+            if(!setNeighborsOfK(img, p, k, perturbationFlag)) std::cout<<"neighbors insufficient!"<<endl;
             vector<double> ui{0.0, 0.0};
             for(vector<double> nei: p.neighbors){
                 ui[0] += (nei[0] - p.pos[0]);

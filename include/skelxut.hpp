@@ -11,7 +11,7 @@ namespace skelx{
     void movePoint(std::vector<skelx::Point> &pointset);
     std::vector<struct skelx::Point> getPointsetInitialized(cv::Mat &img);
     cv::Mat draw(const cv::Mat &src, std::vector<struct skelx::Point> &pointset);
-    void computeUi(cv::Mat &img, std::vector<skelx::Point> &pointset, const int k, const int minRadius, const bool perturbationFlag);
+    void computeUi(cv::Mat &img, std::vector<skelx::Point> &pointset, const int k, const bool perturbationFlag);
     void PCA(cv::Mat &img, std::vector<skelx::Point> &pointset, double detailFactor);
     void visualize(const cv::Mat &img, const std::vector<skelx::Point> pointset, const int iter);
     cv::Mat postProcess(cv::Mat &img, std::vector<skelx::Point> &pointset);
