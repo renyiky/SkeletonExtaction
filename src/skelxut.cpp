@@ -14,6 +14,9 @@
 #include "skelxut.hpp"
 #include "Point.hpp"
 
+// comment out following line to remove omp
+#define PARALLEL_FLAG
+
 using namespace std;
 using namespace cv;
 using namespace Eigen;
@@ -201,12 +204,10 @@ namespace skelx{
     // initialize the pointset
     vector<struct skelx::Point> getPointsetInitialized(Mat &img){
         vector<struct skelx::Point> pointset;
+
         for(int i = 0; i < img.rows; ++i){
             for(int j = 0; j < img.cols; ++j){
                 if(img.at<uchar>(i, j) != 0){
-                    // skelx::Point p(i, j);
-                    // p.pos[0] = i;
-                    // p.pos[1] = j;
                     pointset.push_back(skelx::Point(i, j));
                 }
             }
@@ -259,7 +260,6 @@ namespace skelx{
     // search k nearest neighbors
     // and do perturbation test
     bool setNeighborsOfK(Mat &img, skelx::Point &point, const int k, bool perturbationFlag){
-        // double radius = 2.; // minimum radius
         int rows = img.rows;
         int cols = img.cols;
         int x = point.pos[0];
@@ -322,7 +322,12 @@ namespace skelx{
     // draw points on a new img
     Mat draw(const Mat &src, vector<struct skelx::Point> &pointset){
         Mat ret = Mat::zeros(src.rows, src.cols, CV_8U);
-        for(skelx::Point &p : pointset){
+
+        #ifdef PARALLEL_FLAG
+            #pragma omp parallel for
+        #endif
+        for(int i = 0; i < pointset.size(); ++i){
+            skelx::Point &p = pointset[i];
             if(p.pos[0] >= 0 && p.pos[0] < src.rows && p.pos[1] >= 0 && p.pos[1] < src.cols) 
                 ret.at<uchar>(p.pos[0], p.pos[1]) = 255;
         }
@@ -331,7 +336,8 @@ namespace skelx{
 
     // move points toward deltaX
     void movePoint(vector<skelx::Point> &pointset){
-        for(skelx::Point &p : pointset){
+        for(int i = 0; i < pointset.size(); ++i){
+            skelx::Point &p = pointset[i];
             p.pos[0] += static_cast<int>(p.deltaX[0]);
             p.pos[1] += static_cast<int>(p.deltaX[1]);
         }
@@ -341,10 +347,11 @@ namespace skelx{
     // neighbors and ui of xi would be set
     void computeUi(Mat &img, vector<skelx::Point> &pointset, const int k, const bool perturbationFlag){
         // number search
-        #pragma omp parallel for
+        #ifdef PARALLEL_FLAG
+            #pragma omp parallel for
+        #endif
         for(int i = 0; i < pointset.size(); ++i){
             skelx::Point &p = pointset[i];
-        // for(skelx::Point &p : pointset){
             if(!setNeighborsOfK(img, p, k, perturbationFlag)) std::cout<<"neighbors insufficient!"<<endl;
             vector<double> ui{0.0, 0.0};
             for(vector<double> nei: p.neighbors){
@@ -362,8 +369,9 @@ namespace skelx{
     // the parameter detailFactor which is set to 1.0 as default can control the degree of detail the algorithm would produce,
     // the larger the detailFactor, the more detail is included in the final result.
     void PCA(Mat &img, vector<skelx::Point> &pointset, double detailFactor){
-        // for(skelx::Point &xi: pointset){
-        #pragma omp parallel for
+        #ifdef PARALLEL_FLAG
+            #pragma omp parallel for
+        #endif
         for(int i = 0; i < pointset.size(); ++i){
             skelx::Point &xi = pointset[i];
             if(xi.ui[0] == 0 && xi.ui[1] == 0){
@@ -435,7 +443,6 @@ namespace skelx{
             xi.cosTheta = cosTheta;
             double uiMod = pow(pow(xi.ui[0], 2) + pow(xi.ui[1], 2), 0.5);
             double scale = 10.0;
-                    // jumpFunction = 2.0 / (1 + exp((xi.sigma - 0.7723) * (xi.sigma - 0.7723) * 1500.0)) + 1; // the 0.7723 comes from the mean of (0.755906 + 0.7875 + 0.773625) which are referred to 3 diffenrent rectangle conditions
 
             xi.deltaX[0] = xi.ui[0] * std::exp(- pow(cosTheta, 2.0) * detailFactor * scale);
             xi.deltaX[1] = xi.ui[1] * std::exp(- pow(cosTheta, 2.0) * detailFactor * scale);
@@ -460,11 +467,6 @@ namespace skelx{
         }
         cout<<"area:"<<(right - left) * (down - up)<<endl;
         return min(36,max(21, static_cast<int>(sqrt((right - left) * (down - up) / 400))));
-        // return min(36,max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 10)));
-        // return max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 10));
-        // return max(17, static_cast<int>(pow((right - left) * (down - up), 1. / 3.) / 2.));
-        // return max(17, static_cast<int>(sqrt((right - left) * (down - up)) / 15));
-        // return max(17, static_cast<int>(log((right - left) * (down - up))));
     }
 
     // check if the parameter pos is included in keypoints
@@ -540,6 +542,7 @@ namespace skelx{
         return img;
     }
 
+    // return the answer of gauss circle problem
     int gaussCircleCount(const int r){
         int Nr = 0; // Number of pixels in Radius r
         int i = 0;
@@ -551,79 +554,8 @@ namespace skelx{
         return Nr * 4 + 1;
     }
 
-    bool setRadiusNeighbors(Mat &img, skelx::Point &point, const int radius, bool perturbationFlag){
-        int rows = img.rows,
-            cols = img.cols,
-            x = point.pos[0],
-            y = point.pos[1];
-        vector<vector<double> > neighbors{};
-        // circular search
-        for(int i = -radius; i < radius + 1; ++i){
-            for(int j = -radius; j < radius + 1; ++j){
-                if(pow((i * i + j * j), 0.5) <= radius && x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0 && !(i == 0 && j == 0)){
-                    neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
-                }
-            }
-        }
-        point.neighbors = neighbors;
-        // cout<<"before:"<<neighbors.size()<<endl;
-        // if(neighbors.size() > gaussCircleCount(radius) /){
-            // symmetric counteraction
-            // int n = 0;
-            // while(n < neighbors.size()){
-            //     double tempx = neighbors[n][0];
-            //     double tempy = neighbors[n][1];
-            //     vector<vector<double>>::iterator it = find(neighbors.begin() + n + 1, neighbors.end(), vector<double>{x * 2 - tempx, y * 2 - tempy});
-            //     if(it != neighbors.end()){
-            //         neighbors.erase(neighbors.begin() + n);
-            //         vector<vector<double>>::iterator sym_it = find(neighbors.begin() + n + 1, neighbors.end(), vector<double>{x * 2 - tempx, y * 2 - tempy});
-            //         neighbors.erase(sym_it);
-            //     }
-            //     else ++n;
-            // }
-        // }
-        // cout<<"after:"<<neighbors.size()<<endl;
-        if(perturbationFlag){
-            double sumX = 0;
-            double sumY = 0;
-            for(auto i : neighbors){
-                sumX += i[0] - x;
-                sumY += i[1] - y;
-            }
-            if(sumX != 0 || sumY != 0){
-                Mat neighborGraph = drawNeighborGraph(img, neighbors, point);
-                Mat binImg, labels, stats, centroids;
-                cv::threshold(neighborGraph, binImg, 0, 255, cv::THRESH_OTSU);
-                if(cv::connectedComponentsWithStats (binImg, labels, stats, centroids) != 2){
-                    neighbors = repositionNeighbors(neighborGraph, neighbors, point);
-                }
-            }
-        }
-
-        if(neighbors.size() != 0){
-            // point.neighbors = neighbors;
-            return true;
-        }
-        else return false;
-    }
-
     // compute the search radius
     int computeMinimumSearchRadius(const int k){
-        // double left = img.cols + 1,
-        //     right = -1,
-        //     up = img.rows + 1,
-        //     down = -1;
-        // for(int i = 0; i < img.rows; ++i){
-        //     for(int j = 0; j < img.cols; ++j){
-        //         if(img.at<uchar>(i, j) != 0){
-        //             left = left < j ? left : j;
-        //             right = right > j ? right : j;
-        //             up = up < i ? up : i;
-        //             down = down > i ? down : i;
-        //         }
-        //     }
-        // }
-        // return max(static_cast<int>(sqrt((right - left) * (down - up) / (400 * M_PI))), 1);
         int r = 1;
         while(gaussCircleCount(r++) <= k);
         return r - 2;
