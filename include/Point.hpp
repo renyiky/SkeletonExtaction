@@ -1,5 +1,4 @@
-#ifndef POINTSTRUCT_HPP
-#define POINTSTRUCT_HPP
+#pragma once
 
 #include <vector>
 
@@ -18,5 +17,3 @@ namespace skelx{
         Point(double x, double y):pos{x, y}, sigma(0), cosTheta(0), deltaX{0.0, 0.0}, principalVec{0.0, 0.0}{}
     };
 }
-
-#endif
