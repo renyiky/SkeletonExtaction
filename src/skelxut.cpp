@@ -153,7 +153,8 @@ namespace skelx{
         {{-21,-8},{-21,8},{-19,-12},{-19,12},{-12,-19},{-12,19},{-8,-21},{-8,21},{8,-21},{8,21},{12,-19},{12,19},{19,-12},{19,12},{21,-8},{21,8}},   // r = 22.5
         {{-22,-5},{-22,5},{-5,-22},{-5,22},{5,-22},{5,22},{22,-5},{22,5}},   // r = 22.6
         {{-17,-15},{-17,15},{-16,-16},{-16,16},{-15,-17},{-15,17},{15,-17},{15,17},{16,-16},{16,16},{17,-15},{17,15}},   // r = 22.7
-        {{-22,-6},{-22,6},{-21,-9},{-21,9},{-20,-11},{-20,11},{-18,-14},{-18,14},{-14,-18},{-14,18},{-11,-20},{-11,20},{-9,-21},{-9,21},{-6,-22},{-6,22},{6,-22},{6,22},{9,-21},{9,21},{11,-20},{11,20},{14,-18},{14,18},{18,-14},{18,14},{20,-11},{20,11},{21,-9},{21,9},{22,-6},{22,6}}   // r = 22.9
+        {{-22,-6},{-22,6},{-21,-9},{-21,9},{-20,-11},{-20,11},{-18,-14},{-18,14},{-14,-18},{-14,18},{-11,-20},{-11,20},{-9,-21},{-9,21},{-6,-22},{-6,22},{6,-22},{6,22},{9,-21},{9,21},{11,-20},{11,20},{14,-18},{14,18},{18,-14},{18,14},{20,-11},{20,11},{21,-9},{21,9},{22,-6},{22,6}},   // r = 22.9
+        {{-23,0},{0,-23},{0,23},{23,0}}   // r = 23
     };
 }
 
@@ -340,7 +341,10 @@ namespace skelx{
     // neighbors and ui of xi would be set
     void computeUi(Mat &img, vector<skelx::Point> &pointset, const int k, const bool perturbationFlag){
         // number search
-        for(skelx::Point &p : pointset){
+        #pragma omp parallel for
+        for(int i = 0; i < pointset.size(); ++i){
+            skelx::Point &p = pointset[i];
+        // for(skelx::Point &p : pointset){
             if(!setNeighborsOfK(img, p, k, perturbationFlag)) std::cout<<"neighbors insufficient!"<<endl;
             vector<double> ui{0.0, 0.0};
             for(vector<double> nei: p.neighbors){
@@ -351,19 +355,6 @@ namespace skelx{
             ui[1] = ui[1] / static_cast<double>(p.neighbors.size());
             p.ui = {ui[0], ui[1]};
         }
-
-        // radius search
-        // for(skelx::Point &p : pointset){
-        //     if(!setRadiusNeighbors(img, p, k, perturbationFlag)) std::cout<<"neighbors insufficient!"<<endl;
-        //     vector<double> ui{0.0, 0.0};
-        //     for(vector<double> nei: p.neighbors){
-        //         ui[0] += (nei[0] - p.pos[0]);
-        //         ui[1] += (nei[1] - p.pos[1]);
-        //     }
-        //     ui[0] = ui[0] / static_cast<double>(p.neighbors.size());
-        //     ui[1] = ui[1] / static_cast<double>(p.neighbors.size());
-        //     p.ui = {ui[0], ui[1]};
-        // }
     }
 
     // pca process, after this, the sigma, principalVec, 
@@ -371,10 +362,10 @@ namespace skelx{
     // the parameter detailFactor which is set to 1.0 as default can control the degree of detail the algorithm would produce,
     // the larger the detailFactor, the more detail is included in the final result.
     void PCA(Mat &img, vector<skelx::Point> &pointset, double detailFactor){
-        for(skelx::Point &xi: pointset){
-        // #pragma omp parallel for
-        // for(int i = 0; i < pointset.size(); ++i){
-        //     skelx::Point &xi = pointset[i];
+        // for(skelx::Point &xi: pointset){
+        #pragma omp parallel for
+        for(int i = 0; i < pointset.size(); ++i){
+            skelx::Point &xi = pointset[i];
             if(xi.ui[0] == 0 && xi.ui[1] == 0){
                 xi.deltaX = {0, 0};
                 xi.cosTheta = 0.0;
