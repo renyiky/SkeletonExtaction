@@ -264,24 +264,70 @@ namespace skelx{
         int cols = img.cols;
         int x = point.pos[0];
         int y = point.pos[1];
+        int count = 0;
 
-        vector<vector<double> > neighbors{};
+        vector<vector<double>> neighbors{};
+        vector<vector<double>> invNeighbors{};
 
         // predefined search
         for(const vector<vector<int>> &nei : preDefinedNeighbors){
             if(neighbors.size() < k){
+                count += nei.size();
                 for(const vector<int> &p : nei){
                     int i = p[0];
                     int j = p[1];
                     if(x + i >= 0 && x + i < img.rows && y + j >= 0 && y + j < img.cols && img.at<uchar>(x + i, y + j) != 0){
                         neighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
-                    }
+                    }else invNeighbors.push_back({static_cast<double>(x + i), static_cast<double>(y + j)});
                 }
             }else break;
         }
 
+        // Obtuse angle test
+        int double_x = x * 2;
+        int double_y = y * 2;
+        if(invNeighbors.size() > 0 && invNeighbors.size() < count / 2){
+            // find symmetric points
+            // vector<vector<double>> tmp_neighbor = neighbors;
+            // int i = 0;
+            // while(i < tmp_neighbor.size()){
+            //     auto iter = find(tmp_neighbor.begin(), tmp_neighbor.end(), vector<double>({double_x - tmp_neighbor[i][0], double_y - tmp_neighbor[i][1]}));
+            //     if(iter != tmp_neighbor.end()){
+            //         tmp_neighbor.erase(iter);
+            //         tmp_neighbor.erase(tmp_neighbor.begin() + i);
+            //     }else ++i;
+            // }
+            
+            // Mat neighborGraph = drawNeighborGraph(img, tmp_neighbor, point);
+            // Mat binImg, labels, stats, centroids;
+            // cv::threshold(neighborGraph, binImg, 0, 255, cv::THRESH_OTSU);
+            // if(cv::connectedComponentsWithStats (binImg, labels, stats, centroids) == 2){
+            //     point.obtuseFlag = true;
+            //     // cout<<point.pos[0]<<"  "<<point.pos[1]<<"   size: "<<neighbors.size()<<"  "<<tmp_neighbor.size()<<endl;
+            //     // if(neighbors.size() != tmp_neighbor.size()) cout<<"diff!"<<endl;
+            //     neighbors = tmp_neighbor;
+            // }
+            vector<double> inv_ui{0., 0.};
+            for(auto &invNei : invNeighbors){
+                inv_ui[0] += invNei[0] - x;
+                inv_ui[1] += invNei[1] - y;
+            }
+            if(inv_ui[0] != 0 && inv_ui[1] != 0){
+                inv_ui[0] /= invNeighbors.size();
+                inv_ui[1] /= invNeighbors.size();
+
+                int i = 0;
+                while(i < neighbors.size()){
+                    
+                }
+
+            }
+        
+
+        }
+
         // overflow control
-        if(neighbors.size() < k){
+        if(!point.obtuseFlag && neighbors.size() < k){
             neighbors = {};
             for(int i = 0; i < 3; ++i){
                 for(const vector<int> &p : preDefinedNeighbors[i]){
@@ -360,7 +406,18 @@ namespace skelx{
             }
             ui[0] = ui[0] / static_cast<double>(p.neighbors.size());
             ui[1] = ui[1] / static_cast<double>(p.neighbors.size());
-            p.ui = {ui[0], ui[1]};
+            if(!p.obtuseFlag){
+                p.ui = {ui[0], ui[1]};
+            }else{
+                // p.ui = {ui[0], ui[1]};
+                // cout<<p.pos[0]<<"  "<<p.pos[1]<<"  "<<ui[0]<<"  "<<ui[1]<<endl;s
+                for(auto &i : ui){
+                    if(i >= 0.5) i = 1;
+                    else if(i < 0.5 && i > -0.5) i = 0;
+                    else i = -1;
+                }
+                p.ui = {ui[0], ui[1]};
+            }
         }
     }
 
@@ -374,7 +431,7 @@ namespace skelx{
         #endif
         for(int i = 0; i < pointset.size(); ++i){
             skelx::Point &xi = pointset[i];
-            if(xi.ui[0] == 0 && xi.ui[1] == 0){
+            if(xi.ui[0] == 0 && xi.ui[1] == 0 || xi.obtuseFlag){
                 xi.deltaX = {0, 0};
                 xi.cosTheta = 0.0;
                 continue;
