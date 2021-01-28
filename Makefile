@@ -1,5 +1,6 @@
 VPATH := include:src:src/comparisonAlgs:src/synthesizer:src/evaluation
 
+OS := $(shell uname)
 SRC_CPP := $(notdir $(wildcard src/*.cpp))
 COM_CPP	:= $(notdir $(wildcard src/comparisonAlgs/*.cpp))
 
@@ -8,7 +9,11 @@ OBJ := $(SRC_CPP:%.cpp=%.o) $(COM_CPP:%.cpp=%.o)
 CXX_STD := -std=c++17
 CXX_INC_DIR := -Iinclude
 CXX := clang++
-CXXFLAGS := -MMD -fopenmp `pkg-config --cflags --libs opencv4` -w $(CXX_STD) $(CXX_INC_DIR)
+CXXFLAGS := -MMD `pkg-config --cflags --libs opencv4` -w $(CXX_STD) $(CXX_INC_DIR)
+
+ifeq ($(OS), Linux)
+	CXXFLAGS += -fopenmp
+endif
 
 app:$(OBJ)
 	@echo Linking...
