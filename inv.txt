@@ -1,0 +1,4 @@
+iter:1   sigmaHat = 0.135622
+iter:2   sigmaHat = 0.144931
+iter:3   sigmaHat = 0.156877
+iter:4   sigmaHat = 0.171704

@@ -7,7 +7,7 @@ namespace skelx{
     struct Point{
         int k;
         double  sigma, cosTheta;
-        bool obtuseFlag;
+
         std::vector<std::vector<double> > neighbors;
         std::vector<double> pos, 
                             ui,
