@@ -7,3 +7,5 @@ vsversion/.*
 results/visualization/*
 *.o
 *.d
+vs/skelx/.vs
+*.pdb
