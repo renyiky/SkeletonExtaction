@@ -8,4 +8,4 @@ results/visualization/*
 *.o
 *.d
 vs/skelx/.vs
-*.pdb
+vs/skelx/x64/Debug/*
