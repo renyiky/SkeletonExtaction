@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\comparisonAlgs\AWalg.cpp" />
+    <ClCompile Include="..\..\..\src\comparisonAlgs\BBalg.cpp" />
     <ClCompile Include="..\..\..\src\comparisonAlgs\GHalg.cpp" />
     <ClCompile Include="..\..\..\src\comparisonAlgs\HybridAlg.cpp" />
     <ClCompile Include="..\..\..\src\comparisonAlgs\ZSalg.cpp" />

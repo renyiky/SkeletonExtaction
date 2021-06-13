@@ -42,5 +42,8 @@
     <ClCompile Include="..\..\..\src\comparisonAlgs\ZSalg.cpp">
       <Filter>Source Files\Comparison</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\comparisonAlgs\BBalg.cpp">
+      <Filter>Source Files\Comparison</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

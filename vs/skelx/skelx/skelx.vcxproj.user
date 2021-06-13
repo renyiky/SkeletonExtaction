@@ -3,6 +3,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerWorkingDirectory>$(ProjectDir)..\..\..\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>cat12</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>dog10</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

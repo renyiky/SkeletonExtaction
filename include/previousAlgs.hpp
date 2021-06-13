@@ -6,3 +6,4 @@ cv::Mat ZSalg(cv::Mat img);
 cv::Mat AWalg(cv::Mat img);
 cv::Mat GHalg(cv::Mat img);
 cv::Mat HybridAlg(cv::Mat img);
+cv::Mat BBalg(cv::Mat img);
