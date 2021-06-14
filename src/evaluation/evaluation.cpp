@@ -1,6 +1,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/opencv.hpp>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -10,10 +11,12 @@
 using namespace std;
 using namespace cv;
 
+double RedundantPixelPercentage(const Mat& img);
 double f1ScoreExam(const Mat &groundTruth, const Mat &src);
-double thinningRateExam(const Mat &img);
+double thinningRateExam(const Mat &img, const Mat &raw);
 double connectivityMeasureExam(const Mat &img);
 double sensitivityMeasureExam(const Mat &img);
+int noiseSensitivity(const Mat& img);
 double smoothness(const Mat &img);
 vector<int> searchNeighborsValue(const Mat &img, vector<vector<int> > neighbors);
 int countTriangle(const Mat &img, const vector<int> &pos);
@@ -26,29 +29,31 @@ int main(int argc, char *argv[]){
             // gtFilePath = groundTruthPath + filename + ".png",
             srcFilePath = resultsPath + filename + "_" + argv[2] + "/" + "0_final_" + filename +"_" + argv[2] + ".png",
             ZSFilePath = resultsPath + filename + "_" + argv[2] + "/0_final_ZS_" + filename + ".png",
-            AWFilePath = resultsPath + filename + "_" + argv[2] + "/0_final_AW_" + filename + ".png",
-            GHFilePath = resultsPath + filename + "_" + argv[2] + "/0_final_GH_" + filename + ".png",
+            //AWFilePath = resultsPath + filename + "_" + argv[2] + "/0_final_AW_" + filename + ".png",
+            //GHFilePath = resultsPath + filename + "_" + argv[2] + "/0_final_GH_" + filename + ".png",
+            BBFilePath = resultsPath + filename + "_" + argv[2] + "/0_final_BB_" + filename + ".png",
             HybridFilePath = resultsPath + filename + "_" + argv[2] + "/0_final_Hybrid_" + filename + ".png",
             DMFilePath = resultsPath + filename + "_" + argv[2] + "/DM_" + filename + ".png",
             rawFilePath = resultsPath + filename + "_" + argv[2] + "/0_raw_" + filename + ".png";
     Mat src = imread(srcFilePath, IMREAD_GRAYSCALE),
         ZS = imread(ZSFilePath, IMREAD_GRAYSCALE),
-        AW = imread(AWFilePath, IMREAD_GRAYSCALE),
-        GH = imread(GHFilePath, IMREAD_GRAYSCALE),
+        BB = imread(BBFilePath, IMREAD_GRAYSCALE),
+        //AW = imread(AWFilePath, IMREAD_GRAYSCALE),
+        //GH = imread(GHFilePath, IMREAD_GRAYSCALE),
         Hybrid = imread(HybridFilePath, IMREAD_GRAYSCALE),
         DM = imread(DMFilePath, IMREAD_GRAYSCALE),
         // groundTruth = imread(gtFilePath, IMREAD_GRAYSCALE),
         raw = imread(rawFilePath, IMREAD_GRAYSCALE);
     // groundTruth = invert(groundTruth);
 
-    vector<Mat> resources = {ZS, AW, GH, Hybrid, DM, src};   
-    vector<string> names = {"ZS", "AW", "GH", "Hybrid", "DM", "Ours"};
+    vector<Mat> resources = {ZS, BB, Hybrid, DM, src};   
+    vector<string> names = {"ZS", "BB", "Hybrid", "DM", "Ours"};
     
     // examinations are below    
     vector<double>  TR = {},
                     CM = {},
                     SM = {},
-                    SMOOTHNESS = {};
+                    RPP = {};
     for(Mat &i : resources){
         if(i.data == NULL){
             cerr<<"IMG OPEN FAILED!"<<endl;
@@ -58,16 +63,18 @@ int main(int argc, char *argv[]){
         // f1Scores.push_back(f1ScoreExam(groundTruth, i));
 
         // Thinning Rate
-        TR.push_back(thinningRateExam(i));
+        TR.push_back(thinningRateExam(i, raw));
 
         // Connectivity Measure
         CM.push_back(connectivityMeasureExam(i));
 
         // Sensitivity Measure
-        SM.push_back(sensitivityMeasureExam(i));
+        //SM.push_back(sensitivityMeasureExam(i));
+        SM.push_back(noiseSensitivity(i));
 
-        // Smoothness Measure
-        SMOOTHNESS.push_back(smoothness(i));
+        // RPP Measure
+        RPP.push_back(RedundantPixelPercentage(i));
+
     }
 
     // print all results
@@ -77,7 +84,7 @@ int main(int argc, char *argv[]){
         cout<<setw(7)<<names[i]/*<<"  |  F1 = "<<f1Scores[i]*/<<"  |  TR = "<<TR[i]<<flush;
         cout.unsetf(ios_base::fixed);
         cout<<setw(5)<<"  |  CM = "<<setw(2)<<CM[i]<<setw(5)<<"  |  SM = "<<setw(2)<<SM[i]
-            <<setw(5)<<"  |  Smoothness = "<<setw(2)<<SMOOTHNESS[i]<<endl;
+            <<setw(5)<<"  |  RPP = "<<setw(2)<<RPP[i]<<endl;
     }
 
     return 0;
@@ -110,19 +117,19 @@ int main(int argc, char *argv[]){
 
 // Thinning Rate(TR) examination,
 // when it equals to 1, means that the image is perfectly thinned.
-double thinningRateExam(const Mat &img){
-    int TM1 = 0,
-        temp = max(img.rows, img.cols),
-        TM2 = 4 * (temp - 1) * (temp - 1);
+double thinningRateExam(const Mat &img, const Mat &raw){
+    int TM1 = 0, TM2 = 0;
     
     for(int i = 0; i < img.rows; ++i){
         for(int j = 0; j < img.cols; ++j){
             if(img.at<uchar>(i, j) != 0){
                 TM1 += countTriangle(img, {i, j});
+                TM2 += countTriangle(raw, { i, j });
             }
         }
     }
-    return 1.0 - static_cast<double>(TM1) / static_cast<double>(TM2);
+
+    return (1.0 - static_cast<double>(TM1) / static_cast<double>(TM2)) * 100;
 }
 
 // p9 p2 p3
@@ -279,4 +286,66 @@ double smoothness(const Mat &img){
         }
     }
     return 1. / (1 + SMOOTH / static_cast<double>(count));
+}
+
+int noiseSensitivity(const Mat& img) {
+    int ret = 0;
+    for (int x = 0; x < img.rows; ++x) {
+        for (int y = 0; y < img.cols; ++y) {
+            // count the number of where it changes from black to white
+            vector<int> p2 = { x - 1, y },
+                p3 = { x - 1, y + 1 },
+                p4 = { x, y + 1 },
+                p5 = { x + 1, y + 1 },
+                p6 = { x + 1, y },
+                p7 = { x + 1, y - 1 },
+                p8 = { x, y - 1 },
+                p9 = { x - 1, y - 1 };
+            vector<vector<int> > neighbors = { p2, p3, p4, p5, p6, p7, p8, p9, p2 };
+            vector<int> neighborsValue = searchNeighborsValue(img, neighbors);
+            for (int i = 0; i < neighborsValue.size() - 1; ++i) {
+                if (neighborsValue[i] == 1 && neighborsValue[i + 1] == 0) ret++;
+            }
+        }
+    }
+    return ret;
+}
+
+bool isRemovable(const Mat& img, vector<int> pos) {
+    Mat bw, ret, labelImage;
+    ret = img.clone();
+    // try to remove it
+    ret.at<uchar>(pos[0], pos[1]) = 0;
+    cv::threshold(ret, bw, 0, 255, THRESH_BINARY);
+    if (connectedComponents(bw, labelImage) != 2) return false;
+    else return true;
+}
+
+double RedundantPixelPercentage(const Mat &img) {
+    int SP = 0; // skeleton pixel
+    int RP = 0; // redundant pixel
+    for (int x = 0; x < img.rows; ++x) {
+        for (int y = 0; y < img.cols; ++y) {
+            if (img.at<uchar>(x, y) != 0) {
+                SP++;
+
+                vector<int> p2 = { x - 1, y },
+                    p3 = { x - 1, y + 1 },
+                    p4 = { x, y + 1 },
+                    p5 = { x + 1, y + 1 },
+                    p6 = { x + 1, y },
+                    p7 = { x + 1, y - 1 },
+                    p8 = { x, y - 1 },
+                    p9 = { x - 1, y - 1 };
+                vector<vector<int> > neighbors = { p2, p3, p4, p5, p6, p7, p8, p9};
+                vector<int> neighborsValue = searchNeighborsValue(img, neighbors);
+                int Bp = 0;
+                for (int i = 0; i < neighborsValue.size(); ++i) {
+                    Bp += neighborsValue[i];
+                }
+                if(Bp > 1 && isRemovable(img, { x, y })) RP++;
+            }
+        }
+    }
+    return static_cast<double>(RP) / static_cast<double>(SP) * 100;
 }
