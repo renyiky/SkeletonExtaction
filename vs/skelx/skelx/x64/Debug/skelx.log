@@ -1,2 +1,8 @@
-﻿  BBalg.cpp
+﻿  AWalg.cpp
+  BBalg.cpp
+  GHalg.cpp
+  HybridAlg.cpp
+  ZSalg.cpp
+  main.cpp
+  Generating Code...
   skelx.vcxproj -> D:\SkeletonExtraction\vs\skelx\x64\Debug\skelx.exe
