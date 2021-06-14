@@ -9,11 +9,11 @@ using namespace std;
 using namespace cv;
 
 string resPath("experimentsMaterial/results/");
-vector<string> methodName = {"ZS", "AW", "GH", "Hybrid", "DM", "Ours"};
+vector<string> methodName = {"ZS", "BB", "Hybrid", "DM", "Ours"};
 
 vector<string> prefixes = {"0_final_ZS_",
-                            "0_final_AW_",
-                            "0_final_GH_",
+                            "0_final_BB_",
+                            //"0_final_GH_",
                             "0_final_Hybrid_",
                             "DM_",
                             "0_final_",
