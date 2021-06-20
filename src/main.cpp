@@ -49,11 +49,11 @@ int main(int argc, char *argv[]){
         cout << prefixes[i] << " time consumed: " << total_t << endl;
     }
 
-    start_t = clock();
-    double s = omp_get_wtime();
-    img = contract(img, filename, detailFactor, perturbationFlag);
-    total_t = static_cast<double>(clock() - start_t) / CLOCKS_PER_SEC;
-    cout << "Time consumed: " << omp_get_wtime() - s << endl;
+    //start_t = clock();
+    //double s = omp_get_wtime();
+    //img = contract(img, filename, detailFactor, perturbationFlag);
+    //total_t = static_cast<double>(clock() - start_t) / CLOCKS_PER_SEC;
+    //cout << "Time consumed: " << omp_get_wtime() - s << endl;
     // cout << "Time consumed: " << total_t << endl;
     imwrite(outputPath + "0_final_" + filename + "_" + to_string(static_cast<int>(detailFactor)) + ".png", img);
 

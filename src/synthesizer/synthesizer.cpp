@@ -91,13 +91,13 @@ int main(int argc, char** argv){
     if(background.data == NULL) {cout << "Background image open failed." << endl; return -1;}
 
     vector<Mat> images;
-    for(int i = 0; i < 5; ++i){
+    for(int i = 0; i < 4; ++i){
         Mat im(imread(resPath + prefixes[i] + string(argv[1]) + ".png", IMREAD_GRAYSCALE));
-        if(im.data == NULL) {cout<<"image loading failed."<<endl; return -1;}
+        if(im.data == NULL) {cout<<"image loading failed." + to_string(i)<<endl; return -1;}
         images.push_back(im);
     }
+    images.push_back((imread(resPath + prefixes[4] + string(argv[1]) + +"_" + df + ".png", IMREAD_GRAYSCALE)));
     images.push_back((imread(resPath + prefixes[5] + string(argv[1]) + +"_" + df + ".png", IMREAD_GRAYSCALE)));
-    images.push_back((imread(resPath + prefixes[6] + string(argv[1]) + +"_" + df + ".png", IMREAD_GRAYSCALE)));
     grayAndBlack(background, images, argv[1]);
     // blackAndWhite(background, images, argv[1]);
     return 0;
